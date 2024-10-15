@@ -1,0 +1,28 @@
+version: '3'
+services:
+  aerospike-db:
+    image: aerospike/aerospike-server-enterprise
+    container_name: aerospike-db
+    networks:
+      asgraph_net:
+    ports:
+      - '3000-3002:3000-3002'
+  aerospike-graph:
+    image: aerospike/aerospike-graph-service
+    container_name: aerospike-graph
+    restart: always
+    depends_on:
+     aerospike-db:
+       condition: service_healthy
+    ports:
+      - '8182:8182'
+      - '9090:9090'
+    environment:
+      - aerospike.client.namespace=test
+      - aerospike.client.host=aerospike-db
+      - aerospike.graph.index.vertex.label.enabled=true
+    networks:
+      asgraph_net:
+networks:
+  asgraph_net:
+    name: asgraph_net
