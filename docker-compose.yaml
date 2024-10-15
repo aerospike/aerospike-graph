@@ -7,8 +7,8 @@ services:
       - asgraph_net
     ports:
       - '3000-3002:3000-3002'
-    volumes:
-      - ${PWD}/config/aerospike.conf:/etc/aerospike/aerospike.conf
+    environment:
+      - DEFAULT_TTL=0
     healthcheck:
       test: [ "CMD", "asinfo", "-p", "3000", "-v", "build" ]
       interval: 30s
