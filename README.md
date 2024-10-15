@@ -8,3 +8,16 @@ Aerospike Graph is a developer-ready, real-time, scalable graph database built t
 ```shell
 docker compose -f docker-compose.yaml up -d
 ```
+
+
+# Python example
+
+```
+pip install gremlinpython async_timeout
+
+python ./examples/python-example.py 
+```
+
+
+
+
