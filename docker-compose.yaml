@@ -1,7 +1,7 @@
 version: '3'
 services:
   aerospike-db:
-    image: aerospike/aerospike-server-enterprise
+    image: aerospike/aerospike-server-enterprise:7.1
     container_name: aerospike-db
     networks:
       - asgraph_net
