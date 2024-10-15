@@ -1,1 +1,1 @@
-# aerospike-graph
+# Aerospike Graph Getting Started
