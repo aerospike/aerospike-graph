@@ -15,15 +15,15 @@ if __name__ == '__main__':
     v = g.V().has('company', 'aerospike').next()
 
     # Print out it's element map
-    print("Element map:")
-    print(g.V().element_map().to_list())
+    print("Values:")
+    print(g.V(v).values().to_list())
 
     # Update a property
     g.V(v).property('scale', 'infinite').iterate()
 
     # Print out the new property
-    print("\nProperty map, updated:")
-    print(g.V(v).property_map().to_list())
+    print("\nUpdated:")
+    print(g.V(v).values().to_list())
 
     # Delete the vertex
     g.V(v).drop().iterate()
