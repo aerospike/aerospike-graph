@@ -1,4 +1,4 @@
-# Aerospike Graph Getting Started
+# Aerospike Graph QuickStart
 
 Welcome to the Aerospike Graph getting started repository! This repository provides scripts, guides, and examples designed to help you get started with Aerospike Graph.
 
