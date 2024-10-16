@@ -12,7 +12,7 @@ docker compose up -d
 
 # Python example
 
-We recommended using venv for the python dependencies.
+We recommended using venv for the python dependencies. You may need to install python3-venv for your system.
 
 ```
 python3 -m venv .venv
