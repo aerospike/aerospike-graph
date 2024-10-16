@@ -5,6 +5,11 @@ if __name__ == '__main__':
     # Create GraphTraversalSource to remote server.
     g = traversal().with_remote(DriverRemoteConnection(
         'ws://localhost:8182/gremlin', 'g'))
+    
+    # Check if graph is connected
+    if g.inject(0).next() != 0:
+        print("Failed to connect to graph instance")
+        exit()
 
     # Add a new vertex.
     g.add_v('foo').\
