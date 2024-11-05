@@ -31,5 +31,12 @@ public class Main {
         long airportCount = g.V().hasLabel("airport").count().next();
         long flightCount =  g.V().has("code","SFO").outE().count().next();
         System.out.println("DONE!");
+        try {
+            System.out.println("CLOSING CONNECT!");
+            g.close();
+        } catch (Exception e) {
+            System.err.println("FAILED TO CLOSE!");
+        }
+        return;
     }
 }
