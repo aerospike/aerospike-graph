@@ -3,4 +3,4 @@
 .vscode/
 .DS_Store
 
-examples/graph_example/target
+examples/*/target
