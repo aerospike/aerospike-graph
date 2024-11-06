@@ -1,23 +1,19 @@
 package aerospike.com;
 
-import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.structure.Edge;
-import org.apache.tinkerpop.gremlin.structure.Property;
-import org.apache.tinkerpop.gremlin.structure.VertexProperty;
 import org.apache.tinkerpop.gremlin.driver.Cluster;
 import org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
-import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
-import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal;
-
-import java.util.Iterator;
-import java.util.List;
 
 
 public class Main {
-    private static final String HOST = "172.18.0.3";
+    // Replace this with your aerospike-graph IP, 
+    // or 'localhost' / 'aerospike-graph'
+    // if running on the same docker network as aerospike-graph
+    private static final String HOST = "172.18.0.3"; 
+    
     private static final int PORT = 8182;
     private static final Cluster.Builder BUILDER = Cluster.build().addContactPoint(HOST).port(PORT).enableSsl(false);
 

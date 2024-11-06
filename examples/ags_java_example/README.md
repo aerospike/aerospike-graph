@@ -1,8 +1,10 @@
 ## To run Java example
 
-#### Reqs: Java 17+ , Maven 3.9+(?)
+#### Reqs: Java 17+ , Maven 3.9+
+
 ```
 cd ags_java_example
+# MODIFY HOST line in Main.java to match aerospike-graph IP
 mvn clean install
 java -jar target/ags_java_example-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
