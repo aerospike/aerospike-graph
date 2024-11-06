@@ -43,26 +43,26 @@ public class Main {
             .iterate();
 
         System.out.println("READING BACK DATA..");
+        
         Edge edge =  g.E().hasLabel("connects").next();
-
-        Vertex inV = edge.inVertex();
-        Vertex outV = edge.outVertex();
-        System.out.println("Edge:");
+        System.out.print("Edge: ");
         System.out.println(edge);
-        System.out.println("Out from:");
+        System.out.print("Out from: ");
+        Vertex outV = edge.outVertex();
         System.out.println(outV);
-        System.out.println("In to:");
+        System.out.print("In to: ");
+        Vertex inV = edge.inVertex();
         System.out.println(inV);
 
         // List properties
-        inV.properties().forEachRemaining(property -> {
-            System.out.println(property.key() + " : " + property.value());
-        });
-        Iterator<VertexProperty<Object>> props = inV.properties();
-        while(props.hasNext()){
-            Property p = props.next();
-            System.out.println("-->" + p.toString());
-        }
+        v1 = g.V().hasLabel("V1").next();
+        System.out.println(v1 + " Has Properties:");
+        v1.properties()
+            .forEachRemaining(property -> {
+                System.out.println(
+                    "--> " + property.key() + " : " + property.value()
+                );
+            });
 
         // Clean up
         g.V().drop().iterate();
