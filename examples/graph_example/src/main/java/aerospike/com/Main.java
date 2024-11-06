@@ -33,7 +33,7 @@ public class Main {
         System.out.println("DONE!");
         try {
             System.out.println("CLOSING CONNECT!");
-            g.close();
+            cluster.close();
         } catch (Exception e) {
             System.err.println("FAILED TO CLOSE!");
         }
