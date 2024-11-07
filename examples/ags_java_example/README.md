@@ -4,8 +4,7 @@
 
 ```
 cd ags_java_example
-# MODIFY HOST line in Main.java to match aerospike-graph IP
-mvn clean install
+mvn clean install -q
 java -jar target/ags_java_example-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 Example output:

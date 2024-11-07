@@ -9,10 +9,7 @@ import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalS
 
 
 public class Main {
-    // Replace this with your aerospike-graph IP, 
-    // or 'localhost' / 'aerospike-graph'
-    // if running on the same docker network as aerospike-graph
-    private static final String HOST = "172.18.0.3"; 
+    private static final String HOST = "localhost"; 
     
     private static final int PORT = 8182;
     private static final Cluster.Builder BUILDER = Cluster.build().addContactPoint(HOST).port(PORT).enableSsl(false);
