@@ -35,7 +35,7 @@ public class Main {
             .property("ep2", "ev2")
             .iterate();
 
-        System.out.println("READING BACK DATA..");
+        System.out.println("READING BACK DATA...");
         
         Edge edge =  g.E().hasLabel("connects").next();
         System.out.print("Edge: ");
