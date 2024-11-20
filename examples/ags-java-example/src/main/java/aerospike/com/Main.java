@@ -10,7 +10,6 @@ import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalS
 
 public class Main {
     private static final String HOST = "localhost"; 
-    
     private static final int PORT = 8182;
     private static final Cluster.Builder BUILDER = Cluster.build().addContactPoint(HOST).port(PORT).enableSsl(false);
 
@@ -18,7 +17,7 @@ public class Main {
         final Cluster cluster = BUILDER.create();
         final GraphTraversalSource g = traversal().withRemote(DriverRemoteConnection.using(cluster));
         
-        System.out.println("CONNECTED TO GRAPH, ADDING ELEMENTS");
+        System.out.println("CONNECTED TO GRAPH; ADDING ELEMENTS");
         // Add 2 vertices and an edge between them with 2 properties each
         Vertex v1 = g.addV("V1")
             .property("vp1", "vpv1")
@@ -35,7 +34,7 @@ public class Main {
             .property("ep2", "ev2")
             .iterate();
 
-        System.out.println("READING BACK DATA..");
+        System.out.println("READING BACK DATA...");
         
         Edge edge =  g.E().hasLabel("connects").next();
         System.out.print("Edge: ");
@@ -49,7 +48,7 @@ public class Main {
 
         // List properties
         v1 = g.V().hasLabel("V1").next();
-        System.out.println(v1 + " Has Properties:");
+        System.out.println(v1 + " has Properties:");
         v1.properties()
             .forEachRemaining(property -> {
                 System.out.println(
@@ -59,9 +58,9 @@ public class Main {
 
         // Clean up
         g.V().drop().iterate();
-        System.out.print("DONE, ");
+        System.out.print("DONE; ");
         try {
-            System.out.println("CLOSING CONNECT!");
+            System.out.println("CLOSING CONNECTION!");
             cluster.close();
         } catch (Exception e) {
             System.err.println("FAILED TO CLOSE!");
