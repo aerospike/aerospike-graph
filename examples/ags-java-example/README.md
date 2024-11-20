@@ -5,7 +5,7 @@
 ```
 cd ags_java_example
 mvn clean install -q
-java -jar target/ags-java-example-1.0-SNAPSHOT-jar-with-dependencies.jar
+java -jar target/ags-java-example-1.0-jar-with-dependencies.jar
 ```
 Example output:
 ```
