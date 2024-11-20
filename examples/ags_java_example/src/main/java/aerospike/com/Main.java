@@ -61,7 +61,7 @@ public class Main {
         g.V().drop().iterate();
         System.out.print("DONE, ");
         try {
-            System.out.println("CLOSING CONNECT!");
+            System.out.println("CLOSING CONNECTION!");
             cluster.close();
         } catch (Exception e) {
             System.err.println("FAILED TO CLOSE!");
