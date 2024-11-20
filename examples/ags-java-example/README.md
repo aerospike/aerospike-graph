@@ -1,6 +1,6 @@
 ## To run Java example
 
-#### Reqs: Java 17+ , Maven 3.9+
+#### Reqs: Java 11+
 
 ```
 cd ags-java-example
