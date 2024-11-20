@@ -18,7 +18,7 @@ public class Main {
         final Cluster cluster = BUILDER.create();
         final GraphTraversalSource g = traversal().withRemote(DriverRemoteConnection.using(cluster));
         
-        System.out.println("CONNECTED TO GRAPH, ADDING ELEMENTS");
+        System.out.println("CONNECTED TO GRAPH; ADDING ELEMENTS");
         // Add 2 vertices and an edge between them with 2 properties each
         Vertex v1 = g.addV("V1")
             .property("vp1", "vpv1")
