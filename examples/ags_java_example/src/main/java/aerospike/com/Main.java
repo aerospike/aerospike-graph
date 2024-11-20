@@ -49,7 +49,7 @@ public class Main {
 
         // List properties
         v1 = g.V().hasLabel("V1").next();
-        System.out.println(v1 + " Has Properties:");
+        System.out.println(v1 + " has Properties:");
         v1.properties()
             .forEachRemaining(property -> {
                 System.out.println(
