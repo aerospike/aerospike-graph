@@ -59,7 +59,7 @@ public class Main {
 
         // Clean up
         g.V().drop().iterate();
-        System.out.print("DONE, ");
+        System.out.print("DONE; ");
         try {
             System.out.println("CLOSING CONNECTION!");
             cluster.close();
