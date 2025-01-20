@@ -28,6 +28,8 @@ services:
       - aerospike.client.namespace=test
       - aerospike.client.host=aerospike-db
       - aerospike.graph.index.vertex.label.enabled=true
+    volumes:
+      - ./examples:/data
     networks:
       - asgraph_net
 networks:
