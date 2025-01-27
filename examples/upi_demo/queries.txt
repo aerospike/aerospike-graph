@@ -1,0 +1,137 @@
+Scenario 1: 
+Consider a transaction being evaluated in real time where sender Rajesh Kumar using VPA 8056629010@ybl is sending INR 40,000 to VPA 7797767385@ybl. Is this a known beneficiary for the sender? 
+Steps: 
+Find the VPA, and load all out transactions (edges) in the graph.
+ g.V(“8056629010@ybl”) 
+
+
+Run below query and show that Sender’s VPA has not transacted with Receiver’s VPA before. 
+	
+g.V("8056629010@ybl").out("transaction").hasId("7797767385@ybl")
+
+
+However, now consider all other VPA’s of sender and see if the sender has transacted with the receiver using one of the other VPAs.
+
+Visualization Query: 
+
+
+g.V("8056629010@ybl").in("owns").in("has_account").outE('has_account','has_card').inV().outE("owns").inV().outE("transaction").inV().path()
+OR use start with the person vertex directly since that is also known in the transaction. 
+g.V('CQE72NZMJL').outE('has_account','has_card').inV().outE("owns").inV().outE("transaction").inV().path()
+
+Real time check Query:
+g.V('CQE72NZMJL')             // Start with the vertex with ID 'CQE72NZMJL'
+ .out('has_account', 'has_card') // Traverse outgoing edges 
+ .out('owns')                    // Traverse outgoing edges
+ .out('transaction')             // Traverse outgoing edges
+ .dedup()                        // Remove duplicate IDs
+ .hasId('7797767385@ybl') 
+
+Scenario 2: 
+Now, let us consider a transaction being sent by the same sender (A) to 9524356932@ybl (C)
+A has sent money previously to B but never to C. However, B and C have transacted before, so A and C are likely to also know each other, and this is the first transaction.
+
+
+Show that 9524356932@ybl was not in the list of step 5 of scenario 1 above
+g.V('CQE72NZMJL')           
+ .out('has_account', 'has_card') 
+ .out('owns')                    
+ .out('transaction')             
+ .dedup()                      
+ .hasId('9524356932@ybl') 
+
+
+Modify query to also include one more level of out transactions. 
+g.V('CQE72NZMJL').
+ out('has_account', 'has_card').
+ out('owns').
+ out('transaction').
+ dedup().
+ out('transaction').
+ hasId("9524356932@ybl")
+Scenario 3:
+Aggregate amount of transaction over immediate network of outgoing payments to check velocity.
+Let us calculate the average outgoing transaction amount by each sender VPA  
+g.V('CQE72NZMJL')                
+ .out('has_account', 'has_card') 
+ .out('owns')                    
+ .group()                         
+   .by(id)        
+   .by(local(
+      outE('transaction')
+      .values('amount')
+      .mean()
+   ))
+
+
+Or average transaction amount over all sender VPA
+
+
+g.V('CQE72NZMJL').outE('has_account','has_card').inV().outE('owns').inV().outE('transaction').values('amount').mean()
+
+
+
+Scenario 4: 
+Find if the device imei has been used by the user before. 
+
+List all devices used by the user before.
+g.V('CQE72NZMJL').out("known_device").valueMap()
+
+Possible next step will be to include other users who share the same household, but for that we will need additional data to identify same house, perhaps with address field.
+
+Scenario 5:
+Find if the IP City of the transaction has come up in any of the transactions in the immediate and 2nd degree network.   
+Immediate network of previous transactions sent by any of the VPAs of the user.
+g.V('CQE72NZMJL').out("has_account","has_card").out("owns").outE("transaction").values("ip_city").dedup().toList()
+
+
+Also include IP Cities from transactions sent by any VPA that this user has a relationship with
+
+
+g.V('CQE72NZMJL')                 // Start with the vertex 
+ .out('has_account', 'has_card')  // Traverse outgoing edges 
+ .out('owns')                     // Traverse outgoing edges 
+ .out('transaction')              // Traverse outgoing edges 
+ .outE('transaction')             // Get the outgoing edges 
+ .values('ip_city')               // Retrieve the 'ip_city' 
+ .dedup()                         // Remove duplicate 'ip_city'
+ .toList()                        // Collect the unique 'ip_city'
+
+Scenario 6: 
+Count of blocked accounts, cards, flagged persons, merchants or transactions  
+Count of blocked accounts or cards in immediate network
+g.V('CQE72NZMJL')                // Start with the vertex 
+ .out('has_account', 'has_card') // Traverse outgoing edges 
+ .has('fraud_block', true)       // Filter for vertices 
+ .count()                        // Count the number 
+
+
+Count of blocked accounts or cards in extended network
+g.V('CQE72NZMJL')                 // Start with the vertex 
+ .out('has_account', 'has_card')  // Traverse outgoing edges 
+ .out('owns')                     // Traverse outgoing edges 
+ .out('transaction')              // Traverse outgoing edges
+ .in('owns')                      // Traverse incoming edges 
+ .has('fraud_block', true)        // Filter vertices 
+ .count()                         // Count the number 
+
+
+Count of flagged person or merchant in extended network
+g.V('CQE72NZMJL').out('has_account','has_card').out('owns').out("transaction").in("owns").out("has_account","has_card").has("fraud_flag",true)
+
+
+Count of fraud_flag transactions in the immediate network
+g.V('CQE72NZMJL').out('has_account','has_card').out('owns').outE("transaction").has("fraud_flag",true).count()
+
+
+Count of fraud_flag transactions in the extended network
+g.V('CQE72NZMJL')                // Start with the vertex 
+ .out('has_account', 'has_card') // Traverse outgoing edges 
+.out('owns').out("transaction").outE("transaction").has("fraud_flag",true).count()
+
+
+
+
+
+
+
