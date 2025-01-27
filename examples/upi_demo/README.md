@@ -44,3 +44,5 @@ g.with("evaluationTimeout", 100000)
 ```
 
 ## 3. Run sample Queries
+
+Run the sample queries in `queries.md`  
