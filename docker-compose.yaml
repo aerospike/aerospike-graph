@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   aerospike-db:
     image: aerospike/aerospike-server-enterprise:7.1
@@ -6,24 +6,25 @@ services:
     networks:
       - asgraph_net
     ports:
-      - '3000-3002:3000-3002'
+      - "3000-3002:3000-3002"
     environment:
       - DEFAULT_TTL=0
     healthcheck:
-      test: [ "CMD", "asinfo", "-p", "3000", "-v", "build" ]
+      test: ["CMD", "asinfo", "-p", "3000", "-v", "build"]
       interval: 30s
       timeout: 20s
       retries: 3
   aerospike-graph:
     image: aerospike/aerospike-graph-service
-    container_name: aerospike-graph
+    container_name:
+      aerospike-graph
       #    restart: always
     depends_on:
-     aerospike-db:
-       condition: service_healthy
+      aerospike-db:
+        condition: service_healthy
     ports:
-      - '8182:8182'
-      - '9090:9090'
+      - "8182:8182"
+      - "9090:9090"
     environment:
       - aerospike.client.namespace=test
       - aerospike.client.host=aerospike-db
