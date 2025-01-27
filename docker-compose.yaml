@@ -30,7 +30,7 @@ services:
       - aerospike.client.host=aerospike-db
       - aerospike.graph.index.vertex.label.enabled=true
     volumes:
-      - ./examples:/opt/graphml
+      - ./examples:/data
     networks:
       - asgraph_net
 networks:
