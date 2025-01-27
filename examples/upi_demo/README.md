@@ -23,8 +23,9 @@ Follow these steps to set up Aerospike Graph:
    - Confirm that both the Aerospike Database and Aerospike Graph Service containers are running without errors.
 
 3. **Connect to Aerospike Graph using GdotV**:
+   (Optional) Import the customized Graph stylesheet in Gdotv `UPIGraphGdotvStylesheet.json`
    
-4. **Verify Setup**:
+5. **Verify Setup**:
    - Run a sample query to ensure that the graph service is operational:
      ```groovy
      g.V().limit(1)
