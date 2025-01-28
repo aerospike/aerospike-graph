@@ -9,13 +9,17 @@ java -jar target/ags-java-example-1.0-jar-with-dependencies.jar
 ```
 Example output:
 ```
-CONNECTED TO GRAPH; ADDING ELEMENTS
-READING BACK DATA...
-Edge: e[/////////+b/////////5g==][-51-connects->-52]
-Out from: v[-51]
-In to: v[-52]
-v[-51] has Properties:
---> vp1 : vpv1
---> vp2 : vpv2
-DONE; CLOSING CONNECTION!
+Connected to Aerospike Graph Service; Adding Data...
+Adding some users, accounts and transactions
+Data written successfully...
+
+QUERY 1: Transactions initiated by Alice:
+Transaction Amount: 200, Receiver Account ID: A2
+Transaction Amount: 722, Receiver Account ID: A1
+Transaction Amount: 282, Receiver Account ID: A5
+...
+...
+...
+Dropping Dataset.Closing Connection...
+
 ```
