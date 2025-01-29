@@ -84,7 +84,7 @@ public class Main {
             int amount = random.nextInt(1000) + 1; // Random amount between 1 and 1000
             String transactionId = "T" + i;
             String type = random.nextBoolean() ? "debit" : "credit";
-            String timestamp = String.format("2025-%02d-%02d", random.nextInt(11) + 1,random.nextInt(28) + 1); // Random date in January 2025 // Random date in January 2023
+            String timestamp = String.format("2025-%02d-%02d", random.nextInt(11) + 1,random.nextInt(28) + 1); // Random date in January 2025
 
             g.addE("Transaction")
                     .from(fromAccount).to(toAccount)
@@ -122,7 +122,6 @@ public class Main {
                                 .sum()
                 )
                 .forEachRemaining(System.out::println);
-//
         System.out.println("\nQUERY 3: Users who transferred greater than 100 to Alice:");
         g.V().has("User", "name", "Alice")
                 .out("owns")
