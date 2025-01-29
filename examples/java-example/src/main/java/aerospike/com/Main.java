@@ -27,7 +27,7 @@ public class Main {
             .port(PORT)             // Specify the port
             .enableSsl(false);      // Disable SSL for this example (use true in production if needed)
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         // Create a Cluster object for connecting to the graph database
         final Cluster cluster = BUILDER.create();
         // Initialize a GraphTraversalSource to interact with the graph
@@ -39,18 +39,18 @@ public class Main {
         System.out.println("Adding some users, accounts and transactions");
 
         // Add Users
-        Vertex user1 = g.addV("User").property("userId", "U1").property("name", "Alice").property("age", 30).next();
-        Vertex user2 = g.addV("User").property("userId", "U2").property("name", "Bob").property("age", 35).next();
-        Vertex user3 = g.addV("User").property("userId", "U3").property("name", "Charlie").property("age", 25).next();
-        Vertex user4 = g.addV("User").property("userId", "U4").property("name", "Diana").property("age", 28).next();
-        Vertex user5 = g.addV("User").property("userId", "U5").property("name", "Eve").property("age", 32).next();
+        final Vertex user1 = g.addV("User").property("userId", "U1").property("name", "Alice").property("age", 30).next();
+        final Vertex user2 = g.addV("User").property("userId", "U2").property("name", "Bob").property("age", 35).next();
+        final Vertex user3 = g.addV("User").property("userId", "U3").property("name", "Charlie").property("age", 25).next();
+        final Vertex user4 = g.addV("User").property("userId", "U4").property("name", "Diana").property("age", 28).next();
+        final Vertex user5 = g.addV("User").property("userId", "U5").property("name", "Eve").property("age", 32).next();
 
         // Add Accounts
-        Vertex account1 = g.addV("Account").property("accountId", "A1").property("balance", 5000).next();
-        Vertex account2 = g.addV("Account").property("accountId", "A2").property("balance", 3000).next();
-        Vertex account3 = g.addV("Account").property("accountId", "A3").property("balance", 4000).next();
-        Vertex account4 = g.addV("Account").property("accountId", "A4").property("balance", 2000).next();
-        Vertex account5 = g.addV("Account").property("accountId", "A5").property("balance", 6000).next();
+        final Vertex account1 = g.addV("Account").property("accountId", "A1").property("balance", 5000).next();
+        final Vertex account2 = g.addV("Account").property("accountId", "A2").property("balance", 3000).next();
+        final Vertex account3 = g.addV("Account").property("accountId", "A3").property("balance", 4000).next();
+        final Vertex account4 = g.addV("Account").property("accountId", "A4").property("balance", 2000).next();
+        final Vertex account5 = g.addV("Account").property("accountId", "A5").property("balance", 6000).next();
 
         // Link Users to Accounts
         g.addE("owns").from(user1).to(account1).property("since", "2020").iterate();
@@ -77,14 +77,14 @@ public class Main {
                 .iterate();
 
         // Add Transactions
-        Random random = new Random();
-        for (int i = 1; i <= 50; i++) {
-            Vertex fromAccount = g.V().hasLabel("Account").sample(1).next();
-            Vertex toAccount = g.V().hasLabel("Account").sample(1).next();
-            int amount = random.nextInt(1000) + 1; // Random amount between 1 and 1000
-            String transactionId = "T" + i;
-            String type = random.nextBoolean() ? "debit" : "credit";
-            String timestamp = String.format("2025-%02d-%02d", random.nextInt(11) + 1,random.nextInt(28) + 1); // Random date in January 2025
+        final Random random = new Random();
+        for (final int i = 1; i <= 50; i++) {
+            final Vertex fromAccount = g.V().hasLabel("Account").sample(1).next();
+            final Vertex toAccount = g.V().hasLabel("Account").sample(1).next();
+            final int amount = random.nextInt(1000) + 1; // Random amount between 1 and 1000
+            final String transactionId = "T" + i;
+            final String type = random.nextBoolean() ? "debit" : "credit";
+            final String timestamp = String.format("2025-%02d-%02d", random.nextInt(11) + 1,random.nextInt(28) + 1); // Random date in January 2025
 
             g.addE("Transaction")
                     .from(fromAccount).to(toAccount)
@@ -136,7 +136,7 @@ public class Main {
 
         // Query Example 4: List all properties of a specific user
         System.out.println("\nQUERY 4: Properties of Bob:");
-        Vertex bob = g.V().has("User", "name", "Bob").next();
+        final Vertex bob = g.V().has("User", "name", "Bob").next();
         bob.properties().forEachRemaining(property -> {
             System.out.println(property.key() + " : " + property.value());
         });
@@ -158,10 +158,10 @@ public class Main {
      * @param date The date string in "yyyy-MM-dd" format.
      * @return The epoch timestamp in milliseconds as a long.
      */
-    private static long convertTimestampToLong(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static long convertTimestampToLong(final String date) {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         // Parse the date string to LocalDate
-        LocalDate localDate = LocalDate.parse(date, formatter);
+        final LocalDate localDate = LocalDate.parse(date, formatter);
         // Convert LocalDate to epoch milliseconds
         return localDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
     }
