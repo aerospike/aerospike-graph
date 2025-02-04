@@ -8,7 +8,7 @@ Aerospike Graph is a developer-ready, real-time, scalable graph database built t
 ```shell
 docker compose up -d
 ```
-# Navigate to the examples folder and try out the examples in different languages
+Navigate to the examples folder and try out the examples in different languages
 ```shell
 cd examples
 ```
