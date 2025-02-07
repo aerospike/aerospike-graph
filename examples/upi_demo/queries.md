@@ -33,7 +33,7 @@ Sender `A` sends money to `9524356932@ybl (C)`. A has previously transacted with
 
 ### Steps:
 ```groovy
-# Verify if `9524356932@ybl` was part of previous transactions:
+// Verify if `9524356932@ybl` was part of previous transactions:
 g.V('CQE72NZMJL')
   .out('has_account', 'has_card')
   .out('owns')
@@ -41,7 +41,7 @@ g.V('CQE72NZMJL')
   .dedup()
   .hasId('9524356932@ybl')
 
-# Extend the query to include second-degree transactions:
+// Extend the query to include second-degree transactions:
 g.V('CQE72NZMJL')
   .out('has_account', 'has_card')
   .out('owns')
@@ -53,7 +53,7 @@ g.V('CQE72NZMJL')
 ## Scenario 3: Velocity of Outgoing Transactions 
 ### Steps:
 ```groovy
-# Calculate average outgoing transaction amount for each sender VPA:
+// Calculate average outgoing transaction amount for each sender VPA:
 g.V('CQE72NZMJL')
   .out('has_account', 'has_card')
   .out('owns')
@@ -65,7 +65,7 @@ g.V('CQE72NZMJL')
        .mean()
     ))
 
-# Calculate average transaction amount across all sender VPAs:
+// Calculate average transaction amount across all sender VPAs:
 g.V('CQE72NZMJL')
   .outE('has_account', 'has_card')
   .inV()
@@ -78,7 +78,7 @@ g.V('CQE72NZMJL')
 ## Scenario 4: Device Reuse Detection
 ### Steps:
 ```groovy
-# List all devices used by the user:
+// List all devices used by the user:
 g.V('CQE72NZMJL').out("known_device").valueMap()
 
 # Next Step: Extend to include other users sharing the same household based on additional address data.
@@ -87,7 +87,7 @@ g.V('CQE72NZMJL').out("known_device").valueMap()
 ## Scenario 5: Transactional IP City Analysis
 ### Steps:
 ```groovy
-# IP Cities in the immediate network:
+// IP Cities in the immediate network:
 g.V('CQE72NZMJL')
   .out("has_account", "has_card")
   .out("owns")
@@ -96,7 +96,7 @@ g.V('CQE72NZMJL')
   .dedup()
   .toList()
 
-# IP Cities in the extended network:
+// IP Cities in the extended network:
 g.V('CQE72NZMJL')
   .out('has_account', 'has_card')
   .out('owns')
@@ -109,13 +109,13 @@ g.V('CQE72NZMJL')
 ## Scenario 6: Fraud and Flagged Activity Counts
 ### Steps:
 ```groovy
-# Blocked accounts/cards in the immediate network:
+// Blocked accounts/cards in the immediate network:
 g.V('CQE72NZMJL')
   .out('has_account', 'has_card')
   .has('fraud_block', true)
   .count()
 
-# Blocked accounts/cards in the extended network:
+// Blocked accounts/cards in the extended network:
 g.V('CQE72NZMJL')
   .out('has_account', 'has_card')
   .out('owns')
@@ -124,7 +124,7 @@ g.V('CQE72NZMJL')
   .has('fraud_block', true)
   .count()
 
-# Flagged persons/merchants in the extended network:
+// Flagged persons/merchants in the extended network:
 g.V('CQE72NZMJL')
   .out('has_account', 'has_card')
   .out('owns')
@@ -133,7 +133,7 @@ g.V('CQE72NZMJL')
   .out("has_account", "has_card")
   .has("fraud_flag", true)
 
-# Count fraud-flagged transactions in the immediate network:
+// Count fraud-flagged transactions in the immediate network:
 g.V('CQE72NZMJL')
   .out('has_account', 'has_card')
   .out('owns')
@@ -141,7 +141,7 @@ g.V('CQE72NZMJL')
   .has("fraud_flag", true)
   .count()
 
-# Count fraud-flagged transactions in the extended network:
+// Count fraud-flagged transactions in the extended network:
 g.V('CQE72NZMJL')
   .out('has_account', 'has_card')
   .out('owns')
