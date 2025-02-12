@@ -8,28 +8,8 @@ Aerospike Graph is a developer-ready, real-time, scalable graph database built t
 ```shell
 docker compose up -d
 ```
-
 Please note that Graph will wait for the database to complete start up before it attempts to start.
 
-
-# Python example
-
-We recommended using venv for the python dependencies. You may need to install python3-venv for your system.
-
-```
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-Install dependencies
-```
-python3 -m pip install gremlinpython async_timeout
-```
-
-Execute the python example
-```
-python3 ./examples/python-example.py 
-```
 
 # Query tracing with Zipkin
 
