@@ -22,6 +22,8 @@ services:
     depends_on:
       aerospike-db:
         condition: service_healthy
+      zipkin:
+        condition: service_healthy
     ports:
       - "8182:8182"
       - "9090:9090"
@@ -29,10 +31,19 @@ services:
       - aerospike.client.namespace=test
       - aerospike.client.host=aerospike-db
       - aerospike.graph.index.vertex.label.enabled=true
+      - aerospike.graph.query-tracing.threshold-ms=5
+      - aerospike.graph.query-tracing.opentelemetry-host=zipkin
     volumes:
       - ./examples:/data
     networks:
       - asgraph_net
+  zipkin:
+    image: openzipkin/zipkin
+    networks:
+      - asgraph_net
+    ports:
+      - "9411:9411"
+      
 networks:
   asgraph_net:
     name: asgraph_net
