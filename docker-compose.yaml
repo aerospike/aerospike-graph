@@ -15,7 +15,7 @@ services:
       timeout: 20s
       retries: 3
   aerospike-graph-service:
-    image: aerospike/aerospike-graph-service
+    image: aerospike/aerospike-graph-service:latest
     container_name:
       aerospike-graph-service
       #    restart: always
