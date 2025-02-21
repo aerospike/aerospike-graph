@@ -17,7 +17,7 @@ services:
   aerospike-graph-service:
     image: aerospike/aerospike-graph-service
     container_name:
-      aerospike-graph
+      aerospike-graph-service
       #    restart: always
     depends_on:
       aerospike-db:
@@ -39,6 +39,8 @@ services:
       - asgraph_net
   zipkin:
     image: openzipkin/zipkin
+    container_name:
+      asgraph-zipkin
     networks:
       - asgraph_net
     ports:
