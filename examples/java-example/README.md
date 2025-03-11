@@ -3,7 +3,6 @@
 #### Reqs: Java 11+
 
 ```
-cd ags_java_example
 mvn clean install -q
 java -jar target/ags-java-example-1.0-jar-with-dependencies.jar
 ```
