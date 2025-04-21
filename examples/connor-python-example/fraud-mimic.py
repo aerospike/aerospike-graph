@@ -1,7 +1,7 @@
-
 import random
 import datetime
 import traceback
+
 from gremlin_python.structure.graph import Graph
 from gremlin_python.process.anonymous_traversal import traversal
 from gremlin_python.process.graph_traversal import __
