@@ -37,7 +37,7 @@ def print_all_elements(g):
 
 
 def populate_graph_data(g):
-    """Populate the Aerospike Graph with sample data."""
+   # Populate the Aerospike Graph with sample data.
     try:
         print("Connecting to Aerospike Graph Service to populate data...")
 
