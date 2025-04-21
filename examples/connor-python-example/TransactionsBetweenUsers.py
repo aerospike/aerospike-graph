@@ -218,6 +218,7 @@ def transfers_to_user(g, user_name):
     for result in results:
         print(f"User: {result}")
 
+
 def list_user_properties(g, user_name):
     # Query Example 4: List all properties of a specific user
     print("\nQUERY 4: Properties of " + user_name + ":")
