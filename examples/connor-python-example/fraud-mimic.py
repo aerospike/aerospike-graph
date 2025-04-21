@@ -162,12 +162,13 @@ def main():
         print(f"Something went wrong {e}")
         traceback.print_exc()
 
+
 def convert_timestamp_to_long(date):
     formatter = "%Y-%m-%d"
     local_date = datetime.datetime.strptime(date, formatter)
     return int(local_date.replace(tzinfo=datetime.timezone.utc).timestamp())
 
+
 if __name__ == "__main__":
     main()
-
 
