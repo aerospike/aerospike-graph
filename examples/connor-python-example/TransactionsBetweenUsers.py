@@ -224,6 +224,7 @@ def list_user_properties(g, user_name):
     for key, value in user_properties.items():
         print(f"{key}: {value[0]}")
 
+
 def transactions_between_users(g, user1, user2):
     person_1_id = g.V() \
         .has('User','name',user1) \
