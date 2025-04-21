@@ -172,6 +172,7 @@ def get_graph_elements(g):
         print(f"Something went wrong {e}")
         traceback.print_exc()
 
+
 def all_transactions_by_user(g, user_name):
     #Find all transactions initiated by a specific user
     print("\nQUERY 1: Transactions initiated by " + user_name + ":")
