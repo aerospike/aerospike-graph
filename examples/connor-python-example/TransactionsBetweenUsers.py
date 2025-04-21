@@ -396,10 +396,13 @@ def set_frontend(graph_elements):
     ])
 
     return app
+    
+    
 def convert_timestamp_to_long(date):
     formatter = "%Y-%m-%d"
     local_date = datetime.datetime.strptime(date, formatter)
     return int(local_date.replace(tzinfo=datetime.timezone.utc).timestamp())
+
 
 if __name__ == '__main__':
     try:
