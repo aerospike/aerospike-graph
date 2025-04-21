@@ -1,7 +1,7 @@
-
 import random
 import datetime
 import traceback
+
 from gremlin_python.structure.graph import Graph
 from gremlin_python.process.anonymous_traversal import traversal
 from gremlin_python.process.graph_traversal import __
@@ -12,9 +12,11 @@ from gremlin_python.process.traversal import P
 HOST = "localhost"
 PORT = 8182
 
+
 # Create a connection to the Aerospike Graph Service
 def create_cluster():
     return DriverRemoteConnection("ws://localhost:8182/gremlin", "g")
+
 
 def main():
     try:
@@ -162,12 +164,13 @@ def main():
         print(f"Something went wrong {e}")
         traceback.print_exc()
 
+
 def convert_timestamp_to_long(date):
     formatter = "%Y-%m-%d"
     local_date = datetime.datetime.strptime(date, formatter)
     return int(local_date.replace(tzinfo=datetime.timezone.utc).timestamp())
 
+
 if __name__ == "__main__":
     main()
-
 

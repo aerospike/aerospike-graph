@@ -19,8 +19,10 @@ import dash_bootstrap_components as dbc
 HOST = "localhost"
 PORT = 8182
 
+
 def create_cluster():
     return DriverRemoteConnection("ws://localhost:8182/gremlin", "g")
+
 
 def print_all_elements(g):
     print("=== Vertices ===")
@@ -33,20 +35,17 @@ def print_all_elements(g):
         # same shape for edges: includes 'inV', 'outV', 'label', etc.
         print(e)
 
+
 def populate_graph_data(g):
-    """Populate the Aerospike Graph with sample data."""
+   # Populate the Aerospike Graph with sample data.
     try:
         print("Connecting to Aerospike Graph Service to populate data...")
-        #cluster = create_cluster()
-        #g = traversal().withRemote(cluster)
 
         # Check if graph is connected
         if g.inject(0).next() != 0:
             print("Failed to connect to graph instance")
             exit()
-        print("Connected to Aerospike Graph Service; Adding Data...")
-
-        print("Adding some users, accounts and transactions")
+        print("Connected to Aerospike Graph Service; Adding some users, accounts and transactions.")
 
         # Add Users
         user1 = g.add_v("User").property("userId", "U1").property("name", "Alice").property("age", 30).next()
@@ -119,6 +118,7 @@ def populate_graph_data(g):
         print("Error populating graph data:", e)
         traceback.print_exc()
 
+
 def get_graph_elements(g):
     try:
         elements = []
@@ -171,6 +171,7 @@ def get_graph_elements(g):
         print(f"Something went wrong {e}")
         traceback.print_exc()
 
+
 def all_transactions_by_user(g, user_name):
     #Find all transactions initiated by a specific user
     print("\nQUERY 1: Transactions initiated by " + user_name + ":")
@@ -188,17 +189,19 @@ def all_transactions_by_user(g, user_name):
     for result in results:
         print(f"Transaction Amount: {result['transaction']}, Receiver Account ID: {result['receiver']}")
 
+
 def aggregate_transaction_amounts(g):
     # Query Example 2: Aggregate total transaction amounts for each user
     print("\nQUERY 2: Total transaction amounts initiated by users:")
     results = g.V().hasLabel("Account") \
         .group() \
         .by("accountId") \
-        .by(__.outE("Transaction").values("amount").sum_()) \
+        .by(__.out_e("Transaction").values("amount").sum_()) \
         .toList()
 
     for result in results:
         print(result)
+
 
 def transfers_to_user(g, user_name):
     print("\nQUERY 3: Users who transferred greater than 100 to " + user_name + ":")
@@ -214,6 +217,7 @@ def transfers_to_user(g, user_name):
     for result in results:
         print(f"User: {result}")
 
+
 def list_user_properties(g, user_name):
     # Query Example 4: List all properties of a specific user
     print("\nQUERY 4: Properties of " + user_name + ":")
@@ -222,6 +226,7 @@ def list_user_properties(g, user_name):
     # Iterate and print properties
     for key, value in user_properties.items():
         print(f"{key}: {value[0]}")
+
 
 def transactions_between_users(g, user1, user2):
     person_1_id = g.V() \
@@ -395,10 +400,13 @@ def set_frontend(graph_elements):
     ])
 
     return app
+    
+    
 def convert_timestamp_to_long(date):
     formatter = "%Y-%m-%d"
     local_date = datetime.datetime.strptime(date, formatter)
     return int(local_date.replace(tzinfo=datetime.timezone.utc).timestamp())
+
 
 if __name__ == '__main__':
     try:
