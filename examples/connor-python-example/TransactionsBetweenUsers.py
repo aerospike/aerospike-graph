@@ -45,9 +45,7 @@ def populate_graph_data(g):
         if g.inject(0).next() != 0:
             print("Failed to connect to graph instance")
             exit()
-        print("Connected to Aerospike Graph Service; Adding Data...")
-
-        print("Adding some users, accounts and transactions")
+        print("Connected to Aerospike Graph Service; Adding some users, accounts and transactions.")
 
         # Add Users
         user1 = g.add_v("User").property("userId", "U1").property("name", "Alice").property("age", 30).next()
