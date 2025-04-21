@@ -189,6 +189,7 @@ def all_transactions_by_user(g, user_name):
     for result in results:
         print(f"Transaction Amount: {result['transaction']}, Receiver Account ID: {result['receiver']}")
 
+
 def aggregate_transaction_amounts(g):
     # Query Example 2: Aggregate total transaction amounts for each user
     print("\nQUERY 2: Total transaction amounts initiated by users:")
