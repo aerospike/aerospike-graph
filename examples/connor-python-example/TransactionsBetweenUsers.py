@@ -40,8 +40,6 @@ def populate_graph_data(g):
     """Populate the Aerospike Graph with sample data."""
     try:
         print("Connecting to Aerospike Graph Service to populate data...")
-        #cluster = create_cluster()
-        #g = traversal().withRemote(cluster)
 
         # Check if graph is connected
         if g.inject(0).next() != 0:
