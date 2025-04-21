@@ -35,6 +35,7 @@ def print_all_elements(g):
         # same shape for edges: includes 'inV', 'outV', 'label', etc.
         print(e)
 
+
 def populate_graph_data(g):
     """Populate the Aerospike Graph with sample data."""
     try:
