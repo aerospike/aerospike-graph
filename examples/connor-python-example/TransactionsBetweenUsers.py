@@ -201,6 +201,7 @@ def aggregate_transaction_amounts(g):
     for result in results:
         print(result)
 
+
 def transfers_to_user(g, user_name):
     print("\nQUERY 3: Users who transferred greater than 100 to " + user_name + ":")
     results = g.V().has("User", "name", user_name) \
