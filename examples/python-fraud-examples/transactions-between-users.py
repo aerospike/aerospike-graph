@@ -26,13 +26,13 @@ def create_cluster():
 
 def print_all_elements(g):
     print("=== Vertices ===")
-    for v in g.V().limit(10).element_map().toList():
+    for v in g.V().limit(10).element_map().to_list():
         # v is a dict: {'id': ..., 'label': ..., 'prop1': [...], ...}
         print(v)
 
     print("\n=== Edges ===")
-    for e in g.E().limit(10).element_map().toList():
-        # same shape for edges: includes 'inV', 'outV', 'label', etc.
+    for e in g.E().limit(10).element_map().to_list():
+        # same shape for edges: includes 'in_v', 'out_v', 'label', etc.
         print(e)
 
 
@@ -89,9 +89,11 @@ def populate_graph_data(g):
         random.seed()
         for i in range(1, 51):
             # Randomly select two accounts to create a transaction
-            from_account = g.V().has_label("Account").sample(1).next()
-            to_account = g.V().has_label("Account").sample(1).next()
-            if not from_account or not to_account:
+
+            #Creates list of 2 random unique accounts to create a transaction
+            accounts = g.V().has_label("Account").sample(2).to_list()
+            print(accounts)
+            if len(accounts) < 2:
                 print("Error: Not enough Account vertices to create edges")
                 continue
             amount = random.randint(1, 1000)
@@ -104,7 +106,7 @@ def populate_graph_data(g):
 
             # Create the transaction edge
             g.add_e("Transaction") \
-                .from_(from_account).to(to_account) \
+                .from_(accounts[0]).to(accounts[1]) \
                 .property("transactionId", transaction_id) \
                 .property("amount", amount) \
                 .property("type", type_) \
@@ -131,7 +133,7 @@ def get_graph_elements(g):
         #print_all_elements(g)
 
         # Retrieve vertices
-        vertices = g.V().value_map(True).dedup().toList()
+        vertices = g.V().to_list()
         for vertex in vertices:
             # Use T.id to extract the vertex id from the map
             v_id = vertex[T.id]
@@ -177,15 +179,15 @@ def all_transactions_by_user(g, user_name):
     print("\nQUERY 1: Transactions initiated by " + user_name + ":")
     results =  g.V().has("User", "name", user_name) \
         .out("owns") \
-        .outE("Transaction") \
+        .out_e("Transaction") \
         .as_("transaction") \
-        .inV() \
+        .in_v() \
         .values("accountId") \
         .as_("receiver") \
         .select("transaction", "receiver") \
         .by("amount") \
         .by() \
-        .toList()
+        .to_list()
     for result in results:
         print(f"Transaction Amount: {result['transaction']}, Receiver Account ID: {result['receiver']}")
 
@@ -193,11 +195,11 @@ def all_transactions_by_user(g, user_name):
 def aggregate_transaction_amounts(g):
     # Query Example 2: Aggregate total transaction amounts for each user
     print("\nQUERY 2: Total transaction amounts initiated by users:")
-    results = g.V().hasLabel("Account") \
+    results = g.V().has_label("Account") \
         .group() \
         .by("accountId") \
         .by(__.out_e("Transaction").values("amount").sum_()) \
-        .toList()
+        .to_list()
 
     for result in results:
         print(result)
@@ -207,12 +209,12 @@ def transfers_to_user(g, user_name):
     print("\nQUERY 3: Users who transferred greater than 100 to " + user_name + ":")
     results = g.V().has("User", "name", user_name) \
         .out("owns") \
-        .inE("Transaction") \
+        .in_e("Transaction") \
         .has("amount", P.gte(100)) \
-        .outV() \
+        .out_v() \
         .in_("owns") \
-        .valueMap("name") \
-        .toList()
+        .value_map("name") \
+        .to_list()
 
     for result in results:
         print(f"User: {result}")
@@ -221,7 +223,7 @@ def transfers_to_user(g, user_name):
 def list_user_properties(g, user_name):
     # Query Example 4: List all properties of a specific user
     print("\nQUERY 4: Properties of " + user_name + ":")
-    user_properties = g.V().has("User", "name", user_name).valueMap().next()
+    user_properties = g.V().has("User", "name", user_name).value_map().next()
 
     # Iterate and print properties
     for key, value in user_properties.items():
@@ -237,7 +239,11 @@ def transactions_between_users(g, user1, user2):
         .has('User','name', user2) \
         .id_() \
         .next()
-    results = g.V(person_1_id).outE().otherV().bothE().otherV().inE().otherV().hasId(person_2_id).path().by(T.id).toList()
+    results = (g.V(person_1_id).out_e().
+               other_v().both_e().other_v()
+               .in_e().other_v()
+               .has_id(person_2_id).path()
+               .by(T.id).to_list())
 
     vertex_ids = set()
     edge_ids   = set()
@@ -249,8 +255,8 @@ def transactions_between_users(g, user1, user2):
     edge_ids   = list(edge_ids)
 
     # Retrieve vertices and edges using the collected IDs
-    vertex_data = g.V(vertex_ids).valueMap(True).toList()
-    edge_data   = g.E(edge_ids).elementMap().toList()
+    vertex_data = g.V(vertex_ids).value_map(True).to_list()
+    edge_data   = g.E(edge_ids).element_map().to_list()
 
     elements = []
     for vertex in vertex_data:
@@ -403,9 +409,9 @@ def set_frontend(graph_elements):
     
     
 def convert_timestamp_to_long(date):
-    formatter = "%Y-%m-%d"
-    local_date = datetime.datetime.strptime(date, formatter)
-    return int(local_date.replace(tzinfo=datetime.timezone.utc).timestamp())
+    timestamp = datetime.datetime.now().timestamp()
+    long_timestamp = int(timestamp)
+    return long_timestamp
 
 
 if __name__ == '__main__':
