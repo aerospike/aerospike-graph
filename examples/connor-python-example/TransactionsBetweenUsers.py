@@ -120,6 +120,7 @@ def populate_graph_data(g):
         print("Error populating graph data:", e)
         traceback.print_exc()
 
+
 def get_graph_elements(g):
     try:
         elements = []
