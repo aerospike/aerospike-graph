@@ -12,9 +12,11 @@ from gremlin_python.process.traversal import P
 HOST = "localhost"
 PORT = 8182
 
+
 # Create a connection to the Aerospike Graph Service
 def create_cluster():
     return DriverRemoteConnection("ws://localhost:8182/gremlin", "g")
+
 
 def main():
     try:
