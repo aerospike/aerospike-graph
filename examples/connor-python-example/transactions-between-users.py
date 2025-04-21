@@ -1,7 +1,6 @@
 import random
 import datetime
 import traceback
-import asyncio
 
 from gremlin_python.process.graph_traversal import __
 from gremlin_python.process.traversal import T, Direction
@@ -196,7 +195,7 @@ def aggregate_transaction_amounts(g):
     results = g.V().hasLabel("Account") \
         .group() \
         .by("accountId") \
-        .by(__.outE("Transaction").values("amount").sum_()) \
+        .by(__.out_e("Transaction").values("amount").sum_()) \
         .toList()
 
     for result in results:
