@@ -76,7 +76,7 @@ def main():
             #fix the python deprecated api calls
             #Creates list of 2 random unique accounts to create a transaction
             accounts = g.V().has_label("Account").sample(2).to_list()
-            print(accounts)
+
             if len(accounts) < 2:
                 print("Error: Not enough Account vertices to create edges")
                 continue
