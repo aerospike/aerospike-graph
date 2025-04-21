@@ -19,8 +19,10 @@ import dash_bootstrap_components as dbc
 HOST = "localhost"
 PORT = 8182
 
+
 def create_cluster():
     return DriverRemoteConnection("ws://localhost:8182/gremlin", "g")
+
 
 def print_all_elements(g):
     print("=== Vertices ===")
