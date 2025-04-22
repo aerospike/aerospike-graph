@@ -137,20 +137,26 @@ Date: 2024-03-14 14:30:12
 - DELIVERED_TO (FoodOrder → DeliveryAddress)
 - RATED (CustomerProfile → Restaurant)
 
-## Data Types
+You can view the schema above, with a mermaid diagram. 
+Copy the following schema into [mermaid](https://www.mermaidchart.com/)
 
-- order_date: Unix timestamp in milliseconds
-- status: String (PLACED, ASSIGNED_TO_DRIVER, DELIVERED)
-- rating: Float (1-5)
-- price: Float
+flowchart TD
+ subgraph Entities["Entities"]
+        C["Customer Profile"]
+        R["Restaurant"]
+        O["Food Order"]
+        MI["Menu Item"]
+        DA["Delivery Address"]
+        D["Driver"]
 
-## Error Handling
-
-The CLI includes error handling for:
-- Invalid command syntax
-- Non-existent vertices
-- Database connection issues
-- Invalid data types
+  end
+    C -- PLACED --> O
+    C -- HAS_ADDRESS --> DA
+    O -- ORDERED_FROM --> R
+    O -- DELIVERED_TO --> DA
+    O -- DELIVERED_BY --> D
+    O -- CONTAINS (qty) --> MI
+    C -- RATED (stars, comment) --> R
 
 ## Contributing
 
