@@ -1,0 +1,13 @@
+~id,name,gender,marital_status,spouse_name,phone_number,email,annual_income:Int,type,revenue:Int,occupation,blacklisted:Boolean,created_at:Long,last_active:Long,~label
+3G43RRI3OS,Sarah Michael,Female,Married,Derek Browning,+65 (08) 9743 4536,sarah.michael@yahoo.com,0,business,11421492,Animal technologist,False,1631501485049,1737881083864,Customer
+YZYYST07I6,Derek Browning,Male,Married,Sarah Michael,+65 0496 998 114,derek.browning@outlook.com,0,business,9249860,"Development worker, international aid",False,1644456436156,1743489158703,Customer
+0ZTL97SB1S,Chad Barber,Male,Single,,+65 7835-5123,chad.barber@protonmail.com,829361,individual,0,Forensic psychologist,False,1592677152069,1743900463775,Customer
+T57OF52QFI,Dustin Winters,Male,Married,Michael Bailey,+65 4826-3906,dustin.winters@fakemail.com,918932,individual,0,Veterinary surgeon,True,1736980659182,1744952959373,Customer
+6Z0CJSO81M,Michael Bailey,Male,Married,Dustin Winters,+65 08 3116 1170,michael.bailey@yahoo.com,833451,individual,0,Social researcher,False,1638227730816,1741901039306,Customer
+ZUOP64K057,Bradley Singh PhD,Male,Single,,+65 8101-8075,bradley.singh.phd@gmail.com,273638,individual,0,Electrical engineer,False,1732617272422,1739880899732,Customer
+PQ8LNVR3QW,Alexandria Cooke DVM,Female,Single,,+65 +61-3-3920-8537,alexandria.cooke.dvm@hotmail.com,0,business,31838370,Learning mentor,False,1706634462345,1742737331153,Customer
+PM4252VCGG,Michael Kramer,Male,Single,,+65 +61-471-979-290,michael.kramer@yahoo.com,186575,individual,0,"Radiographer, diagnostic",False,1717292086010,1741406406987,Customer
+7X166WCWJU,Monica Ellison,Female,Single,,+65 (08)-0325-3963,monica.ellison@gmail.com,467336,individual,0,Broadcast presenter,False,1609187132897,1742709723536,Customer
+3TA4D6FXTL,Patrick Campbell,Male,Single,,+65 (07)62875020,patrick.campbell@yahoo.com,0,business,4190059,"Therapist, music",False,1634575237167,1743000651792,Customer
+66HJWIL09J,Monica Barry,Female,Married,Patrick Carlson,+65 (02)82233071,monica.barry@yahoo.com,809445,individual,0,Biomedical engineer,False,1629413632446,1740010972471,Customer
+Q6QYBBFU2P,Patrick Carlson,Male,Married,Monica Barry,+65 (07)36718062,patrick.carlson@outlook.com,0,business,43602499,Electrical engineer,False,1651158775158,1742421160716,Customer

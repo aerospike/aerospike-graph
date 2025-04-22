@@ -1,0 +1,379 @@
+~from,~to,~label,transaction_id,datetime:Long,amount:Double,type,description,location,fraud_flag:Boolean,channel,receiver_bank,receiver_bank_code,receiver_account_type
+342385953133297,339880287664806,suspicious_transaction,7495baec-de97-4679-8646-4f1c953c5212,1744377861915,1086.36,credit,fraud_scenario_a,,,,,,
+342385953133297,339880287664806,suspicious_transaction,41f70287-e9a8-4465-b250-41329926fdec,1744375221915,1007.77,credit,fraud_scenario_a,,,,,,
+342385953133297,339880287664806,suspicious_transaction,9032b9aa-1946-4b91-bc21-e05c741e4e18,1744377561915,2846.04,credit,fraud_scenario_a,,,,,,
+992582716566526,339880287664806,suspicious_transaction,fe3af525-148e-426e-b103-6c10a3be805e,1744374981915,2282.65,credit,fraud_scenario_a,,,,,,
+992582716566526,339880287664806,suspicious_transaction,68667da5-19e7-42b9-8636-6f7a9c1b55da,1744371621915,2736.03,credit,fraud_scenario_a,,,,,,
+339880287664806,798445353272872,suspicious_transaction,5d1930b3-6c4d-4d78-9328-7a591d002989,1744391601915,9092.83,debit,fraud_scenario_a,,,,,,
+648786678574953,339880287664806,suspicious_transaction,be80fb69-5c0e-43b7-82c5-22c1262c2caf,1739565270725,1998.46,credit,fraud_scenario_a,,,,,,
+992582716566526,339880287664806,suspicious_transaction,1e528757-b0f5-4084-9ac1-8b2b5a0cc4b2,1739563590725,2918.33,credit,fraud_scenario_a,,,,,,
+796880489675195,339880287664806,suspicious_transaction,6855b7fe-865f-4da7-9884-936dc41f2bc1,1739570850725,1987.11,credit,fraud_scenario_a,,,,,,
+902325281898561,339880287664806,suspicious_transaction,de77f539-a0b8-4c91-b4fa-5084c1cb9fe6,1739575890725,1101.56,credit,fraud_scenario_a,,,,,,
+648786678574953,339880287664806,suspicious_transaction,409bab4c-a63b-419c-a3e3-64fc48612fa4,1739571690725,2034.28,credit,fraud_scenario_a,,,,,,
+339880287664806,482739530752219,suspicious_transaction,924ca46b-ec13-452f-9e99-06f2fbf3e8e3,1739595330725,9560.6,debit,fraud_scenario_a,,,,,,
+339880287664806,798445353272872,suspicious_transaction,57fbb959-1c70-4f11-8d2f-e8c484a4126c,1740898619995,2893.48,credit,fraud_scenario_a,,,,,,
+342385953133297,798445353272872,suspicious_transaction,4e718179-46c3-4b76-8e7e-3c1c41607398,1740910619995,1079.84,credit,fraud_scenario_a,,,,,,
+648786678574953,798445353272872,suspicious_transaction,3e01a18d-5eaf-45b6-8fe9-f2f5b11f5a67,1740899159995,2877.45,credit,fraud_scenario_a,,,,,,
+339880287664806,798445353272872,suspicious_transaction,41e8ef2f-62dd-4075-9dd0-73bdbcc53abd,1740907319995,1981.05,credit,fraud_scenario_a,,,,,,
+339880287664806,798445353272872,suspicious_transaction,dd885f4a-c354-4da3-b427-c7fe469ebd07,1740911099995,2285.64,credit,fraud_scenario_a,,,,,,
+798445353272872,430468123308242,suspicious_transaction,1044b2f6-d195-4cc6-aca3-0790a3adacaf,1740926159995,11040.1,debit,fraud_scenario_a,,,,,,
+992582716566526,798445353272872,suspicious_transaction,a0b30c2c-226e-4b14-9c67-b6608fe61884,1743594550406,1255.3,credit,fraud_scenario_a,,,,,,
+339880287664806,798445353272872,suspicious_transaction,2680d426-c402-42bc-a5aa-c7120a83e2b2,1743585370406,2091.26,credit,fraud_scenario_a,,,,,,
+339880287664806,798445353272872,suspicious_transaction,2a7eb20a-2fdd-497a-8a16-52b6e9db131f,1743589390406,1488.71,credit,fraud_scenario_a,,,,,,
+902325281898561,798445353272872,suspicious_transaction,f87c8b03-3fb0-4f4e-866d-45bb91a9dd2f,1743586930406,2173.51,credit,fraud_scenario_a,,,,,,
+992582716566526,798445353272872,suspicious_transaction,5047241a-9522-414b-884e-8e6309255cf6,1743586090406,2916.72,credit,fraud_scenario_a,,,,,,
+798445353272872,492523153029790,suspicious_transaction,0207a8b6-779b-4d80-86bd-07b8175eba11,1743612490406,9842.41,debit,fraud_scenario_a,,,,,,
+992582716566526,798445353272872,suspicious_transaction,15b71e28-edc1-47c7-af2b-d7175e707615,1738365857802,2763.96,credit,fraud_scenario_a,,,,,,
+902325281898561,798445353272872,suspicious_transaction,3358d2c7-be15-439e-b0e7-acc3040dbd41,1738377977802,2093.3,credit,fraud_scenario_a,,,,,,
+992582716566526,798445353272872,suspicious_transaction,509c16b9-a861-4f8c-8eb5-2fe56b8417d6,1738377437802,1315.14,credit,fraud_scenario_a,,,,,,
+992582716566526,798445353272872,suspicious_transaction,6f7bb461-27a7-478c-bce6-1801d1c0b65b,1738369517802,1194.12,credit,fraud_scenario_a,,,,,,
+902325281898561,798445353272872,suspicious_transaction,70086d89-da8a-4169-a9df-bd8ab8dbdd60,1738366817802,1326.92,credit,fraud_scenario_a,,,,,,
+798445353272872,430468123308242,suspicious_transaction,c02f072f-64fc-45f6-ac6a-cdbb95c6f84a,1738399037802,8445.37,debit,fraud_scenario_a,,,,,,
+992582716566526,339880287664806,suspicious_transaction,aff98449-56d6-479e-90de-b6cbdb07c907,1743142057969,11164.66,credit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,da57d838-b862-4175-aff2-a297a8587734,1743174637969,2791.17,debit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,20a9e24c-b6f7-4767-98f3-b42a20a488ea,1743167077969,2791.17,debit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,f6ca586e-80ad-4980-a562-c0b89ad0a772,1743164257969,2791.17,debit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,1d44da66-b10d-4980-9f8a-d1582f2e0bc9,1743172297969,2791.17,debit,fraud_scenario_b,,,,,,
+796880489675195,339880287664806,suspicious_transaction,ab059942-0b32-40f0-939e-908a290493c3,1738652431206,28843.91,credit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,173044d1-c5ce-49aa-8223-21e419e87d7a,1738666351206,7210.98,debit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,848be22a-94ea-41f8-94b0-e44afab9c5c4,1738669651206,7210.98,debit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,fa3d0bdd-0792-4717-a766-e4bffdbcd001,1738679131206,7210.98,debit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,e0b195ed-2999-47f0-99a9-035e57499342,1738674211206,7210.98,debit,fraud_scenario_b,,,,,,
+339880287664806,798445353272872,suspicious_transaction,050df77e-2d54-4252-9bf4-f5d84428ba94,1739155343243,22131.43,credit,fraud_scenario_b,,,,,,
+798445353272872,602129453899139,suspicious_transaction,5fc35a50-035c-4c8d-8d22-a54d662490ae,1739181443243,5532.86,debit,fraud_scenario_b,,,,,,
+798445353272872,602129453899139,suspicious_transaction,72f05ad2-cc13-4d09-9636-8e487a712a00,1739182343243,5532.86,debit,fraud_scenario_b,,,,,,
+798445353272872,602129453899139,suspicious_transaction,684f650d-0be3-4ede-a33c-4eee31c54b13,1739187503243,5532.86,debit,fraud_scenario_b,,,,,,
+798445353272872,602129453899139,suspicious_transaction,7f6e9d63-a7fb-45e6-a69f-b9088aa3f536,1739176583243,5532.86,debit,fraud_scenario_b,,,,,,
+902325281898561,339880287664806,suspicious_transaction,53829c85-6de0-4ef6-a8db-ef733fd7ed25,1743805662973,32095.53,credit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,11fa48c3-c236-42a6-8378-6723897ded9c,1743821802973,8023.88,debit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,7a85a3fc-eb24-4ba1-9f3d-8ede02170085,1743828942973,8023.88,debit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,aa5a1fab-8849-467d-8894-2456ef22a1a2,1743827862973,8023.88,debit,fraud_scenario_b,,,,,,
+339880287664806,602129453899139,suspicious_transaction,82b002f7-5aff-4237-b652-fe2fec47c7e2,1743816582973,8023.88,debit,fraud_scenario_b,,,,,,
+339880287664806,798445353272872,suspicious_transaction,4b0a6d0e-fd35-41c4-be65-204ded989c13,1744006143752,37471.02,credit,fraud_scenario_b,,,,,,
+798445353272872,798445353272872,suspicious_transaction,0072eb0f-1582-4b35-8908-b9c06cc8afec,1744028223752,9367.75,debit,fraud_scenario_b,,,,,,
+798445353272872,798445353272872,suspicious_transaction,affea2ad-4620-48e5-ab32-33f8660502fa,1744029423752,9367.75,debit,fraud_scenario_b,,,,,,
+798445353272872,798445353272872,suspicious_transaction,e2e44e6a-f5a5-44c7-8fed-3a58989edc9e,1744018863752,9367.75,debit,fraud_scenario_b,,,,,,
+798445353272872,798445353272872,suspicious_transaction,5d049de5-dd80-46a7-8f0a-e3a473db55e0,1744026723752,9367.75,debit,fraud_scenario_b,,,,,,
+339880287664806,339880287664806,suspicious_atm_withdrawal,fa3fbb23-fc95-4733-ad8c-af3f7cb98c67,1739656754430,7551.02,debit,fraud_scenario_c,,,,,,
+339880287664806,339880287664806,suspicious_atm_withdrawal,a1d270d5-d0ea-4d07-ba41-06ec73ae3a57,1742421220004,6187.82,debit,fraud_scenario_c,,,,,,
+339880287664806,339880287664806,suspicious_atm_withdrawal,a817f939-14f2-473a-a902-464610279247,1742085538444,6436.64,debit,fraud_scenario_c,,,,,,
+798445353272872,798445353272872,suspicious_atm_withdrawal,13f4e4e3-8d30-4029-a2f9-2f0f736f792f,1744446669042,7606.29,debit,fraud_scenario_c,,,,,,
+798445353272872,798445353272872,suspicious_atm_withdrawal,0b22ac60-9050-4e9e-a37b-e4349e7f2cec,1737553309059,7785.73,debit,fraud_scenario_c,,,,,,
+798445353272872,798445353272872,suspicious_atm_withdrawal,92990613-ded0-4dd8-9966-811543ff5490,1744901108500,7764.32,debit,fraud_scenario_c,,,,,,
+339880287664806,339880287664806,suspicious_atm_withdrawal,4ced103b-ce8a-47e0-a7fb-5ab76d1d80f9,1743337332922,6149.45,debit,fraud_scenario_c,,,,,,
+339880287664806,339880287664806,suspicious_atm_withdrawal,7084f3ea-8643-426a-a395-16a21aee2c42,1742969489111,6953.37,debit,fraud_scenario_c,,,,,,
+339880287664806,339880287664806,suspicious_atm_withdrawal,746e8321-5b37-4954-9f11-1bf0f8b1ac4c,1744369832206,8072.39,debit,fraud_scenario_c,,,,,,
+798445353272872,798445353272872,suspicious_atm_withdrawal,875c3a55-9437-45b9-9bcb-ff750f724bc9,1738167918352,9905.32,debit,fraud_scenario_c,,,,,,
+798445353272872,798445353272872,suspicious_atm_withdrawal,f6de4576-6b80-48b7-a612-d5ee6403d15a,1744612921625,5630.59,debit,fraud_scenario_c,,,,,,
+798445353272872,798445353272872,suspicious_atm_withdrawal,e7cd882b-d324-4dc6-9c8e-27166e77a8d9,1741354236932,6528.84,debit,fraud_scenario_c,,,,,,
+339880287664806,339880287664806,suspicious_atm_withdrawal,c11e9cb3-cc94-498c-bf46-71bc39454022,1739424096899,9952.03,debit,fraud_scenario_c,,,,,,
+339880287664806,339880287664806,suspicious_atm_withdrawal,942c6ca1-0e76-4edc-a47e-dc7023aaed07,1741608103528,9088.94,debit,fraud_scenario_c,,,,,,
+339880287664806,339880287664806,suspicious_atm_withdrawal,57b2a68a-7485-4d6a-999c-144e38959eb5,1738376892771,9828.84,debit,fraud_scenario_c,,,,,,
+798445353272872,798445353272872,suspicious_transaction,2dea0afd-c597-45f7-ad75-f35ae5669d1d,1739880525833,3353.88,credit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,ebb06d36-f64d-4af8-931d-80f9787853f9,1739879745833,1310.53,debit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,575fdeb2-bc42-41ea-8499-be9e4c016fd7,1739879865833,2965.81,debit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,106dbd3b-4239-401e-b3d6-46b96b6db06e,1739883045833,609.94,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,afe85e46-6e7a-48e6-94cb-84d182bb44d0,1739880405833,3897.56,credit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,1c083279-dbfb-4817-b64a-e46809fe5fc1,1739879685833,3343.51,credit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,7cb1010b-4210-4a3e-a402-bf9beead2ed8,1739880465833,2329.51,credit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,a1425a7c-c803-4177-ae02-ee450a56fdd8,1739879925833,1332.38,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,b5e7a42d-2645-4bda-a778-ce0c7015485c,1739880285833,4327.28,debit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,5a1de4b9-40eb-41ab-a7f7-5e71464315e9,1739881665833,3777.17,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,a6efb5a2-b7c3-4da7-940f-c7df2e31c469,1741131518108,3974.44,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,e02a73a9-84d5-4855-8c0f-745d24f1ba01,1741130858108,3288.33,debit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,67a03a94-ae62-42ba-b7af-c25363e52ac4,1741130858108,4102.45,credit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,651fa155-74d8-4c39-bd3b-f390be1ec895,1741133858108,1379.94,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,fb78886b-d5b0-447d-a267-0b43966450af,1741133918108,1782.46,credit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,3d78276e-5cbf-4be7-acba-ff2a41031514,1741132658108,1414.38,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,f5fdeeed-ca07-45f9-a060-2f55c6e4d282,1741133738108,3142.53,credit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,b882bbf1-dc84-4b87-8da5-1395933cf907,1741133498108,4375.8,debit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,1f8d9d78-33ee-4657-9afd-416d02737f38,1741131098108,2125.86,debit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,b1d35326-3dfd-4954-abf0-fbd95a93d805,1741133138108,1152.59,debit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,071317b3-a594-4e48-ad6a-71d6bb0d04ea,1743529476160,1650.96,credit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,5f6ab48e-e46a-4bc2-b293-616d1b0cc384,1743530976160,3851.45,debit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,9c1bab72-48ae-4cdc-bccc-2f19f982d23b,1743528876160,1604.52,credit,fraud_scenario_d,,,,,,
+339880287664806,798445353272872,suspicious_transaction,73c3c42f-d911-42fe-93ee-fa63d1693204,1743528936160,2505.19,credit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,38206e08-458c-4e22-97f6-86ee57e4edfc,1743531456160,598.34,debit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,1d393a2c-0eb0-4b88-81db-8684d3343713,1743532176160,2337.79,debit,fraud_scenario_d,,,,,,
+339880287664806,798445353272872,suspicious_transaction,4bb0e8a4-4bb0-4ee9-818c-caef53f9d13a,1743531036160,686.04,debit,fraud_scenario_d,,,,,,
+339880287664806,798445353272872,suspicious_transaction,8b724ec4-5b1f-4855-b07e-2ee0802d2eda,1743531456160,3096.46,credit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,2dfeb28a-1069-4e0f-be60-dc41fbce1b79,1743530016160,1320.52,debit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,51594ff4-e51a-4902-94c3-936665b3f67e,1743530496160,4396.24,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,2eb7b95c-66e4-4c45-bd6f-8d17efe40fa4,1739978413816,1776.73,credit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,8d98b0dc-5736-4180-a680-81405e82a77f,1739978413816,2079.31,debit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,499587e0-1ebf-49b3-bd4c-b2cb3f68c67a,1739978113816,2030.49,credit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,d200ddb5-2b01-4eb5-bc9e-3aafb282aeed,1739979793816,2038.35,credit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,ad3eaf26-099a-4d51-914c-c3fd02ee6387,1739976613816,2971.88,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,e51ade74-85c7-4388-9a33-c9ae0109fdf0,1739978953816,2789.44,debit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,3dc41901-2303-4015-9455-7f8b7995ffdb,1739979853816,1915.19,credit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,4e20534c-14d0-4178-9415-a1698eb95a73,1739980033816,2358.79,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,474c1273-a648-4ce0-9932-42050aad16a5,1739977933816,644.12,debit,fraud_scenario_d,,,,,,
+798445353272872,339880287664806,suspicious_transaction,d8ecab14-2e51-473e-bba4-b131b363d09c,1739976553816,1991.41,credit,fraud_scenario_d,,,,,,
+339880287664806,798445353272872,suspicious_transaction,c495573a-610a-4723-8331-000dc1d0758e,1741108701255,3484.75,credit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,2eb0a5c9-0a4f-4920-85d3-5dd51ad01161,1741108221255,2748.93,debit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,4ee7819c-32a4-4fe3-ac91-7edb5e28a131,1741108821255,780.48,credit,fraud_scenario_d,,,,,,
+339880287664806,798445353272872,suspicious_transaction,1c5b8bcd-f4d9-4b39-b258-2e5424f7c55b,1741106841255,4886.88,credit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,1fae6ccd-051c-493f-ac28-386c6748034c,1741108821255,2533.42,credit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,50ccc0b5-7400-43a8-8253-a01583af3466,1741108941255,770.95,debit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,e7b3f980-2de0-4924-845a-b94779419776,1741106721255,553.81,credit,fraud_scenario_d,,,,,,
+339880287664806,798445353272872,suspicious_transaction,a3376bb1-093a-4512-8b7c-fabbdb5559fd,1741106721255,2192.23,credit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,b4fffa8b-5c08-424a-9a8e-c923542c78ce,1741107081255,873.16,debit,fraud_scenario_d,,,,,,
+339880287664806,339880287664806,suspicious_transaction,9b383cf0-8dad-4745-b449-5a7a4c59a6c4,1741108461255,2006.19,debit,fraud_scenario_d,,,,,,
+798445353272872,798445353272872,suspicious_transaction,c86ba0b5-8789-4f58-9e13-647d6d3fd700,1737613007097,5727.39,credit,fraud_scenario_e,,,,,,
+798445353272872,798445353272872,suspicious_transaction,96bb125a-2774-4cde-b29c-a7e88eb5a33b,1737668184429,5409.26,debit,fraud_scenario_e,,,,,,
+798445353272872,798445353272872,suspicious_transaction,3e6f0a28-bd8a-4e10-9294-160f0ffc00fc,1744732923219,5930.24,debit,fraud_scenario_e,,,,,,
+798445353272872,339880287664806,suspicious_transaction,de09029f-3220-4c3b-8bc0-52912ec4c21e,1740767489409,5886.89,debit,fraud_scenario_e,,,,,,
+798445353272872,339880287664806,suspicious_transaction,3049992b-f7f0-4b86-b598-d943e6ec4e11,1745167405731,9935.83,credit,fraud_scenario_e,,,,,,
+339880287664806,339880287664806,suspicious_transaction,5c94830a-9aa4-474b-83b6-a87b5b674380,1740304888188,5997.62,debit,fraud_scenario_e,,,,,,
+339880287664806,339880287664806,suspicious_transaction,fe52ac71-397c-498f-8a76-c34820b446de,1737548583924,5915.15,debit,fraud_scenario_e,,,,,,
+339880287664806,339880287664806,suspicious_transaction,19b3bff9-7215-4393-a259-df9a8c68a90a,1741587944535,6816.54,debit,fraud_scenario_e,,,,,,
+902325281898561,767470005234707,suspicious_transaction,92eb9ab7-3be7-48cc-8299-7005d94558c9,1739400957067,20463.68,credit,fraud_scenario_f,,,,,,
+767470005234707,482739530752219,suspicious_transaction,cceba26c-210c-4b68-8e57-aba97a525e16,1739413437067,5115.92,debit,fraud_scenario_f,,,,,,
+767470005234707,482739530752219,suspicious_transaction,2523e596-fb27-4611-a00a-830851c2951a,1739426397067,5115.92,debit,fraud_scenario_f,,,,,,
+767470005234707,482739530752219,suspicious_transaction,0b2946c0-1dd7-4bd5-a499-4c30c27ebff3,1739425017067,5115.92,debit,fraud_scenario_f,,,,,,
+767470005234707,482739530752219,suspicious_transaction,24ea9884-c89f-4bbf-bf86-110f97ec87f5,1739423757067,5115.92,debit,fraud_scenario_f,,,,,,
+902325281898561,602129453899139,suspicious_transaction,01007a72-1a5f-40b7-b589-2967ec23c45a,1741163772349,24717.53,credit,fraud_scenario_f,,,,,,
+602129453899139,430468123308242,suspicious_transaction,b253e734-f3e0-4e0a-be49-0f2d69fbb32a,1741186572349,6179.38,debit,fraud_scenario_f,,,,,,
+602129453899139,430468123308242,suspicious_transaction,935611e7-0c0f-4dbb-8028-40b2dabdf27f,1741189152349,6179.38,debit,fraud_scenario_f,,,,,,
+602129453899139,430468123308242,suspicious_transaction,af6ec404-54f8-4c75-84e8-69a68e37121d,1741187592349,6179.38,debit,fraud_scenario_f,,,,,,
+602129453899139,430468123308242,suspicious_transaction,ea0390e1-b379-4e38-81a3-3c7b3fbf5fd9,1741185612349,6179.38,debit,fraud_scenario_f,,,,,,
+992582716566526,648786678574953,suspicious_transaction,eb557925-a64f-445b-b578-245b49450260,1740144409831,48444.04,credit,fraud_scenario_f,,,,,,
+648786678574953,798445353272872,suspicious_transaction,365b3c1d-348b-4aac-a19c-21e343ed7df6,1740171289831,12111.01,debit,fraud_scenario_f,,,,,,
+648786678574953,798445353272872,suspicious_transaction,81a1a528-65f4-4d2f-bc4e-bf5a79507ced,1740173509831,12111.01,debit,fraud_scenario_f,,,,,,
+648786678574953,798445353272872,suspicious_transaction,3e0c0906-6a32-49ff-b35a-0a64d96ec6ec,1740162529831,12111.01,debit,fraud_scenario_f,,,,,,
+648786678574953,798445353272872,suspicious_transaction,07a3150c-d23d-4cd4-879d-b62e945a4e1c,1740174529831,12111.01,debit,fraud_scenario_f,,,,,,
+902325281898561,602129453899139,suspicious_transaction,6d185fa0-8eb5-4e9a-8c45-fdb7d2c86027,1741773973594,13378.13,credit,fraud_scenario_f,,,,,,
+602129453899139,767470005234707,suspicious_transaction,a0d14c69-ab40-44e5-9025-d15093958450,1741802293594,3344.53,debit,fraud_scenario_f,,,,,,
+602129453899139,767470005234707,suspicious_transaction,a369cb89-e18b-4d52-8fa1-6c5355df2491,1741802473594,3344.53,debit,fraud_scenario_f,,,,,,
+602129453899139,767470005234707,suspicious_transaction,b839ee10-3380-46d4-b3e4-153c99e66bf7,1741793953594,3344.53,debit,fraud_scenario_f,,,,,,
+602129453899139,767470005234707,suspicious_transaction,e13fe941-0848-4276-bdfc-d6385b37f198,1741806673594,3344.53,debit,fraud_scenario_f,,,,,,
+902325281898561,648786678574953,suspicious_transaction,f5826cc4-36fd-447a-8d27-5c54fe25e732,1743151171580,19071.76,credit,fraud_scenario_f,,,,,,
+648786678574953,482739530752219,suspicious_transaction,e8f3bd71-f8f4-4803-885f-d3e4d08c2880,1743177031580,4767.94,debit,fraud_scenario_f,,,,,,
+648786678574953,482739530752219,suspicious_transaction,62d143ad-fd84-4bd6-b7b1-4917dff20cf7,1743179191580,4767.94,debit,fraud_scenario_f,,,,,,
+648786678574953,482739530752219,suspicious_transaction,c0bd87df-30d4-402c-9695-a04049c765fc,1743183691580,4767.94,debit,fraud_scenario_f,,,,,,
+648786678574953,482739530752219,suspicious_transaction,68754b72-c1d4-4cad-996a-bb7dff17b7af,1743178951580,4767.94,debit,fraud_scenario_f,,,,,,
+798445353272872,unknown,suspicious_transaction,6832a7e5-65f4-47b2-af36-46607e79804a,1743602870024,1763.74,debit,fraud_scenario_g,Thailand,True,,,,
+798445353272872,unknown,suspicious_transaction,9e7201ec-c2e2-4d9a-8660-31643fb9377b,1739047605830,1927.92,debit,fraud_scenario_g,Thailand,True,,,,
+798445353272872,unknown,suspicious_transaction,3df913ec-d994-4185-99eb-f712e05e5dca,1741773711279,1779.34,debit,fraud_scenario_g,Thailand,True,,,,
+798445353272872,unknown,suspicious_transaction,1b3a646a-25be-47e1-b7ba-bc78d09903bb,1741291441305,2722.3,debit,fraud_scenario_g,Bahrain,True,,,,
+798445353272872,unknown,suspicious_transaction,de952850-c278-4633-bbb2-196ccd572448,1740234419021,4015.51,debit,fraud_scenario_g,Thailand,True,,,,
+339880287664806,unknown,suspicious_transaction,2d5f9719-4900-4238-899d-78cbc04a001f,1744383807260,1639.6,debit,fraud_scenario_g,Thailand,True,,,,
+339880287664806,unknown,suspicious_transaction,a33140dd-888c-49dd-9a6c-22edb6176f1d,1745252011768,1418.02,debit,fraud_scenario_g,Bahrain,True,,,,
+339880287664806,unknown,suspicious_transaction,62108c68-a033-4e02-8f41-cc0a70fcdf7b,1739152534825,916.13,debit,fraud_scenario_g,Bahrain,True,,,,
+339880287664806,unknown,suspicious_transaction,a39ad15a-9727-4d4d-9d22-00e0735b2c07,1743696880776,4898.78,debit,fraud_scenario_g,Thailand,True,,,,
+339880287664806,unknown,suspicious_transaction,d015d54e-c633-4c70-895d-5dd14fcc5930,1744746745880,3851.01,debit,fraud_scenario_g,Dubai,True,,,,
+798445353272872,339880287664806,transaction,98489720-efc2-41fc-a5d1-4167e48ab550,1738989504294,3930.49,credit,SALARY,,False,ONLINE,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,841ef700-9728-4691-80f4-1a7716984f05,1739365642071,730.2,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+339880287664806,602129453899139,transaction,0b2c1c07-564f-496e-80ef-8196ea37b9e4,1739872918486,1356.98,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+339880287664806,602129453899139,transaction,27bcb492-9cc1-49ee-b1dd-6fd779a79322,1740262017167,1074.96,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,602129453899139,transaction,74e2096e-8581-4d4f-b081-028b9886ae5d,1740434237075,937.08,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+339880287664806,992582716566526,transaction,81a29a9a-89b2-4de0-bf38-7ea02eef3349,1740576259499,1404.21,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,5e36fb19-4d45-4a57-a3e3-9039ffc2f0aa,1741307241658,835.88,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+339880287664806,798445353272872,transaction,723d9965-8dc1-4ef4-a808-82fb3fb21213,1742017951694,261.88,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+339880287664806,648786678574953,transaction,eb260c82-6e91-4780-bea5-9fc5f09b07f8,1742529546761,18.68,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,c6fd3ed3-fb69-491a-a673-4dd882143878,1742869329414,1382.71,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,52083670-d754-4a31-905d-f803a531c492,1743433090961,1506.51,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,342385953133297,transaction,58bf2543-4c5a-4576-81fa-9211660ff5dd,1743566550649,1899.48,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+339880287664806,796880489675195,transaction,df6a14f7-491a-46e7-97f4-68ebaa1a3ed4,1743689173553,1867.13,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+339880287664806,430468123308242,transaction,e0cfe08c-35db-4a6a-8395-62022db0edee,1744359437741,375.15,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+339880287664806,902325281898561,transaction,8d794f8c-dbfe-4306-ab8c-91dcb77da899,1744632356405,729.19,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+339880287664806,992582716566526,transaction,11d330c9-0461-4d57-9263-d475c616c0b7,1745277527973,636.16,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,7cf8088f-ce37-438f-80f9-f45dc077cfeb,1739129720887,270.56,debit,Recurring Payment,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,602129453899139,transaction,4bbcc38a-4de9-462d-9fe4-66eb675296c5,1744328101370,140.39,debit,Recurring Payment,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,992582716566526,transaction,e4a5b087-dbf7-443e-9ca7-45c9d28d63b8,1745229263615,243.29,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Savings
+767470005234707,339880287664806,transaction,a48d689b-cbec-4e47-88bd-5ce8ea281f15,1738659944918,4950.15,credit,SALARY,,False,ONLINE,Bank of China,BOC987,Savings
+339880287664806,796880489675195,transaction,98ee6131-175b-44fe-8477-4e7de08d8dfc,1739470456702,510.54,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+339880287664806,902325281898561,transaction,321c2498-4ade-4770-afc5-3134258111c3,1739627149879,589.66,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,1c00f3b8-9abe-4751-b4fc-ecb84fe82969,1740147422140,417.92,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,c88cc52d-af5a-4b56-a23f-2d0b96058649,1740926544699,1289.43,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+339880287664806,902325281898561,transaction,152d9096-5860-417e-bd58-1a98b0ebe524,1741218491262,845.05,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+339880287664806,342385953133297,transaction,99c5427b-c4a3-41ce-b766-ae57432e6939,1742455736233,254.35,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+339880287664806,602129453899139,transaction,93bc7dd3-9ee8-453a-b934-b28099fe2987,1742863209534,1712.89,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,342385953133297,transaction,fa897508-c0eb-41b7-b37b-42a83311e657,1743418703167,1378.23,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,796880489675195,transaction,2b482700-9e24-4d1a-b9d0-bc376cf9cf98,1744862410952,700.93,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,5f951812-9c04-494b-a15e-893d979ab9f6,1739725776198,452.82,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Savings
+339880287664806,602129453899139,transaction,ffe9e92a-eb3a-473a-98fa-f18eeffbb1ec,1739353632009,338.39,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Savings
+339880287664806,992582716566526,transaction,cc045b98-5c28-40a6-a0c0-229658ceebf0,1742692442871,485.15,debit,Recurring Payment,,False,FAST,Bank of China,BOC987,Savings
+902325281898561,339880287664806,transaction,4f3d8388-1fdd-4e69-938b-597b04fdefb4,1737781868748,3784.6,credit,SALARY,,False,ONLINE,Bank of China,BOC987,Savings
+339880287664806,992582716566526,transaction,90e64e3c-52dd-4efb-86f7-e96b651f6d9e,1737827289513,56.41,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+339880287664806,430468123308242,transaction,c43f8fb5-533f-4209-8945-40f2797517ee,1738470472452,1079.24,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+339880287664806,342385953133297,transaction,4d83cae3-4b3d-4f7d-9b91-ea1da6e9be59,1738620115170,1543.36,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+339880287664806,648786678574953,transaction,c225c261-49dc-48fd-8e49-3b2abc7ae987,1739006299194,783.91,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,342385953133297,transaction,180cf50f-8ab1-42e0-8495-869f7bb98a2f,1739156177390,182.4,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+339880287664806,492523153029790,transaction,4711f2c4-598b-4271-968d-03e39e29973c,1740084838744,1571.91,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+339880287664806,430468123308242,transaction,2e8e507b-d091-450e-87b7-3cf57552ca6b,1740368621368,1117.84,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+339880287664806,992582716566526,transaction,dd8e609d-9df2-4e56-8a3f-9ee7c935195c,1740485116166,1045.65,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+339880287664806,902325281898561,transaction,caabaf27-cda4-4827-8c9f-d7c083dd705b,1740971139469,215.28,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+339880287664806,648786678574953,transaction,fba2b038-2fe9-4b9e-ae5e-e8b92e97fa3f,1741497741253,925.63,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+339880287664806,902325281898561,transaction,ccca8117-01a3-41d1-b83a-d1cf49c7b6b8,1743129388777,1518.53,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+339880287664806,342385953133297,transaction,2fe5fb14-4dd5-4c0a-9f1f-203de3581faf,1743418275751,1571.25,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,63964020-7d2b-4cb7-9d26-c5911b4e0891,1743885163391,1404.41,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+339880287664806,602129453899139,transaction,821b4015-5952-492d-813d-0f631420de7b,1744452206986,1452.51,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,fe949389-c68c-4995-a7e6-a690cd8f5a79,1744673647648,1633.45,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+339880287664806,798445353272872,transaction,996f7532-e9c8-4a3c-a5ff-96bd45908f7b,1744941920258,985.5,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+339880287664806,796880489675195,transaction,35fda741-d4fa-471b-a427-46c2834d9d38,1745106567535,432.52,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+339880287664806,339880287664806,transaction,d2cb18b7-1031-4907-ba2c-4049d455c901,1741987963153,174.09,debit,Recurring Payment,,False,SWIFT,Bank of China,BOC987,Savings
+339880287664806,602129453899139,transaction,6bb5882d-1e81-42db-9cc1-1c20b57a4274,1741395212832,258.86,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Savings
+339880287664806,992582716566526,transaction,94c1d575-d67c-4dc5-a2c4-6de848ba72c5,1742209245693,171.48,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Savings
+902325281898561,796880489675195,transaction,f8e2cc0c-0ca4-4964-a3d1-036d40932ec4,1738106622501,2025.29,credit,SALARY,,False,FAST,Bank of China,BOC987,Savings
+796880489675195,796880489675195,transaction,a81c8aa7-b482-4d54-b6fd-4d4f80cfdd5e,1738531164202,574.44,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+796880489675195,992582716566526,transaction,0bdb4fd7-2d02-4de0-bbf0-d5f7ed7ea9cd,1740020193044,1494.37,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+796880489675195,482739530752219,transaction,0f3b588f-3c24-4ed0-8929-de7086b43a21,1741304076953,914.32,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+796880489675195,902325281898561,transaction,c9e79200-bd28-4491-8d0d-114bd0d04b9d,1742434893994,403.95,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,339880287664806,transaction,f841d6c9-f6de-4fe1-829b-e0a98cfd1127,1743985745269,432.51,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+796880489675195,902325281898561,transaction,61d0ec5f-973b-42a7-903a-719bfb656571,1745040572575,674.11,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+796880489675195,796880489675195,transaction,a141ee4f-6927-4690-93dd-22f4d635191e,1741055019524,114.31,debit,Recurring Payment,,False,FAST,Bank of China,BOC987,Savings
+796880489675195,992582716566526,transaction,7e5b8cd6-5a76-4211-987c-80c7b3cffbb3,1744839770012,374.3,debit,Recurring Payment,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,482739530752219,transaction,2fa4bb32-e3c1-4648-b9b8-7360e6777ff0,1742719651643,321.38,debit,Recurring Payment,,False,MOBILE,Bank of China,BOC987,Savings
+902325281898561,796880489675195,transaction,13ea3683-c0ba-4b26-8530-417b7c1d9284,1737806870546,2527.08,credit,SALARY,,False,FAST,Bank of China,BOC987,Savings
+796880489675195,430468123308242,transaction,a54505a0-a8d9-4017-8a8b-277f80f5afaa,1738246631008,937.19,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,648786678574953,transaction,1a410c4f-c191-420a-aa59-2b59231c50fb,1738327361199,1843.29,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+796880489675195,992582716566526,transaction,7c2c8889-95a2-4d3b-9161-760361aa83b0,1738404976585,1970.35,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+796880489675195,796880489675195,transaction,1d4aa1c2-0114-4191-9e50-23b161b72178,1739470765824,1473.44,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,902325281898561,transaction,1ea713dc-6593-4fa6-8683-522a4a57c4b8,1740308753001,1736.11,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+796880489675195,902325281898561,transaction,b6bf7310-1c2f-411d-a80b-85a3f0751150,1741857379058,1006.15,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,648786678574953,transaction,f4417181-5214-435c-aad5-e7f2e83e1370,1742361317215,412.92,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+796880489675195,796880489675195,transaction,4f6c58d6-f87c-4ddf-b27c-40397d0b08b4,1744362731499,1845.04,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+796880489675195,339880287664806,transaction,77a43b2d-9449-4f87-b446-b9ea7576ae78,1744650157709,1757.87,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,796880489675195,transaction,b79adf74-3d2f-4eea-82ed-8b6d7b009f51,1744194985881,330.25,debit,Recurring Payment,,False,FAST,Bank of China,BOC987,Savings
+796880489675195,992582716566526,transaction,92d0698a-ff79-45d7-a5a9-0450f597860c,1744392286355,209.28,debit,Recurring Payment,,False,FAST,Bank of China,BOC987,Savings
+796880489675195,482739530752219,transaction,370b7d83-3986-4b77-86c8-20dabaac8e49,1741076033896,295.2,debit,Recurring Payment,,False,SWIFT,Bank of China,BOC987,Savings
+796880489675195,342385953133297,transaction,c4fe9bf9-e1c7-43a7-9cd9-328fb3ccce63,1738368176507,251.07,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,342385953133297,transaction,da84beec-db29-4407-8a5c-009c53835161,1739077373449,1630.62,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+796880489675195,992582716566526,transaction,2b6cf35b-db42-4d29-9dc2-97db82cf1f8b,1739854768107,418.3,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,342385953133297,transaction,31721d35-a5ac-462f-83a6-ee3c6efffd77,1740340060611,495.74,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+796880489675195,492523153029790,transaction,7e791f0f-36e6-4df1-88a6-8b5b58ed0865,1740426953958,381.71,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+796880489675195,992582716566526,transaction,d33a1138-404c-4fce-8d89-c976eb0a7588,1740788385401,901.52,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,492523153029790,transaction,c44dd704-a3b7-454c-8ac6-bac0f1e26e40,1741567842715,1715.28,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+796880489675195,796880489675195,transaction,9fd55c54-cb66-48bc-ae0a-ab9f9bb19c50,1742403838484,1876.07,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+796880489675195,992582716566526,transaction,69700643-0e3c-411e-b620-0ac1f46c15ee,1742925126692,1669.54,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+796880489675195,648786678574953,transaction,fd9a9b18-5f63-4dcf-b0dc-dcec942021c5,1742947995912,1083.74,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,796880489675195,transaction,32507224-3999-4e95-ac0e-710e5660c0bd,1744114719941,1894.04,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,796880489675195,transaction,b24d5f94-1154-4dce-803d-cf30a455a864,1740850590145,387.55,debit,Recurring Payment,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,992582716566526,transaction,f6fdc09b-6a77-4a76-9ac2-213f61fa122f,1737564222451,387.2,debit,Recurring Payment,,False,MOBILE,Bank of China,BOC987,Savings
+796880489675195,482739530752219,transaction,2800ae90-bac3-4bd1-9f8e-8e9be6dc4ef8,1744416917155,68.54,debit,Recurring Payment,,False,SWIFT,Bank of China,BOC987,Savings
+767470005234707,992582716566526,transaction,43f74595-4400-4083-8a65-15857615d3fa,1738410582944,4237.67,credit,SALARY,,False,ONLINE,Bank of China,BOC987,Savings
+992582716566526,342385953133297,transaction,910b9a91-3442-473f-ae7b-b95020992b65,1738706642544,295.09,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+992582716566526,902325281898561,transaction,d766af3a-b1d9-4f74-810d-c84c161876db,1738803399810,1497.14,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+992582716566526,339880287664806,transaction,4d1683ff-2803-4c4b-8c17-76984fd67baa,1742572156798,742.44,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+992582716566526,798445353272872,transaction,82751dff-bad7-4140-aadd-e7f9987b9842,1742834828147,1587.41,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+992582716566526,342385953133297,transaction,e1b784b5-5fef-42a3-83c3-6092aef2f445,1744771638090,622.97,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+992582716566526,992582716566526,transaction,5afdfd1a-2f99-4368-b669-20f5a3de282c,1745060833140,1431.19,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+992582716566526,992582716566526,transaction,2f9d3861-282b-4a80-800b-c25f65acd8ef,1745106054740,1424.59,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+992582716566526,342385953133297,transaction,8e7bcd98-5dd6-411d-b129-45dfcab3f340,1744079760278,446.8,debit,Recurring Payment,,False,FAST,Bank of China,BOC987,Savings
+992582716566526,902325281898561,transaction,414f063b-608e-4d59-b638-b4f3f51f71a0,1738302278342,146.67,debit,Recurring Payment,,False,SWIFT,Bank of China,BOC987,Savings
+992582716566526,339880287664806,transaction,72bbd520-0d45-4ffc-acee-3775a53209df,1738783693794,244.75,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Savings
+798445353272872,992582716566526,transaction,a4d964ff-935c-44fc-a452-12e06ff89313,1738771437582,2259.65,credit,SALARY,,False,ONLINE,Bank of China,BOC987,Savings
+992582716566526,992582716566526,transaction,77be637b-dcca-44dc-8622-a3ef450a6c2c,1740726208192,256.71,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+992582716566526,902325281898561,transaction,e730ad8e-37a7-41e9-b1f4-8e6da97394d0,1741120691402,342.16,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+992582716566526,342385953133297,transaction,7b6f9fc7-a666-47b7-b633-42062d33531d,1742996368497,254.14,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+992582716566526,648786678574953,transaction,4039ae94-fe22-4735-a4f3-94fbb83ea0fa,1744148326806,1260.77,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+992582716566526,342385953133297,transaction,3d0e0d1b-cf92-44f4-b8d9-70c27fa61460,1742415826765,326.5,debit,Recurring Payment,,False,MOBILE,Bank of China,BOC987,Savings
+992582716566526,902325281898561,transaction,5d45b2d1-e440-452a-bbb2-fdd416361c9a,1741649516402,66.26,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Savings
+992582716566526,339880287664806,transaction,075bb3ec-1c28-4d55-a41c-ae7185fb36f6,1738175234406,144.87,debit,Recurring Payment,,False,ATM,Bank of China,BOC987,Savings
+767470005234707,992582716566526,transaction,ac91cd1f-95cf-45e2-90d6-fa11fd9f4119,1738270901762,4517.81,credit,SALARY,,False,FAST,Bank of China,BOC987,Savings
+992582716566526,796880489675195,transaction,03166bbb-2872-41d8-b474-410a6570a53d,1738451758288,301.71,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+992582716566526,602129453899139,transaction,56c1fc17-b707-46e5-ad18-f2859b169c74,1741221525397,920.15,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+992582716566526,648786678574953,transaction,8b8f6c7b-593f-4c2c-a405-013dc3c78797,1741977578327,607.29,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+992582716566526,796880489675195,transaction,6b5f8a4a-6408-4ee1-97dd-eb42da0d2e42,1742776375328,1683.7,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+992582716566526,992582716566526,transaction,90160cac-1695-4e42-b871-bea19fc2fa51,1743261820809,922.66,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+992582716566526,902325281898561,transaction,1b17e855-cb4c-4e47-a987-63afe721b379,1743818071138,1855.13,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+992582716566526,798445353272872,transaction,97c341e8-7c05-4138-9053-d303f464183e,1744247190467,1936.68,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+992582716566526,902325281898561,transaction,4dcb1099-e546-4208-bc30-971d746a9810,1744251326341,1607.45,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+992582716566526,796880489675195,transaction,da303dad-b3c1-431d-b0fd-1d0750e53e6d,1744633633588,1165.97,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+992582716566526,342385953133297,transaction,4294a15f-12bf-4f78-a186-893651fdb8ab,1743536906293,492.61,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Savings
+992582716566526,902325281898561,transaction,4c66e5d0-0283-45c8-8210-16da15bd86d7,1740698578392,67.62,debit,Recurring Payment,,False,ATM,Bank of China,BOC987,Savings
+992582716566526,339880287664806,transaction,507f5c23-eaff-4b27-b664-41abede925d5,1738249859989,455.71,debit,Recurring Payment,,False,ATM,Bank of China,BOC987,Savings
+902325281898561,648786678574953,transaction,4713c059-3800-4ab1-ba21-1074027074f9,1738843353445,1762.43,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,47fec546-0fbe-4cdb-a646-2303ba50910c,1739287370254,497.94,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,1f4f8d09-31ac-4ca1-868b-0b9671c924c0,1739515339806,1578.83,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Checking
+902325281898561,342385953133297,transaction,1d680f7c-bfbc-4e68-a857-0354ea9759be,1739772444254,413.81,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,d2d2f7c5-d77c-4051-b5a9-8c796bb82f48,1741672830730,1787.97,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,339880287664806,transaction,e49e78f5-370b-4f7e-8332-8ef762193ae1,1741992426834,1171.03,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Checking
+902325281898561,798445353272872,transaction,efc35b3a-4935-4382-a49b-e710b74a870d,1742693824000,863.87,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,992582716566526,transaction,4cd814b5-85a1-40d7-8944-e2927b63b3ab,1742985029934,619.71,debit,General Transaction,,False,FAST,Bank of China,BOC987,Checking
+902325281898561,342385953133297,transaction,322dbc05-4c25-408f-9911-d8a4b4111571,1743473821538,515.78,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,792ae954-1923-4b8b-9c3a-08cc039db109,1743899171326,554.85,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,339880287664806,transaction,bd87fc7f-602c-47c3-9df4-83da74c7add0,1744434411299,588.43,debit,General Transaction,,False,ATM,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,acd09f37-d48c-4799-98c4-a84da61f5209,1744524283464,489.08,debit,Recurring Payment,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,9e33109d-1fed-430e-bf63-11225ac55573,1741825954493,490.18,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,342385953133297,transaction,3883a502-3c03-4386-8a8a-dd314e5cc0d2,1738623968932,373.89,debit,Recurring Payment,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,342385953133297,transaction,5b769aaa-a613-4164-8794-13c9e18c96d9,1737948775840,1042.27,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,902325281898561,transaction,76e7bce6-d222-494c-beba-39990c54ad94,1737970844318,1139.48,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Checking
+902325281898561,339880287664806,transaction,2e4ee243-9170-4db3-b989-20a79f3a69d4,1738669872361,1666.53,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,3fca43fb-6a83-45ed-beac-dafe87550669,1738939845820,928.73,debit,General Transaction,,False,ATM,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,a419041a-f33b-45e2-b7e2-cecffe956497,1739314422218,1613.3,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,902325281898561,transaction,195d3a5f-fd35-4e2a-ae59-23d4ad72b65a,1739493196054,1030.27,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,339880287664806,transaction,58252b6e-1b91-4b1b-856c-3d5b3fac391d,1739639206907,710.21,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,339880287664806,transaction,4cb082cf-ee43-4b1d-b7fc-ed26e9c9ebb7,1739813535273,637.69,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Checking
+902325281898561,992582716566526,transaction,fa298c95-d8a7-469b-8b93-c51af4606536,1740240074280,294.6,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,767470005234707,transaction,eb2af301-3ee9-484b-a8dd-29289a347a6a,1740639925648,1574.89,debit,General Transaction,,False,ATM,Bank of China,BOC987,Checking
+902325281898561,992582716566526,transaction,11f5fc81-b6d4-403d-8ca8-3f05ca41f63c,1740761745314,271.42,debit,General Transaction,,False,FAST,Bank of China,BOC987,Checking
+902325281898561,339880287664806,transaction,71e1cc92-a436-46e7-9fac-3ff172385bc2,1741404077957,1066.97,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Checking
+902325281898561,342385953133297,transaction,8ce79f16-2a56-4494-aafa-6361f5b16a9f,1742709223466,1704.58,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,342385953133297,transaction,d0e20949-4976-4d95-9006-a919a97e240f,1743301811200,1122.32,debit,General Transaction,,False,ATM,Bank of China,BOC987,Checking
+902325281898561,339880287664806,transaction,7e81f056-3fce-4c8d-be90-a0510ae7dd4e,1743786634851,1345.76,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,4025be84-cab7-48b9-a570-e4f5183765f5,1744542459145,1989.44,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,14e46288-d2ab-4873-bce1-a1cc29b89502,1742841643614,440.09,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,f812dcb7-5877-4cbf-aeef-16192f05bc9d,1739086655846,351.6,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,342385953133297,transaction,bad3ec69-c00e-4b3d-bcdf-712464713e04,1741082418501,343.59,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,482739530752219,transaction,27d48a6d-6ae4-4ab6-8dcd-31e94b555d3e,1739363383190,215.96,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,602129453899139,transaction,65733e03-9ff5-456b-8e06-6a876b7d7e39,1739390636075,143.32,debit,General Transaction,,False,FAST,Bank of China,BOC987,Checking
+902325281898561,492523153029790,transaction,7fc42751-6c86-4b1a-92f4-c591ed1ad80b,1739463949595,1216.38,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,1a744213-032d-433f-b7a4-0e065a9ca7cd,1740183569068,658.06,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,ab6f597b-29e4-424a-91f2-4f7c993dc0d0,1740554117715,1406.39,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,663c25fd-c06c-45e5-b490-ec5556d9597a,1741513469203,1435.88,debit,General Transaction,,False,FAST,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,481ee8bb-dfff-4e24-a59a-b7b7faeca6eb,1742274772139,713.09,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,482739530752219,transaction,61213b3a-2bc1-4f1c-abde-1ff9a3570041,1743102996335,1340.73,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,342385953133297,transaction,81308a9a-07d2-494d-a909-65df61648282,1743531321578,965.13,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Checking
+902325281898561,339880287664806,transaction,1b20aebe-1069-4fe8-80a2-ddf1892a8a3e,1743536030973,724.51,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,902325281898561,transaction,5de65112-0da1-4e07-8725-e5b5f9bb3bc6,1743859372413,1347.78,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,bcb44b5e-8354-4825-b1d5-25b97e95a6da,1744498087755,591.19,debit,General Transaction,,False,FAST,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,2a43e79c-eb3c-477e-b870-9b8288ca1bbb,1744765652696,1380.96,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Checking
+902325281898561,492523153029790,transaction,694bf75c-9278-4bce-b146-fef73e813d48,1744960860795,639.22,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,c9fdbdae-6114-4b4c-92f2-26562543db32,1744970641648,1530.09,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,648786678574953,transaction,613dda42-5c16-4d17-9819-89df2b0b53e4,1742743953118,189.38,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Checking
+902325281898561,796880489675195,transaction,03a12dd7-ceb2-435e-8ffa-20d54c4ccbc3,1737745730245,280.17,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Checking
+902325281898561,342385953133297,transaction,b0b54603-dcb4-44b2-abde-0be476ec4996,1741506629540,475.1,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Checking
+767470005234707,342385953133297,transaction,3e899081-32d3-4493-8b72-56cbe588f357,1737534386862,2204.89,credit,SALARY,,False,FAST,Bank of China,BOC987,Savings
+342385953133297,992582716566526,transaction,a4876430-d613-42d7-98c4-ab64db422055,1737871969756,1686.16,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+342385953133297,342385953133297,transaction,8d2401d5-9455-41f0-8a0b-c8059beb79a1,1739007583543,1212.44,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+342385953133297,992582716566526,transaction,25926160-f1fc-4516-869c-82b9d03b2866,1739554863285,940.46,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+342385953133297,796880489675195,transaction,0264f4a3-918d-44ba-8775-17afe0349352,1740031749746,1083.82,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+342385953133297,798445353272872,transaction,9a5f0f48-e41b-4360-8e9a-431fc19886ec,1740145228902,1039.23,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+342385953133297,430468123308242,transaction,ee733f7f-b9d8-4f48-8029-dbb5df454994,1740580287571,1194.35,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+342385953133297,798445353272872,transaction,39f0e30c-9662-4577-870e-dcea23a9a440,1742919692659,1369.86,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+342385953133297,482739530752219,transaction,79d77a5a-8000-42f5-81ac-962e5bea9df0,1743392602796,1015.18,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+342385953133297,342385953133297,transaction,d6e87ac5-1b5f-4b7d-950f-7e97448a2eff,1744407312563,434.2,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+342385953133297,648786678574953,transaction,12aac7bb-5785-405e-9d5c-3eb4ad5b3ff4,1744551773039,1372.24,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+342385953133297,992582716566526,transaction,7d500c82-5cb0-495b-b747-74431b060afe,1740507952838,462.37,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Savings
+342385953133297,342385953133297,transaction,77251c08-df08-4b79-8dd0-3e2acdf47096,1739875465928,493.66,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Savings
+342385953133297,796880489675195,transaction,e5c4f6ce-3e5b-4dbe-a321-3d2a1a91c31b,1743201026599,436.03,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Savings
+798445353272872,342385953133297,transaction,a7970d24-2c66-4f0a-ac5b-782c6e0d6e7e,1737546184530,4043.6,credit,SALARY,,False,FAST,Bank of China,BOC987,Savings
+342385953133297,342385953133297,transaction,d7323941-2c2d-4423-9721-849122b1caab,1737643157416,1525.91,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+342385953133297,492523153029790,transaction,411067a4-aecd-4985-bc63-5703e54437ef,1738154302734,22.31,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+342385953133297,798445353272872,transaction,501004e1-5c2b-4ab6-a8ad-9ebd7331d972,1738271415017,1471.71,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+342385953133297,902325281898561,transaction,8621f081-56ac-4e17-9bbf-3e4926b3eddd,1739527362777,341.89,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+342385953133297,482739530752219,transaction,70c3a56c-0d1b-46ba-bb1c-bf1c23d8b49d,1740307593059,323.77,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+342385953133297,339880287664806,transaction,ddfedf0f-be14-4496-a39f-4377318a0f2d,1740474539332,125.46,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+342385953133297,902325281898561,transaction,54afc86c-1662-479b-8df2-96c3dbb284f4,1740799816299,358.61,debit,General Transaction,,False,MOBILE,Bank of China,BOC987,Savings
+342385953133297,492523153029790,transaction,d5d29744-b47c-4d85-953c-a1e0d41d7317,1742397172982,753.36,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+342385953133297,992582716566526,transaction,638a99dd-a0cb-4cfc-a62e-be4b27dc098f,1742630923423,1770.5,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+342385953133297,796880489675195,transaction,b07e163e-070d-42cd-aa13-0bc3552f35e9,1742657711334,423.06,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+342385953133297,492523153029790,transaction,3212edae-7f7e-40e8-88a1-847499c912cd,1743780707282,1993.11,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+342385953133297,992582716566526,transaction,8f12321b-b7b9-46ae-8afe-ca1790dd6e90,1738813828634,475.49,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Savings
+342385953133297,342385953133297,transaction,a26ff388-bd43-4af9-a865-fd66e6c1b6cd,1739531229616,441.7,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Savings
+342385953133297,796880489675195,transaction,04422160-f856-49e7-9e0d-ed32a4537e77,1742285258440,119.84,debit,Recurring Payment,,False,FAST,Bank of China,BOC987,Savings
+902325281898561,342385953133297,transaction,412c2117-7bb5-4f2d-bca3-aaeebc8dd0c0,1739068663485,3380.57,credit,SALARY,,False,ONLINE,Bank of China,BOC987,Savings
+342385953133297,902325281898561,transaction,692d30d4-113c-44f9-85fd-beb0502e5731,1739133427110,1910.5,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+342385953133297,342385953133297,transaction,0ea5da82-9c02-4a4f-b2cd-f8ec4036e8e1,1741037759749,1492.07,debit,General Transaction,,False,ATM,Bank of China,BOC987,Savings
+342385953133297,648786678574953,transaction,3fcb3843-7e06-4715-aa03-e1e12f02638b,1741293641418,90.03,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+342385953133297,992582716566526,transaction,e0a6f8d2-908f-490d-a019-1d672b9cd5f9,1741437586469,1288.21,debit,General Transaction,,False,BRANCH,Bank of China,BOC987,Savings
+342385953133297,339880287664806,transaction,51e7bb03-342e-4913-b8a2-6635927a7934,1741804175421,556.81,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+342385953133297,648786678574953,transaction,dd200a2e-9ca5-4f2d-a1f0-2a7491aa1c79,1741824044626,1849.88,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+342385953133297,430468123308242,transaction,d9ab4f13-3307-442f-b6f2-84be63b32463,1742873292543,1912.44,debit,General Transaction,,False,SWIFT,Bank of China,BOC987,Savings
+342385953133297,796880489675195,transaction,94420d7d-3373-4590-a5dc-8790ba0111bb,1743585310979,634.38,debit,General Transaction,,False,ONLINE,Bank of China,BOC987,Savings
+342385953133297,430468123308242,transaction,edbb3b7f-7be8-4fc7-b11f-58f8b80bdfac,1743690274186,758.6,debit,General Transaction,,False,FAST,Bank of China,BOC987,Savings
+342385953133297,992582716566526,transaction,d13832a0-fc96-4b49-83d5-2541001b5d12,1741873915817,114.04,debit,Recurring Payment,,False,SWIFT,Bank of China,BOC987,Savings
+342385953133297,342385953133297,transaction,5daccb08-5a82-4a95-977b-dba58d6cdcad,1744842744085,190.62,debit,Recurring Payment,,False,ONLINE,Bank of China,BOC987,Savings
+342385953133297,796880489675195,transaction,12fc51b0-32a7-4257-8650-e170309ae281,1740004875309,54.64,debit,Recurring Payment,,False,BRANCH,Bank of China,BOC987,Savings

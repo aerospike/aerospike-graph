@@ -1,0 +1,13 @@
+~id,bank_name,bank_code,account_type,balance:Double,currency,fraud_block:Boolean,status,open_date:Long,~label
+798445353272872,Mizuho Bank,MIZ456,Checking,995866.93,CNY,False,active,1582611021573,Bank Account
+339880287664806,Bank of China,BOC987,Savings,645922.93,CNY,False,active,1648813031530,Bank Account
+648786678574953,Bank of China,BOC987,Savings,556253.87,CNY,False,dormant,1588005580603,Bank Account
+796880489675195,Bank of China,BOC987,Savings,868722.34,CNY,False,active,1666157252679,Bank Account
+992582716566526,Bank of China,BOC987,Savings,271128.26,CNY,False,reactivated,1726135111354,Bank Account
+767470005234707,ICBC,ICB123,Checking,358960.61,CNY,False,dormant,1695200606984,Bank Account
+482739530752219,ICBC,ICB123,Savings,300353.13,CNY,False,active,1729250765975,Bank Account
+602129453899139,ICBC,ICB123,Savings,634772.8,CNY,False,dormant,1604046428425,Bank Account
+492523153029790,ICBC,ICB123,Savings,247995.29,CNY,False,active,1698908529496,Bank Account
+902325281898561,Bank of China,BOC987,Checking,560396.43,CNY,False,active,1601726132210,Bank Account
+342385953133297,Bank of China,BOC987,Savings,140634.45,CNY,False,active,1596005755615,Bank Account
+430468123308242,Mizuho Bank,MIZ456,Savings,502054.0,CNY,False,active,1637549763315,Bank Account
