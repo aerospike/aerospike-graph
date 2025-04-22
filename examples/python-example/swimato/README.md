@@ -137,26 +137,6 @@ Date: 2024-03-14 14:30:12
 - DELIVERED_TO (FoodOrder → DeliveryAddress)
 - RATED (CustomerProfile → Restaurant)
 
-You can view the schema above, with a mermaid diagram. 
-Copy the following schema into [mermaid](https://www.mermaidchart.com/)
-
-flowchart TD
- subgraph Entities["Entities"]
-        C["Customer Profile"]
-        R["Restaurant"]
-        O["Food Order"]
-        MI["Menu Item"]
-        DA["Delivery Address"]
-        D["Driver"]
-
-  end
-    C -- PLACED --> O
-    C -- HAS_ADDRESS --> DA
-    O -- ORDERED_FROM --> R
-    O -- DELIVERED_TO --> DA
-    O -- DELIVERED_BY --> D
-    O -- CONTAINS (qty) --> MI
-    C -- RATED (stars, comment) --> R
 
 ## Contributing
 
