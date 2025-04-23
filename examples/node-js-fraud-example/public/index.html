@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aerospike Graph Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; }
+        svg { width: 100%; height: 100%; }
+        .link { stroke: #999; stroke-opacity: 0.6; }
+        .node circle { fill: #0074D9; stroke: #fff; stroke-width: 1.5px; }
+        text { font: 10px sans-serif; pointer-events: none; }
+    </style>
+</head>
+<body>
+<svg></svg>
+<script>
+    const svg = d3.select('svg');
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    let simulation;
+
+    async function loadGraph() {
+      const resp = await fetch('/graph');
+      const { nodes, links } = await resp.json();
+      drawGraph(nodes, links);
+    }
+
+    function drawGraph(nodes, links) {
+      svg.selectAll('*').remove();
+      simulation && simulation.stop();
+
+      const link = svg.append('g')
+        .attr('class', 'links')
+        .selectAll('line')
+        .data(links)
+        .join('line')
+        .attr('class', 'link');
+
+      const node = svg.append('g')
+        .attr('class', 'nodes')
+        .selectAll('g')
+        .data(nodes)
+        .join('g');
+      node.append('circle').attr('r', 8);
+      node.append('text').attr('x', 12).attr('y', 3).text(d => d.label);
+
+      simulation = d3.forceSimulation(nodes)
+        .force('link', d3.forceLink(links).id(d => d.id).distance(50))
+        .force('charge', d3.forceManyBody().strength(-200))
+        .force('center', d3.forceCenter(width / 2, height / 2));
+
+      simulation.on('tick', () => {
+        link.attr('x1', d => d.source.x)
+            .attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x)
+            .attr('y2', d => d.target.y);
+        node.attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      svg.attr('width', window.innerWidth).attr('height', window.innerHeight);
+    });
+
+    loadGraph();
+</script>
+</body>
+</html>
