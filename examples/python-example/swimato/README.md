@@ -13,6 +13,7 @@ Swimato consists of two main components:
 - Python 3.8+
 - Aerospike Graph database
 - Python virtual environment (recommended)
+- Set up Aerospike Graph (see the root directory [README.md](../../../README.md) for more information)
 
 
 1. Create and activate a virtual environment:
@@ -36,31 +37,25 @@ The `swimato-datasetgen.py` script generates sample food delivery orders with th
 - Drivers
 - Delivery Addresses
 
-To generate sample data:
+To generate sample data and move it to the examples directory (default mounting location for docker-compose):
 ```bash
-python swimato-datasetgen.py
+python swimato-datasetgen.py && mv edges ../../ && mv vertices ../../
 ```
-This will create edges and vertices folder in the current directory.
+The data will now be created and mounted to the Aerospike Graph container.
 
-
-## Load Data into Aerospike Graph
-Move the edges and vertices folder to the /examples directory in the Aerospike Graph repo base directory.
-(Optional) There is an edges and vertices folder in the current directory. Move them to the /examples directory in the Aerospike Graph repo base directory.
-NOTE: The vertices and edges folder should be in /examples directory in the Aerospike Graph repo base directory since that's the default mounted volume in the docker-compose.yml file.
- 
 Run the following command to load the data into Aerospike Graph:
 ```bash
-python load_data.py --vertices /path/to/vertices --edges /path/to/edges
+python swimato-load.py --vertices /path/to/vertices --edges /path/to/edges
 ```
 
 
 ## CLI Interface
 
-The `swimato_cli.py` provides an interactive interface to query the graph database.
+The `swimato-cli.py` provides an interactive interface to query the graph database.
 
 To start the CLI:
 ```bash
-python swimato_cli.py
+python swimato-cli.py
 ```
 
 ### Available Commands
@@ -138,10 +133,3 @@ Date: 2024-03-14 14:30:12
 - RATED (CustomerProfile → Restaurant)
 
 
-## Contributing
-
-Feel free to submit issues, fork the repository, and create pull requests for any improvements.
-
-## License
-
-MIT License - feel free to use this demo application for learning and development purposes.

@@ -120,6 +120,62 @@ class SwimatoCLI(cmd.Cmd):
         else:
             print("No ratings found for this restaurant")
 
+    def do_get_random(self, arg):
+        """
+        Get random pieces of information to seed commands. Usage:
+        get_random customers <count>
+        get_random orders <count>
+        get_random restaurants <count>
+        get_random drivers <count>
+        """
+        if not arg:
+            print("Please provide type and count")
+            return
+
+        args = arg.split()
+        if len(args) != 2:
+            print("Invalid arguments. Use 'help get_random' for usage.")
+            return
+
+        type_, count = args
+        try:
+            count = int(count)
+        except ValueError:
+            print("Count must be an integer")
+            return
+
+        if type_ == 'customers':
+            customers = self.g.V().hasLabel("CustomerProfile")\
+                    .sample(count)\
+                    .id_()\
+                    .to_list()
+            print("\nRandom Customers:")
+            print(customers)
+        elif type_ == 'orders':
+            orders = self.g.V().hasLabel("FoodOrder")\
+                    .sample(count)\
+                    .id_()\
+                    .to_list()
+            print("\nRandom Orders:")
+            print(orders)
+        elif type_ == 'restaurants':
+            restaurants = self.g.V().hasLabel("Restaurant")\
+                    .sample(count)\
+                    .id_()\
+                    .to_list()
+            print("\nRandom Restaurants:")
+            print(restaurants)
+        elif type_ == 'drivers':
+            drivers = self.g.V().hasLabel("Driver")\
+                    .sample(count)\
+                    .id_()\
+                    .to_list()
+            print("\nRandom Drivers:")
+            print(drivers)
+        else:
+            print("Invalid type. Use 'help get_random' for usage.")
+            return
+
     def do_customer_orders(self, arg):
         """
         Get 5 most recent orders for a customer. Usage:
@@ -156,10 +212,6 @@ class SwimatoCLI(cmd.Cmd):
         self.connection.close()
         print("Goodbye!")
         return True
-
-    def do_EOF(self, arg):
-        """Exit on Ctrl-D"""
-        return self.do_quit(arg)
 
 if __name__ == '__main__':
     try:
