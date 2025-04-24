@@ -5,9 +5,11 @@ from gremlin_python.driver.driver_remote_connection import DriverRemoteConnectio
 from datetime import datetime, timedelta
 from gremlin_python.statics import long  # Java long
 from gremlin_python.statics import timestamp
+from gremlin_python.process.anonymous_traversal import traversal
+from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
+from gremlin_python.process.graph_traversal import __
 
-# Aerospike Graph Server connection details
-AEROSPIKE_GRAPH_URL = "ws://localhost:8182/gremlin"
+
 
 # Input CSV file
 INPUT_CSV_FILE = "./dataset/vertices/bank_accounts/bank_account.csv"
@@ -24,9 +26,8 @@ def detect_structured_mule_activity():
     """Detects structured mule activity based on transaction patterns."""
     try:
         # Establish connection to Aerospike Graph
-        graph = Graph()
-        connection = DriverRemoteConnection(AEROSPIKE_GRAPH_URL, 'gmuleGraph')
-        g = graph.traversal().withRemote(connection)
+        connection = DriverRemoteConnection('ws://localhost:8182/gremlin', 'g')
+        g = traversal().with_remote(connection)
 
         # Read the input CSV file
         with open(INPUT_CSV_FILE, mode='r', newline='') as infile:
@@ -44,11 +45,12 @@ def detect_structured_mule_activity():
                 
                 time_window_start = debit['datetime'] - (24*60*60*1000) #Check upto 24 hrs ago 
                 credit_total=0
-
+                # print(credit_transactions[0])
                 for t in credit_transactions:
                     if time_window_start <= t['datetime'] < debit['datetime']:
                         credit_total += t['amount']
                         relevant_credits[t['datetime']] = t 
+                        
                         if len(relevant_credits) > 2 and 0.9 * debit_amount <= credit_total <= debit_amount:
                             if bank_account not in suspect_mule_accounts:
                                 suspect_mule_accounts.append(bank_account)

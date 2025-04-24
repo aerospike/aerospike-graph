@@ -11,6 +11,24 @@ def random_timestamp():
     start_date = end_date - timedelta(days=90)
     return int(fake.date_time_between(start_date=start_date, end_date=end_date).timestamp() * 1000)
 
+"""
+Scenario A simulates a classic money mule pattern where:
+1. Multiple small deposits (credits) from different client accounts:
+   - 5 transactions between $1,000-$3,000 each
+   - Spread across a 4-hour window
+   - Coming from random legitimate client accounts
+
+2. Followed by a single large withdrawal (debit):
+   - Occurs 3-6 hours after the last deposit
+   - Amount is 90-100% of total deposits (simulating fees)
+   - Money is sent to fraudster's account
+
+This pattern is typical of money mule operations where fraudsters:
+- Break up large amounts into smaller transactions to avoid detection
+- Use multiple sources to make deposits look less suspicious
+- Use mule account as intermediary to obscure money trail
+- Move accumulated money to their account after a short delay
+"""
 def fraud_scenario_a(transactions, mule_accounts, fraud_accounts, client_accounts):
     for a in range(5):
         mule = random.choice(mule_accounts)
@@ -29,6 +47,23 @@ def fraud_scenario_a(transactions, mule_accounts, fraud_accounts, client_account
         )
     return transactions
 
+"""
+Scenario B simulates a money mule pattern that's the reverse of Scenario A:
+1. Single large deposit (credit):
+   - One transaction of $10,000-$50,000
+   - From a single client account
+   - Occurs 3-6 hours before withdrawals
+
+2. Followed by multiple smaller withdrawals (debits):
+   - 4 equal-sized withdrawals (large amount split evenly)
+   - Spread across a 4-hour window
+   - All going to fraudster's account
+
+This pattern demonstrates "structuring" or "smurfing" where:
+- Large suspicious deposit is broken into smaller withdrawals
+- Multiple smaller transactions may avoid detection systems
+- Mule account used to obscure the money trail
+"""
 def fraud_scenario_b(transactions, mule_accounts, fraud_accounts, client_accounts):
     for a in range(5):
         mule = random.choice(mule_accounts)
@@ -47,6 +82,20 @@ def fraud_scenario_b(transactions, mule_accounts, fraud_accounts, client_account
         ])
     return transactions
 
+"""
+Scenario C simulates suspicious ATM withdrawal patterns:
+1. Multiple large ATM withdrawals:
+   - 3 withdrawals per mule account
+   - Each withdrawal between $5,000-$10,000
+   - Self-directed transactions (mule to same mule)
+   - Random timestamps
+
+This pattern demonstrates potential structuring of cash withdrawals where:
+- Multiple large cash withdrawals just under suspicious activity reporting thresholds
+- Same account making repeated large withdrawals
+- Common in money laundering where criminals need to convert electronic funds to cash
+- Self-directed transactions indicate ATM or cash withdrawal activity
+"""
 def fraud_scenario_c(transactions, mule_accounts):
     for a in range(5):
         mule = random.choice(mule_accounts)
@@ -56,6 +105,22 @@ def fraud_scenario_c(transactions, mule_accounts):
         ])
     return transactions
 
+"""
+Scenario D simulates a network of mule accounts transferring money between themselves:
+1. High-frequency random transfers:
+   - 10 transactions per mule account
+   - Random amounts between $500-$5,000
+   - Spread across a 1-hour window
+   - Mix of credits and debits
+   - Transfers between different mule accounts
+
+This pattern demonstrates "layering" in money laundering where:
+- Money moves rapidly between multiple mule accounts
+- Random transaction types and amounts to appear chaotic
+- Creates complex transaction paths to obscure money trail
+- Makes it difficult to track the original source/destination of funds
+- Typical of sophisticated money laundering networks using multiple mules
+"""
 def fraud_scenario_d(transactions, mule_accounts):
     for a in range(5):
         mule = random.choice(mule_accounts)
@@ -66,6 +131,28 @@ def fraud_scenario_d(transactions, mule_accounts):
         ])
     return transactions
 
+"""
+Scenario E simulates a salary/income-based money laundering pattern:
+1. Initial "salary-like" deposit:
+   - Single credit between $5,000-$10,000
+   - Coming from a client account
+   - Mimics legitimate income/salary deposit
+
+2. Followed by multiple suspicious transfers:
+   - 3 outgoing transfers per mule
+   - Each transfer between $5,000-$7,000
+   - Sent to other mule accounts
+   - Random timestamps
+
+This pattern demonstrates:
+- Attempt to legitimize funds by mimicking regular salary deposits
+- Immediate distribution of funds to other mules
+- Transfers slightly lower than incoming amount to appear as normal spending
+- Common in employment-based money laundering schemes where:
+  * Mules are given fake employment
+  * Receive seemingly legitimate payments
+  * Then distribute funds through the mule network
+"""
 def fraud_scenario_e(transactions, mule_accounts, client_accounts):
     for mule in mule_accounts:
         income = random.uniform(5000, 10000)
@@ -78,6 +165,29 @@ def fraud_scenario_e(transactions, mule_accounts, client_accounts):
         ])
     return transactions
 
+"""
+Scenario F simulates dormant account takeover fraud:
+1. Large deposit into previously dormant account:
+   - Single credit between $10,000-$50,000
+   - From a client account
+   - Occurs 3-6 hours before withdrawals begin
+   - Targets specifically dormant accounts
+
+2. Followed by structured withdrawals:
+   - 4 equal-sized withdrawals (large amount split evenly)
+   - Spread across a 4-hour window
+   - All going to fraudster's account
+
+This pattern demonstrates account takeover fraud where:
+- Criminals target inactive/dormant accounts
+- Sudden activity after period of dormancy is a red flag
+- Similar structuring pattern to Scenario B, but using compromised accounts
+- Common in cybercrime where:
+  * Hackers gain access to dormant accounts
+  * Use them as temporary money laundering vehicles
+  * Quick in-and-out transactions before detection
+  * Account owner may not notice activity due to inactivity
+"""
 def fraud_scenario_f(transactions, dormant_accounts, fraud_accounts, client_accounts):
     for a in range(5):
         dormant_account = random.choice(dormant_accounts)
@@ -96,6 +206,21 @@ def fraud_scenario_f(transactions, dormant_accounts, fraud_accounts, client_acco
         ])
     return transactions
 
+"""
+Scenario G simulates international money laundering:
+1. Multiple small-to-medium transfers to high-risk jurisdictions:
+   - 5 transactions per mule account
+   - Amounts between $500-$5,000
+   - All debits (money leaving)
+   - Destinations in known high-risk locations (Dubai, Bahrain, Thailand)
+   - Recipients marked as "unknown"
+
+This pattern demonstrates:
+- International money movement to high-risk jurisdictions
+- Multiple smaller transfers to avoid scrutiny
+- Typical of international money laundering or terrorist financing
+- Transactions to regions known for financial opacity
+"""
 def fraud_scenario_g(transactions, mule_accounts):
     for mule in mule_accounts:
         transactions.extend([
@@ -104,6 +229,22 @@ def fraud_scenario_g(transactions, mule_accounts):
         ])
     return transactions
 
+"""
+Scenario H simulates region-specific fraud patterns (Indian context):
+1. Large suspicious transfers from specific fraud hotspots:
+   - 3 transactions per mule account
+   - Large amounts between ₹10,000-₹50,000
+   - All debits to fraud accounts
+   - Originating from known fraud hotspots (Jamtara, Bharatpur, Alwar)
+   - Explicitly flagged as fraudulent
+
+This pattern demonstrates:
+- Region-specific fraud patterns (Indian cybercrime hotspots)
+- Known high-risk geographical areas for financial fraud
+- Larger transaction amounts typical of phone/cyber fraud
+- Direct transfers to fraudster accounts
+- Common in phone scams and cyber fraud originating from these regions
+"""
 def fraud_scenario_h(transactions, mule_accounts, fraud_accounts, region):
     if region == "indian":
         for a in range(5):
