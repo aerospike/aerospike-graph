@@ -413,15 +413,8 @@ if __name__ == '__main__':
         cluster = DriverRemoteConnection("ws://{host}:{port}/gremlin".format(host=HOST, port=PORT), "g")
         g = traversal().with_remote(cluster)
         populate_graph_data(g)
-        # Then, start the Dash web server
 
-        #all_transactions_by_user(g, "Alice")
-        #aggregate_transaction_amounts(g)
-        #transfers_to_user(g, "Alice")
-        #list_user_properties(g, "Bob")
-
-        #get graph elements, then if its not empty render the graph
-        #elements = get_graph_elements(g)
+        # Get Graph elements and Render the graph.
         elements = transactions_between_users(g, "Alice", "Bob")
         if not elements:
             print("No graph elements found. Exiting.")
