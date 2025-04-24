@@ -15,7 +15,6 @@ from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
 
-
 HOST = "localhost"
 PORT = 8182
 
