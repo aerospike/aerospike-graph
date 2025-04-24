@@ -107,6 +107,7 @@ def main():
             .by("amount") \
             .by() \
             .to_list()
+            
         for result in results:
             print(f"Transaction Amount: {result['transaction']}, Receiver Account ID: {result['receiver']}")
 
