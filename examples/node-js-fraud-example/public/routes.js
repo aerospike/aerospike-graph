@@ -1,71 +1,92 @@
+// Handles routing to the different queries
 
+import {updateSelectRefs} from "./state.js";
+import {select1El, select2El} from './state.js';
+import {drawGraph} from "./d3Graph.js"
+
+const userNames = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Heidi", "Ivan", "Judy",];
+
+function userSelectHTML(selectId, defaultValue = "") {
+    return `
+    <select id="${selectId}">
+      ${userNames
+        .map(name => `<option id="${selectId}-option-${name}" value="${name}" ${name === defaultValue ? "selected" : ""}>${name}</option>`)
+        .join("")}
+    </select>
+  `;
+}
+
+// Feeds state values then calls for graph data and parses
+export async function getGraph() {
+    const val1 = select1El?.value;
+    const val2 = select2El?.value;
+    const key = location.hash.slice(1) || 'between';
+
+    const params = new URLSearchParams({
+        routeKey: key,
+        user1: val1,
+        user2: val2
+    });
+    const resp = await fetch(`/graph?${params}`);
+
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const jsonData = await resp.json();
+
+    let {nodes, links: rawLinks} = jsonData;
+    const links = rawLinks.map((l) => ({
+        ...l, label: l.transactionId || l.type || l.label || "",
+    }));
+    return {nodes, links}
+}
+
+// Defines elements of each route to be used
 const routes = {
-    user: {
-        title: 'Welcome Home',
-        render: container => {
+    between: {
+        title: 'Transactions Between Users', render: container => {
             container.innerHTML = `
-        <p>This is the home page.</p>
-        <button id="alert-btn">Click me!</button>
+        ${userSelectHTML("user-select-1", "Alice")}
+        ${userSelectHTML("user-select-2", "Bob")}
       `;
-            document.getElementById('alert-btn')
-                .addEventListener('click', () => alert('Hello from Home!'));
+            updateSelectRefs()
         }
     },
-    between: {
-        title: 'About Us',
-        render: container => {
+    incoming: {
+        title: 'Incoming Transactions to User', render: container => {
             container.innerHTML = `
-        <p>We’re a small startup building cool things.</p>
-        <ul>
-          <li>Vanilla JS</li>
-          <li>No frameworks</li>
-        </ul>
+        ${userSelectHTML("user-select-1", "Bob")}
       `;
+            updateSelectRefs()
+        }
+    },
+    outgoing: {
+        title: 'Outgoing Transactions from User', render: container => {
+            container.innerHTML = `
+        ${userSelectHTML("user-select-1", "Bob")}
+      `;
+            updateSelectRefs()
         }
     },
     home: {
         title: 'Full Graph',
         render: container => {
-            container.innerHTML = `
-        <form id="contact-form">
-          <label>
-            Your Name:
-            <input type="text" name="name" required>
-          </label><br><br>
-          <label>
-            Message:
-            <textarea name="message" required></textarea>
-          </label><br><br>
-          <button type="submit">Send</button>
-        </form>
+            container.innerHTML = ` 
       `;
-            document.getElementById('contact-form')
-                .addEventListener('submit', e => {
-                    e.preventDefault();
-                    const data = new FormData(e.target);
-                    console.log('Contact form submitted:', {
-                        name: data.get('name'),
-                        message: data.get('message')
-                    });
-                    alert('Thanks for reaching out!');
-                });
+            updateSelectRefs()
         }
     }
 };
 
+// Handles content updates based on route and calls to redraw the graph
+async function router() {
+    const hash = location.hash.slice(1) || 'between';
+    const route = routes[hash] || routes.between;
 
-function router() {
-    console.log("Hashing Route")
-    const hash = location.hash.slice(1) || 'home';  // default to “home”
-    const route = routes[hash] || routes.home;
-    
-    // Update the <h1>
-    document.getElementById('page-title').textContent = route.title;
+    document.getElementById('query-title').textContent = route.title;
 
-    // Render the content
-    const contentDiv = document.getElementById('content');
-    contentDiv.innerHTML = '';      // clear out old content
+    const contentDiv = document.getElementById('nav-content');
+    contentDiv.innerHTML = '';
     route.render(contentDiv);
+    await drawGraph()
 }
 
 // Listen for hash changes and initial load
