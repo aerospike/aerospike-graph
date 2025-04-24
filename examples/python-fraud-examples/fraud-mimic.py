@@ -95,7 +95,6 @@ def main():
         print("Data written successfully...")
 
         # Query Example 1: Find all transactions initiated by a specific user
-
         print("\nQUERY 1: Transactions initiated by Alice:")
         results =  g.V().has("User", "name", "Alice") \
             .out("owns") \
