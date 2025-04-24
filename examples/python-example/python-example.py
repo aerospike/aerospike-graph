@@ -3,9 +3,9 @@ from gremlin_python.driver.driver_remote_connection import DriverRemoteConnectio
 
 if __name__ == '__main__':
     # Create GraphTraversalSource to remote server.
-    g = traversal().with_remote(DriverRemoteConnection(
-        'ws://localhost:8182/gremlin', 'g'))
-    
+    remote_conn = DriverRemoteConnection('ws://localhost:8182/gremlin', 'g')
+    g = traversal().with_remote(remote_conn)
+
     # Check if graph is connected
     if g.inject(0).next() != 0:
         print("Failed to connect to graph instance")
@@ -32,3 +32,6 @@ if __name__ == '__main__':
 
     # Delete the vertex
     g.V(v).drop().iterate()
+
+    remote_conn.close()
+    
