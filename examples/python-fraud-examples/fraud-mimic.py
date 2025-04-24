@@ -122,7 +122,6 @@ def main():
         for result in results:
             print(result)
 
-
         print("\nQUERY 3: Users who transferred greater than 100 to Alice:")
         results = g.V().has("User", "name", "Alice") \
             .out("owns") \
