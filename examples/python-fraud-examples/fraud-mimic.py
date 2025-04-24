@@ -12,16 +12,11 @@ HOST = "localhost"
 PORT = 8182
 
 
-# Create a connection to the Aerospike Graph Service
-def create_cluster():
-    return DriverRemoteConnection("ws://localhost:8182/gremlin", "g")
-
-
 def main():
     try:
         # Create a GraphTraversalSource to remote server
         print("Connecting to Aerospike Graph Service...")
-        cluster = create_cluster()
+        cluster = DriverRemoteConnection("ws://{host}:{port}/gremlin".format(host=HOST, port=PORT), "g")
         g = traversal().with_remote(cluster)
 
         # Check if graph is connected
