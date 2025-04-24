@@ -410,7 +410,7 @@ def convert_timestamp_to_long(date):
 if __name__ == '__main__':
     try:
         print("Closing Connection...")
-        cluster = create_cluster()
+        cluster = DriverRemoteConnection("ws://{host}:{port}/gremlin".format(host=HOST, port=PORT), "g")
         g = traversal().with_remote(cluster)
         populate_graph_data(g)
         # Then, start the Dash web server
