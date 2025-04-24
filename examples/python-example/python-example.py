@@ -34,3 +34,4 @@ if __name__ == '__main__':
     g.V(v).drop().iterate()
 
     remote_conn.close()
+    
