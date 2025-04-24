@@ -17,7 +17,7 @@ def load_graph_data(vertices_path, edges_path):
         g.inject(0).next()
         print("Connected to Aerospike Graph successfully!")
     except Exception as e:
-        print(f"Error, failed to connection to Aerospike Graph. Please read the root README.md for help setting up Aeropsike Graph locally. Error message: {str(e)}")
+        print(f"Error, failed to connect to Aerospike Graph. Please read the root README.md for help setting up Aerospike Graph locally. Error message: {str(e)}")
         sys.exit(1)
 
     try:
