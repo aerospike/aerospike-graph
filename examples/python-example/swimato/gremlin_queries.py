@@ -108,11 +108,6 @@ class GremlinClient:
         return result
 
     def get_subgraph(self, object_id, entity_type, depth):
-        # customer_078124
-        # restaurant_000417
-        # driver_000242
-        # order_00217003
-
         max_per_hop: int = 5
         max_paths: int = 150
         label = ""

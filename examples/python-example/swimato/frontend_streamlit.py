@@ -1,6 +1,7 @@
 # frontend_streamlit.py
 import streamlit as st
 import graphviz
+from streamlit_agraph import agraph, Node, Edge, Config
 from gremlin_python.process.traversal import T
 from gremlin_queries import GremlinClient
 
@@ -22,6 +23,7 @@ command = st.sidebar.selectbox("Select Action", [
     "Check Order by ID", "Check Order by Customer", "Assign Driver",
     "Restaurant Ratings", "Get Random", "Customer Orders", "Graph Visualization"
 ])
+
 if command == "Check Order by ID":
     order_id = st.text_input("Order ID")
     if st.button("Run"):
@@ -93,16 +95,32 @@ elif command == "Graph Visualization":
     object_id = st.text_input("ID")
     if st.button("Run"):
         data = client.get_subgraph(object_id, entity_type, depth)
-        if data:
-            dot = graphviz.Digraph()
-            for v in data["vertices"]:
-                dot.node(str(v[T.id]), v[T.label])
-            for e in data["edges"]:
-                dot.edge(str(e.get("out")), str(e.get("in")), label=e.get("label"))
-            st.graphviz_chart(dot, use_container_width=True)
+        if data and len(data.get("vertices", [])) > 0:
+            nodes = [
+                Node(id=str(v[T.id]), label=v[T.label], tooltip=str(v))
+                for v in data["vertices"]
+            ]
+            edges = [
+                Edge(source=str(e.get("out")), target=str(e.get("in")), label=e.get("label"))
+                for e in data["edges"]
+            ]
+            config = Config(
+                width="100%",
+                height=600,
+                directed=True,
+                nodeHighlightBehavior=True,
+                node={
+                    "labelProperty": "label",
+                    "renderLabel": True,
+                    "highlightStrokeColor": "#000",
+                },
+                link={
+                    "labelProperty": "label",
+                    "renderLabel": True,
+                },
+                physics=True,
+            )
+
+            agraph(nodes=nodes, edges=edges, config=config)
         else:
             st.error("vertex cannot be found")
-
-# To run:
-# pip install streamlit gremlinpython
-# streamlit run frontend_streamlit.py
