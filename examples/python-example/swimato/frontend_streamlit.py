@@ -1,6 +1,5 @@
 # frontend_streamlit.py
 import streamlit as st
-import graphviz
 from streamlit_agraph import agraph, Node, Edge, Config
 from gremlin_python.process.traversal import T
 from gremlin_queries import GremlinClient
