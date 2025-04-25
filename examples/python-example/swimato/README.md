@@ -56,6 +56,25 @@ Run the following command to load the data into Aerospike Graph:
 python swimato-load.py
 ```
 
+## GUI
+
+`gremlin_queries.py` and `frontend_streamlit.py` create an interactive web page
+to run graph queries, as well as visualize subgraphs of swimato.
+
+to run
+
+```bash
+pip install streamlit_agraph streamlit
+```
+
+then start the webpage with
+
+```bash
+streamlit run frontend_streamlit.py
+```
+
+you may now test out the features navigated by the dropdown 'Select Action'
+
 ## CLI Interface
 
 The `swimato-cli.py` provides an interactive interface to query the graph database.
