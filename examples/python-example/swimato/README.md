@@ -33,7 +33,7 @@ pip install gremlinpython
 
 ## Data Generation
 
-The `swimato-datasetgen.py` script generates sample food delivery orders with the following entities:
+The `swimato_datasetgen.py` script generates sample food delivery orders with the following entities:
 
 - Customers
 - Restaurants
@@ -45,7 +45,7 @@ The `swimato-datasetgen.py` script generates sample food delivery orders with th
 To generate sample data
 
 ```bash
-python swimato-datasetgen.py
+python swimato_datasetgen.py
 ```
 
 The data will now be created and mounted to the Aerospike Graph container.
@@ -53,7 +53,7 @@ The data will now be created and mounted to the Aerospike Graph container.
 Run the following command to load the data into Aerospike Graph:
 
 ```bash
-python swimato-load.py
+python swimato_load.py
 ```
 
 ## GUI
@@ -77,12 +77,12 @@ you may now test out the features navigated by the dropdown 'Select Action'
 
 ## CLI Interface
 
-The `swimato-cli.py` provides an interactive interface to query the graph database.
+The `swimato_cli.py` provides an interactive interface to query the graph database.
 
 To start the CLI:
 
 ```bash
-python swimato-cli.py
+python swimato_cli.py
 ```
 
 ### Available Commands

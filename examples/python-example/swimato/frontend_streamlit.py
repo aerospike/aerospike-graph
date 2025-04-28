@@ -5,7 +5,6 @@ from gremlin_python.process.traversal import T
 from gremlin_queries import GremlinClient
 
 client = GremlinClient()
-
 st.set_page_config(page_title="Swimato Frontend")
 st.title("Swimato Local App")
 

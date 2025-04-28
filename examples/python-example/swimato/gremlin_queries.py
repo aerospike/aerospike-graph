@@ -12,6 +12,9 @@ class GremlinClient:
         self.connection = DriverRemoteConnection(url, traversal_source)
         self.g = traversal().with_remote(self.connection)
 
+    def clean_db(self):
+        self.g.V().drop().iterate()
+
     def close(self):
         self.connection.close()
 

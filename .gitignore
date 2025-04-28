@@ -5,3 +5,4 @@
 examples/node-js-fraud-example/node_modules
 .idea/
 examples/*/target
+*.csv
