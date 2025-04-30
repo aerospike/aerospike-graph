@@ -7,8 +7,8 @@ customers, restaurants, orders, and drivers.
 
 Swimato consists of two main components:
 
-1. Data Generator (`swimato_datasetgen.py`) - Creates the dataset
-2. GUI Interface (`frontend_streamlit.py`) - Runs the webpage
+1. Data Generator (`swimato_datasetgen.py`) - creates the dataset.
+2. GUI Interface (`frontend_streamlit.py`) - runs the webpage.
 
 ## Prerequisites
 
@@ -20,16 +20,16 @@ Swimato consists of two main components:
 
 1. Create and activate a virtual environment:
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
 
 3. Install dependencies:
 
-```bash
-pip install gremlinpython streamlit_agraph streamlit
-```
+   ```bash
+   pip install gremlinpython streamlit_agraph streamlit
+   ```
 
 ## Data Generation
 
@@ -37,18 +37,18 @@ The `swimato_datasetgen.py` script generates sample food delivery orders with th
 
 - Customers
 - Restaurants
-- Menu Items
+- Menu items
 - Orders
 - Drivers
-- Delivery Addresses
+- Delivery addresses
 
-To generate sample data
+To generate sample data run the following command:
 
 ```bash
 python swimato_datasetgen.py
 ```
 
-The data will now be created and mounted to the Aerospike Graph container.
+The data is created and mounted to the Aerospike Graph container.
 
 Run the following command to load the data into Aerospike Graph:
 
@@ -58,16 +58,16 @@ python swimato_load.py
 
 ## GUI
 
-`gremlin_queries.py` and `frontend_streamlit.py` create an interactive web page
-to run graph queries, as well as visualize subgraphs of swimato.
+The `gremlin_queries.py` and `frontend_streamlit.py` scripts create an interactive web page
+to run graph queries, as well as visualize subgraphs of Swimato.
 
-start the webpage with
+Start the webpage with the following command:
 
 ```bash
 streamlit run frontend_streamlit.py
 ```
 
-you may now test out the features navigated by the dropdown 'Select Action'
+You can now test out the features navigated by the dropdown `Select Action`.
 
 ## Graph Schema
 
@@ -88,5 +88,3 @@ you may now test out the features navigated by the dropdown 'Select Action'
 - DELIVERED_BY (FoodOrder → Driver)
 - DELIVERED_TO (FoodOrder → DeliveryAddress)
 - RATED (CustomerProfile → Restaurant)
-
-

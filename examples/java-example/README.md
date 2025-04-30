@@ -1,11 +1,19 @@
-## To run Java example
+## Java example AGS app
 
-#### Reqs: Java 11+
+### Prerequisites
+
+- Java 11+
+- Aerospike Graph Service
+- Aerospike Database
+
+Navigate to the `java-example` directory and run the following
+shell commands:
 
 ```
 mvn clean install -q
 java -jar target/ags-java-example-1.0-jar-with-dependencies.jar
 ```
+
 Example output:
 ```
 Connected to Aerospike Graph Service; Adding Data...
