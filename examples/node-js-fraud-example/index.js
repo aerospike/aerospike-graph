@@ -9,8 +9,7 @@ import {dirname} from 'path';
 // Gremlin imports
 const {traversal} = gremlin.process.AnonymousTraversalSource;
 const {DriverRemoteConnection} = gremlin.driver;
-const __ = gremlin.process.statics;
-const {t, p, direction} = gremlin.process;
+const {t, direction} = gremlin.process;
 
 // Connection Variables
 const HOST = "localhost";
@@ -38,7 +37,7 @@ app.get("/", (req, res) => {
 
 app.get("/graph", async (req, res) => {
     try {
-        let newGraph = {}
+        let newGraph
 
         const {routeKey = 'between', user1, user2} = req.query;
         switch (routeKey) {
@@ -201,7 +200,7 @@ async function transactionsBetweenUsers(user1, user2) {
 // Returns D3 Formatted elements either outgoing or incoming transactions of user1
 async function userTransactions(user1, dir) {
     const p1 = await g.V().hasLabel("User").has("name", user1).id().next()
-    let paths = [];
+    let paths
     if (dir === "out")
         paths = await g.V(p1.value)
             .outE().otherV().outE()
