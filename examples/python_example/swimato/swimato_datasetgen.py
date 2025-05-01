@@ -55,6 +55,30 @@ edge_headers = {
     "RATED": "~from,~to,~label,rating,comment",
 }
 
+def generate_random_review() -> str:
+    aspects = ["food", "service", "ambiance", "prices", "menu", "desserts", "drinks"]
+    adjectives = [
+        "amazing", "delightful", "mediocre", "lackluster", "outstanding",
+        "overpriced", "cozy", "noisy", "friendly", "unimpressive",
+        "exquisite", "underwhelming", "fantastic", "disappointing"
+    ]
+    intensifiers = ["truly", "incredibly", "surprisingly", "somewhat", "quite", "absolutely"]
+    templates = [
+        "The {aspect} were {adj}.",
+        "I found the {aspect} {adj}.",
+        "Amazing {adj} thanks to the {aspect}",
+        "While the {aspect} was {adj}, everything else was fine.",
+        "Their {aspect} is {adj}—I’ll definitely be back!",
+    ]
+
+    aspect = random.choice(aspects)
+    adj = random.choice(adjectives)
+    # 50% chance to add an intensifier
+    if random.random() < 0.5:
+        adj = f"{random.choice(intensifiers)} {adj}"
+    template = random.choice(templates)
+    return template.format(aspect=aspect, adj=adj)
+
 # Function to create directories and open file handles with header rows.
 def open_file_handles(base_folder, mapping, header_mapping):
     handles = {}
@@ -172,7 +196,7 @@ for i in range(1, n_customers + 1):
         # With a probability, create a RATED edge from customer to restaurant.
         if random.random() < 0.3:
             rating_value = random.randint(1, 5)
-            comment = f"Review for {restaurant_id}"
+            comment = generate_random_review()
             # Edge: RATED row: ~from,~to,~label,rating,comment
             edge_rated = f"{customer_id},{restaurant_id},RATED,{rating_value},{comment}"
             edge_files["RATED"].write(edge_rated + "\n")
