@@ -176,9 +176,11 @@ async function populateGraph() {
 
 // Returns the D3 formatted elements of paths between two given users
 async function transactionsBetweenUsers(user1, user2) {
+    if (user1 === user2) { // edge case where user chooses 2 of the same user
+        return {nodes: [], links: []};
+    }
     const p1 = await g.V().has("User", "name", user2).id().next();
     const p2 = await g.V().has("User", "name", user1).id().next();
-
     const paths = await g
         .V(p1.value)
         .outE()
@@ -191,10 +193,8 @@ async function transactionsBetweenUsers(user1, user2) {
         .path()
         .by(t.id)
         .toList();
-
     const processedPath = await processPaths(paths)
     const {vData, eData} = processedPath
-
     return makeD3Els(vData, eData)
 }
 
@@ -227,6 +227,9 @@ export async function getFullGraph() {
 async function processPaths(paths) {
     const vertexes = new Set(),
         edges = new Set();
+    if(paths.length === 0){
+        return {vData: [], eData: []}
+    }
     paths.forEach(path => {
         let i = 0;
         for (const elem of path.objects) {
