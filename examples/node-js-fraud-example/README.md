@@ -8,22 +8,24 @@
 
 ## Install Dependencies
 
+navigate to this directory in your terminal
+
 ```bash
-# navigate to this directory in your terminal
 npm i
 ```
 
 ## Start the Server
 
+from the `node-js-fraud-example` directory
+
 ```bash
-# must have node for this
 node index.js
 ```
 
 ## Open the Web Page
 
-Once you see ouput Server listening on http://localhost:5000
-Navigate to that address on a web browser
+Once you see output Server listening on http://localhost:5000
+navigate to that address on a web browser
 
 ## Play around with the Graph
 
