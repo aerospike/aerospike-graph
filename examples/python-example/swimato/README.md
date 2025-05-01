@@ -17,21 +17,15 @@ Swimato consists of two main components:
 - Python virtual environment (recommended)
 - Set up Aerospike Graph (see the root directory [README.md](../../../README.md) for more information)
 
-Create and activate a virtual environment:
+
+1. Create and activate a virtual environment:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-On Windows:
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-Install dependencies:
+3. Install dependencies:
 
 ```bash
 pip install gremlinpython streamlit_agraph streamlit
@@ -65,7 +59,7 @@ python swimato_load.py
 ## GUI
 
 `gremlin_queries.py` and `frontend_streamlit.py` create an interactive web page
-to run graph queries, as well as visualize subgraphes of Swimato.
+to run graph queries, as well as visualize subgraphs of swimato.
 
 start the webpage with
 
