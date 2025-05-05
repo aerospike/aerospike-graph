@@ -11,9 +11,23 @@ let height = window.innerHeight;
 let simulation;
 
 export async function drawGraph() {
-    const {nodes, links} = await getGraph();
-    svg.selectAll("*").remove();
 
+    const {nodes = [], links = []} = await getGraph();
+    svg.selectAll("*").remove();
+    console.log(nodes)
+    if (nodes.length === 0) {
+        svg
+            .append("text")
+            .attr("x", width / 2)
+            .attr("y", height / 2)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "24px")
+            .attr("fill", "#666")
+            .text("No transactions found");
+
+        return;
+    }
+    console.log("not empty")
     simulation = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id).distance(120).strength(1))
         .force("charge", d3.forceManyBody().strength(-100))

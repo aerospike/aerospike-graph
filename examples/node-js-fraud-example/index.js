@@ -9,8 +9,7 @@ import {dirname} from 'path';
 // Gremlin imports
 const {traversal} = gremlin.process.AnonymousTraversalSource;
 const {DriverRemoteConnection} = gremlin.driver;
-const __ = gremlin.process.statics;
-const {t, p, direction} = gremlin.process;
+const {t, direction} = gremlin.process;
 
 // Connection Variables
 const HOST = "localhost";
@@ -38,7 +37,7 @@ app.get("/", (req, res) => {
 
 app.get("/graph", async (req, res) => {
     try {
-        let newGraph = {}
+        let newGraph
 
         const {routeKey = 'between', user1, user2} = req.query;
         switch (routeKey) {
@@ -176,9 +175,11 @@ async function populateGraph() {
 
 // Returns the D3 formatted elements of paths between two given users
 async function transactionsBetweenUsers(user1, user2) {
+    if (user1 === user2) { // edge case where user chooses 2 of the same user
+        return {nodes: [], links: []};
+    }
     const p1 = await g.V().has("User", "name", user2).id().next();
     const p2 = await g.V().has("User", "name", user1).id().next();
-
     const paths = await g
         .V(p1.value)
         .outE()
@@ -191,17 +192,15 @@ async function transactionsBetweenUsers(user1, user2) {
         .path()
         .by(t.id)
         .toList();
-
     const processedPath = await processPaths(paths)
     const {vData, eData} = processedPath
-
     return makeD3Els(vData, eData)
 }
 
 // Returns D3 Formatted elements either outgoing or incoming transactions of user1
 async function userTransactions(user1, dir) {
     const p1 = await g.V().hasLabel("User").has("name", user1).id().next()
-    let paths = [];
+    let paths
     if (dir === "out")
         paths = await g.V(p1.value)
             .outE().otherV().outE()
@@ -227,6 +226,9 @@ export async function getFullGraph() {
 async function processPaths(paths) {
     const vertexes = new Set(),
         edges = new Set();
+    if(paths.length === 0){
+        return {vData: [], eData: []}
+    }
     paths.forEach(path => {
         let i = 0;
         for (const elem of path.objects) {
