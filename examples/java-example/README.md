@@ -1,4 +1,4 @@
-## Java example AGS app
+## Java application example
 
 ### Prerequisites
 
