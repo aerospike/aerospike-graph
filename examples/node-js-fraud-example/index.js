@@ -62,7 +62,9 @@ app.get("/graph", async (req, res) => {
     }
 });
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), {
+    dotfiles: 'allow',
+}));
 
 const userNames = [
     "Alice",
@@ -81,8 +83,12 @@ const userNames = [
 async function closeConnection() {
     try {
         console.log("Closing connection...");
-        await g.V().drop().iterate();
-        await drc.close();
+        const check = await g.inject(0).next();
+        if (check.value === 0) {
+            await g.V().drop().iterate();
+            await drc.close();
+            console.log("Graph Cleared")
+        }
         server.close(() => process.exit(0));
         console.log("Connection Closed!");
     } catch (error) {
