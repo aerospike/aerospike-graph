@@ -114,11 +114,11 @@ class GremlinClient:
         max_per_hop: int = 5
         max_paths: int = 150
         label = ""
-        if entity_type == "customer":
+        if entity_type == "customers":
             label = "CustomerProfile"
-        elif entity_type == "restaurant":
+        elif entity_type == "restaurants":
             label = "Restaurant"
-        elif entity_type == "order":
+        elif entity_type == "orders":
             label = "FoodOrder"
         else:
             label = "Driver"

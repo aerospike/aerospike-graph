@@ -20,6 +20,8 @@ def load_graph_data(vertices_path, edges_path):
         sys.exit(1)
 
     try:
+        print("Clearing server data")
+        g.V().drop().iterate()
         print(f"Loading data from:\n\tVertices: {vertices_path}\n\tEdges: {edges_path}")
 
         # Execute the bulk load command
@@ -41,8 +43,8 @@ def load_graph_data(vertices_path, edges_path):
 
 def main():
     # Convert relative paths to absolute paths
-    vertices_path = "/data/python-example/swimato/vertices"
-    edges_path = "/data/python-example/swimato/edges"
+    vertices_path = "/data/python_example/swimato/vertices"
+    edges_path = "/data/python_example/swimato/edges"
 
     # Load data.
     load_graph_data(vertices_path, edges_path)

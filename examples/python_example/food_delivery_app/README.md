@@ -1,13 +1,13 @@
-# Swimato - Food Delivery Graph Demo Application
+# Food Delivery Graph Demo Application
 
 A demo application showcasing graph database capabilities using Aerospike Graph, featuring a food delivery system with
 customers, restaurants, orders, and drivers.
 
 ## Overview
 
-Swimato consists of two main components:
+Food Delivery App consists of two main components:
 
-1. Data Generator (`swimato_datasetgen.py`) - Creates the dataset
+1. Data Generator (`food_delivery_datasetgen.py`) - Creates the dataset
 2. GUI Interface (`frontend_streamlit.py`) - Runs the webpage
 
 ## Prerequisites
@@ -33,7 +33,7 @@ pip install gremlinpython streamlit_agraph streamlit
 
 ## Data Generation
 
-The `swimato_datasetgen.py` script generates sample food delivery orders with the following entities:
+The `food_delivery_datasetgen.py` script generates sample food delivery orders with the following entities:
 
 - Customers
 - Restaurants
@@ -45,7 +45,7 @@ The `swimato_datasetgen.py` script generates sample food delivery orders with th
 To generate sample data
 
 ```bash
-python swimato_datasetgen.py
+python food_delivery_datasetgen.py
 ```
 
 The data will now be created and mounted to the Aerospike Graph container.
@@ -53,13 +53,13 @@ The data will now be created and mounted to the Aerospike Graph container.
 Run the following command to load the data into Aerospike Graph:
 
 ```bash
-python swimato_load.py
+python food_delivery_load.py
 ```
 
 ## GUI
 
 `gremlin_queries.py` and `frontend_streamlit.py` create an interactive web page
-to run graph queries, as well as visualize subgraphs of swimato.
+to run graph queries, as well as visualize subgraphs of the food delivery data.
 
 start the webpage with
 
