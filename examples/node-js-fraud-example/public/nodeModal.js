@@ -7,13 +7,20 @@ const modalH3 = document.getElementById('modal-h3')
 // fill & show
 export function showNodeModal(d) {
     modalH3.textContent = "Node Properties"
-    modalBody.textContent = JSON.stringify(d, null, 2);
+    modalBody.textContent = JSON.stringify(d.data, null, 2);
     modal.classList.remove('hidden');
 }
 
 export function showEdgeModal(d) {
+    const sourceNode = d.source.data
+    const targetNode = d.target.data
+    const edgeData = {
+        data: d.data,
+        sourceNode: sourceNode,
+        targetNode: targetNode,
+    }
     modalH3.textContent = "Edge Properties"
-    modalBody.textContent = JSON.stringify(d, null, 2);
+    modalBody.textContent = JSON.stringify(edgeData, null, 2);
     modal.classList.remove('hidden');
 }
 

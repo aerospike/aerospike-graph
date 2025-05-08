@@ -14,7 +14,7 @@ let simulation;
 export async function drawGraph() {
     const {nodes = [], links = []} = await getGraph();
     svg.selectAll("*").remove();
-
+    console.log(links[0])
     if (nodes.length === 0) {
         svg
             .append("text")
