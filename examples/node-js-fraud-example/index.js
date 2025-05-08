@@ -2,9 +2,8 @@
 
 import gremlin from "gremlin"
 import express from "express"
-import path from "path"
+import path, {dirname} from "path"
 import {fileURLToPath} from 'url';
-import {dirname} from 'path';
 
 // Gremlin imports
 const {traversal} = gremlin.process.AnonymousTraversalSource;
@@ -232,7 +231,7 @@ export async function getFullGraph() {
 async function processPaths(paths) {
     const vertexes = new Set(),
         edges = new Set();
-    if(paths.length === 0){
+    if (paths.length === 0) {
         return {vData: [], eData: []}
     }
     paths.forEach(path => {
@@ -254,18 +253,41 @@ async function processPaths(paths) {
 
 // Given lists of values for nodes and edges, format them for D3 Visualization
 function makeD3Els(vData, eData) {
-    const nodes = vData.map((v) => ({
-        id: v.get(t.id),
-        label: v.get("name") || v.get("accountId") || String(v.get("id")),
-    }));
+    const nodes = vData.map(v => {
+        const props = Object.fromEntries(
+            Array.from(v.entries()).map(([k, val]) => [
+                k,
+                Array.isArray(val) && val.length === 1 ? val[0] : val
+            ])
+        );
+        return {
+            id: props.id,
+            label: props.name || props.accountId || String(props.id),
+            data: props
+        }
+    });
 
-    const links = eData.map((e) => ({
-        source: e.get(direction.out).get(t.id),
-        target: e.get(direction.in).get(t.id),
-        label: e.has("transactionId")
-            ? `$${e.get("transactionId")}->${e.get("amount")}`
-            : e.get(t.label),
-    }));
+    const links = eData.map(e => {
+        const excludedKeys = ['IN', 'OUT'];
+        let props = Object.fromEntries(
+            Array.from(e.entries())
+                .map(([k, val]) => [String(k),
+                    Array.isArray(val) && val.length === 1 ? val[0] : val
+                ])
+        );
+
+        for (const key of excludedKeys) {
+            delete props[key];
+        }
+        return {
+            source: e.get(direction.out).get(t.id),
+            target: e.get(direction.in).get(t.id),
+            label: e.has("transactionId")
+                ? `$${e.get("transactionId")}->${e.get("amount")}`
+                : e.get(t.label),
+            data: props
+        }
+    });
     return {nodes, links}
 }
 
