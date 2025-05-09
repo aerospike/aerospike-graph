@@ -23,7 +23,7 @@ node index.js
 
 ## Open the Web Page
 
-The shell ouput `Server listening on http://localhost:5000`
+The shell output `Server listening on http://localhost:5000`
 indicates that the app is running.
 Navigate to `http://localhost:5000` in a web browser
 to use the app's UI.
