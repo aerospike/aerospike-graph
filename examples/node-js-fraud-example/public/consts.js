@@ -1,4 +1,4 @@
-const userNames = [
+export const userNames = [
     "Alice", "Bob", "Charlie", "Diana", "Eve",
     "Frank", "Grace", "Heidi", "Ivan", "Judy",
     "Karl", "Laura", "Mallory", "Nathan", "Olivia",

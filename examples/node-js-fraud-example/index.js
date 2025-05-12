@@ -1,11 +1,12 @@
 // Holds main server/app and gremlin logic
 
+
 import gremlin from "gremlin"
 import express from "express"
 import path, {dirname} from "path"
 import {fileURLToPath} from 'url';
 
-import {banks, devices, userNames} from "./consts.js";
+import {banks, devices, userNames} from "./public/consts.js";
 import {P} from "gremlin/lib/process/traversal.js";
 
 // Gremlin imports
@@ -27,12 +28,18 @@ const server = app.listen(HTTP_PORT, () =>
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+
 export const drc = new DriverRemoteConnection(
     `ws://${HOST}:${PORT}/gremlin`
 );
 
 export const g = traversal().withRemote(drc);
 
+app.use(express.static(path.join(__dirname, "public"), {
+    dotfiles: 'allow',
+}));
+
+app.get("/ping", (req, res) => res.send("pong"));
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -43,9 +50,6 @@ app.get("/graph", async (req, res) => {
 
         const {routeKey = 'between', user1, user2} = req.query;
         switch (routeKey) {
-            case "home":
-                newGraph = await getFullGraph(g);
-                break;
             case "outgoing":
                 newGraph = await userTransactions(user1, "out");
                 break;
@@ -63,10 +67,6 @@ app.get("/graph", async (req, res) => {
         res.status(500).json({error: e.message});
     }
 });
-
-app.use(express.static(path.join(__dirname, "public"), {
-    dotfiles: 'allow',
-}));
 
 // Shut down server and clear graph data
 async function closeConnection() {
@@ -100,21 +100,20 @@ async function populateGraph() {
         // Create people
         const accountVertices = [];
         const userVertices = await Promise.all(
-            userNames.map((name, i) => {
-                    g
-                        .addV("User")
-                        .property("userId", `U${i + 1}`)
-                        .property("name", name)
-                        .property("age", 25 + randomInt(-6, 45))
-                        .next()
-                }
+            userNames.map((name, i) =>
+                g
+                    .addV("User")
+                    .property("userId", `U${i + 1}`)
+                    .property("name", name)
+                    .property("age", 25 + randomInt(-6, 45))
+                    .next()
             )
         );
 
 
         for (let i = 0; i < userNames.length; i++) {
             const bal = randomInt(500, 50000);
-            const bank = banks[randomInt(0, banks.length() - 1)]
+            const bank = banks[randomInt(0, banks.length - 1)]
             // Insert one Account vertex, then await it before moving on
             const result = await g
                 .addV("Account")
@@ -139,11 +138,11 @@ async function populateGraph() {
 
         // Create random transactions
         for (const account of accountVertices) {
-            const transactions = randomInt(4, 10)
+            const transactions = randomInt(7, 14)
             for (let i = 0; i < transactions; i++) {
-                const toAcc = await g.V().hasLabel("Account").hasId(P.neq(account.id)).sample(1).filter().toList();
-                const from = account[0];
-                const to = toAcc[1];
+                const toAcc = await g.V().hasLabel("Account").hasId(P.neq(account.id)).sample(1).toList();
+                const from = account.value;
+                const to = toAcc[0];
                 const amt = randomInt(1, 1001);
                 const txId = `T${i}`;
                 const type = Math.random() < 0.5 ? "debit" : "credit";
@@ -209,13 +208,6 @@ async function userTransactions(user1, dir) {
     const {vData, eData} = processedPath
 
     return makeD3Els(vData, eData)
-}
-
-// Retrieve D3 formatted elements of full graph
-export async function getFullGraph() {
-    const vData = await g.V().valueMap(true).toList();
-    const eData = await g.E().elementMap().toList();
-    return makeD3Els(vData, eData);
 }
 
 // Given list of paths, produces the list of values for nodes and edges
@@ -292,9 +284,13 @@ function randomInt(min, max) {
 }
 
 (async () => {
-    console.log("Connecting to graph and populating data...");
-    await populateGraph(g)
+    try {
+        console.log("Connecting to graph and populating data...");
+        //await populateGraph(g);
+    } catch (e) {
+        console.error("Failed initial graph population:", e);
+    }
 })();
 
-process.on('SIGINT', closeConnection);  // e.g. Ctrl+C
-process.on('SIGTERM', closeConnection);  // e.g. Docker stop / kill
+//process.on('SIGINT', closeConnection);  // e.g. Ctrl+C
+//process.on('SIGTERM', closeConnection);  // e.g. Docker stop / kill

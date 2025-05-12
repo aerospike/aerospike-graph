@@ -1,18 +1,18 @@
 // Handles routing to the different queries
 
-import {updateSelectRefs} from "./state.js";
-import {select1El, select2El} from './state.js';
+import {select1El, select2El, updateSelectRefs} from "./state.js";
 import {drawGraph} from "./d3Graph.js"
 
 const userNames = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Heidi", "Ivan", "Judy",];
 
-function userSelectHTML(selectId, defaultValue = "") {
+function userSelectHTML(selectId, datalistId, defaultValue = "") {
     return `
-    <select id="${selectId}">
-      ${userNames
-        .map(name => `<option id="${selectId}-option-${name}" value="${name}" ${name === defaultValue ? "selected" : ""}>${name}</option>`)
-        .join("")}
-    </select>
+    <input
+      id="${selectId}"
+      list="userList"
+      placeholder="Type a user name…"
+    />
+    <datalist id="${datalistId}"></datalist>
   `;
 }
 
@@ -44,8 +44,8 @@ const routes = {
     between: {
         title: 'Transactions Between Users', render: container => {
             container.innerHTML = `
-        ${userSelectHTML("user-select-1", "Alice")}
-        ${userSelectHTML("user-select-2", "Bob")}
+        ${userSelectHTML("user-select-1", "data-list-1", "Alice")}
+        ${userSelectHTML("user-select-2", "data-list-2", "Bob")}
       `;
             updateSelectRefs()
         }
