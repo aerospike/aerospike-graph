@@ -9,7 +9,7 @@ function userSelectHTML(selectId, datalistId, defaultValue = "") {
     return `
     <input
       id="${selectId}"
-      list="userList"
+      list="${datalistId}"
       placeholder="Type a user name…"
     />
     <datalist id="${datalistId}"></datalist>
@@ -53,7 +53,7 @@ const routes = {
     incoming: {
         title: 'Incoming Transactions to User', render: container => {
             container.innerHTML = `
-        ${userSelectHTML("user-select-1", "Bob")}
+        ${userSelectHTML("user-select-1", "data-list-1", "Bob")}
       `;
             updateSelectRefs()
         }
@@ -61,19 +61,11 @@ const routes = {
     outgoing: {
         title: 'Outgoing Transactions from User', render: container => {
             container.innerHTML = `
-        ${userSelectHTML("user-select-1", "Bob")}
+        ${userSelectHTML("user-select-1", "data-list-1", "Bob")}
       `;
             updateSelectRefs()
         }
     },
-    home: {
-        title: 'Full Graph',
-        render: container => {
-            container.innerHTML = ` 
-      `;
-            updateSelectRefs()
-        }
-    }
 };
 
 // Handles content updates based on route and calls to redraw the graph
