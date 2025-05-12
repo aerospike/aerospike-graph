@@ -5,6 +5,9 @@ import express from "express"
 import path, {dirname} from "path"
 import {fileURLToPath} from 'url';
 
+import {banks, devices, userNames} from "./consts.js";
+import {P} from "gremlin/lib/process/traversal.js";
+
 // Gremlin imports
 const {traversal} = gremlin.process.AnonymousTraversalSource;
 const {DriverRemoteConnection} = gremlin.driver;
@@ -65,19 +68,6 @@ app.use(express.static(path.join(__dirname, "public"), {
     dotfiles: 'allow',
 }));
 
-const userNames = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "Diana",
-    "Eve",
-    "Frank",
-    "Grace",
-    "Heidi",
-    "Ivan",
-    "Judy",
-];
-
 // Shut down server and clear graph data
 async function closeConnection() {
     try {
@@ -108,29 +98,29 @@ async function populateGraph() {
         }
 
         // Create people
+        const accountVertices = [];
         const userVertices = await Promise.all(
-            userNames.map((name, i) =>
-                g
-                    .addV("User")
-                    .property("userId", `U${i + 1}`)
-                    .property("name", name)
-                    .property("age", 25 + randomInt(-6, 40))
-                    .next()
+            userNames.map((name, i) => {
+                    g
+                        .addV("User")
+                        .property("userId", `U${i + 1}`)
+                        .property("name", name)
+                        .property("age", 25 + randomInt(-6, 45))
+                        .next()
+                }
             )
         );
 
-        // Create Accounts
-        const balances = [
-            5000, 3000, 4000, 2000, 6000, 7000, 8000, 9000, 10000, 11000,
-        ];
-        const accountVertices = [];
-        for (let i = 0; i < balances.length; i++) {
-            const bal = balances[i];
+
+        for (let i = 0; i < userNames.length; i++) {
+            const bal = randomInt(500, 50000);
+            const bank = banks[randomInt(0, banks.length() - 1)]
             // Insert one Account vertex, then await it before moving on
             const result = await g
                 .addV("Account")
                 .property("accountId", `A${i + 1}`)
                 .property("balance", bal)
+                .property("bank", bank)
                 .next();
             accountVertices.push(result);
         }
@@ -142,36 +132,37 @@ async function populateGraph() {
                     .addE("owns")
                     .from_(u.value)
                     .to(accountVertices[i].value)
-                    .property("since", `${2020 + randomInt(-8, 4)}`)
+                    .property("since", `${2020 + randomInt(-15, 5)}`)
                     .iterate()
             )
         );
 
-        const devices = ["mobile", "terminal", "web"];
         // Create random transactions
-        for (let i = 1; i <= 100; i++) {
-            const users = await g.V().hasLabel("Account").sample(2).toList();
-            const from = users[0];
-            const to = users[1];
-            const amt = randomInt(1, 1001);
-            const txId = `T${i}`;
-            const type = Math.random() < 0.5 ? "debit" : "credit";
-            const month = String(randomInt(1, 12)).padStart(2, "0");
-            const day = String(randomInt(1, 28)).padStart(2, "0");
-            const date = `2025-${month}-${day}`;
-            const device = devices[Math.floor(Math.random() * devices.length)];
-            await g
-                .addE("Transaction")
-                .from_(from)
-                .to(to)
-                .property("transactionId", txId)
-                .property("amount", amt)
-                .property("device", device)
-                .property("type", type)
-                .property("timestamp", convertTimestampToLong(date))
-                .iterate();
+        for (const account of accountVertices) {
+            const transactions = randomInt(4, 10)
+            for (let i = 0; i < transactions; i++) {
+                const toAcc = await g.V().hasLabel("Account").hasId(P.neq(account.id)).sample(1).filter().toList();
+                const from = account[0];
+                const to = toAcc[1];
+                const amt = randomInt(1, 1001);
+                const txId = `T${i}`;
+                const type = Math.random() < 0.5 ? "debit" : "credit";
+                const month = String(randomInt(1, 12)).padStart(2, "0");
+                const day = String(randomInt(1, 28)).padStart(2, "0");
+                const date = `2025-${month}-${day}`;
+                const device = devices[randomInt(0, devices.length - 1)];
+                await g
+                    .addE("Transaction")
+                    .from_(from)
+                    .to(to)
+                    .property("transactionId", txId)
+                    .property("amount", amt)
+                    .property("device", device)
+                    .property("type", type)
+                    .property("timestamp", convertTimestampToLong(date))
+                    .iterate();
+            }
         }
-
         console.log("Graph population complete.");
     } catch (error) {
         console.error("Error populating graph:", error);
