@@ -2,6 +2,7 @@
 
 import {select1El, select2El, updateSelectRefs} from "./state.js";
 import {drawGraph} from "./d3Graph.js"
+import {addListeners} from "./autocompleteSelect.js";
 
 const userNames = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Heidi", "Ivan", "Judy",];
 
@@ -78,6 +79,7 @@ async function router() {
     const contentDiv = document.getElementById('nav-content');
     contentDiv.innerHTML = '';
     route.render(contentDiv);
+    addListeners();
     await drawGraph()
 }
 
