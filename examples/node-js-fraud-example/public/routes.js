@@ -4,8 +4,6 @@ import {select1El, select2El, updateSelectRefs} from "./state.js";
 import {drawGraph} from "./d3Graph.js"
 import {addListeners} from "./autocompleteSelect.js";
 
-const userNames = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Heidi", "Ivan", "Judy",];
-
 function userSelectHTML(selectId, datalistId, defaultValue = "") {
     return `
     <input
@@ -38,6 +36,15 @@ export async function getGraph() {
         ...l, label: l.transactionId || l.type || l.label || "",
     }));
     return {nodes, links}
+}
+
+export async function getNames() {
+    const resp = await fetch(`/names`);
+    console.log(resp)
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const jsonData = await resp.json();
+    let {names} = await jsonData;
+    return {names}
 }
 
 // Defines elements of each route to be used

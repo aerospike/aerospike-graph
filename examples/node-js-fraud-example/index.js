@@ -1,6 +1,5 @@
 // Holds main server/app and gremlin logic
 
-
 import gremlin from "gremlin"
 import express from "express"
 import path, {dirname} from "path"
@@ -18,11 +17,11 @@ const {t, direction} = gremlin.process;
 const HOST = "localhost";
 const PORT = 8182;
 const HTTP_PORT = 5000;
-
+let serverFlag = false;
 // Create Express app
 const app = express();
 const server = app.listen(HTTP_PORT, () =>
-    console.log(`Server listening on http://localhost:${HTTP_PORT}`)
+    serverFlag = true
 );
 
 const __filename = fileURLToPath(import.meta.url);
@@ -62,6 +61,16 @@ app.get("/graph", async (req, res) => {
         }
 
         res.json(newGraph);
+    } catch (e) {
+        console.error("Error in /graph:", e);
+        res.status(500).json({error: e.message});
+    }
+});
+
+app.get("/names", async (req, res) => {
+    try {
+        const names = await g.V().hasLabel("User").values("name").toList()
+        res.json({names});
     } catch (e) {
         console.error("Error in /graph:", e);
         res.status(500).json({error: e.message});
@@ -112,7 +121,7 @@ async function populateGraph() {
 
 
         for (let i = 0; i < userNames.length; i++) {
-            const bal = randomInt(500, 50000);
+            const bal = randomInt(500, 10000);
             const bank = banks[randomInt(0, banks.length - 1)]
             // Insert one Account vertex, then await it before moving on
             const result = await g
@@ -137,18 +146,21 @@ async function populateGraph() {
         );
 
         // Create random transactions
+        let transAmt = 0
         for (const account of accountVertices) {
             const transactions = randomInt(7, 14)
             for (let i = 0; i < transactions; i++) {
+                transAmt++
                 const toAcc = await g.V().hasLabel("Account").hasId(P.neq(account.id)).sample(1).toList();
                 const from = account.value;
                 const to = toAcc[0];
                 const amt = randomInt(1, 1001);
                 const txId = `T${i}`;
                 const type = Math.random() < 0.5 ? "debit" : "credit";
+                const year = String(randomInt(2000,2025))
                 const month = String(randomInt(1, 12)).padStart(2, "0");
                 const day = String(randomInt(1, 28)).padStart(2, "0");
-                const date = `2025-${month}-${day}`;
+                const date = `${year}-${month}-${day}`;
                 const device = devices[randomInt(0, devices.length - 1)];
                 await g
                     .addE("Transaction")
@@ -162,12 +174,90 @@ async function populateGraph() {
                     .iterate();
             }
         }
+
+        await generateHubs(userNames.length, transAmt, 2)
         console.log("Graph population complete.");
     } catch (error) {
         console.error("Error populating graph:", error);
     }
 }
 
+async function generateHubs(startingVertIndex, startingTransIndex, hubs){
+    let startVertInd = startingVertIndex
+    let startTransInd = startingTransIndex
+    let hubsArr = []
+    let accountsArr = []
+
+    //Make Hub Vertices
+    for(let i = 0; i<hubs; i++){
+        startVertInd++
+        const bal = randomInt(90000, 250000);
+        const bank = banks[randomInt(0, banks.length - 1)]
+        const vert = await g
+            .addV("User")
+            .property("userId", `U${i + 1}`)
+            .property("name", "ShadyMan" + i)
+            .property("age", 25 + randomInt(-6, 45))
+            .next()
+        accountsArr.push(vert)
+    }
+
+    //Make accounts
+    startVertInd = startingVertIndex
+    for(let i = 0; i<hubs; i++){
+        startVertInd++
+        const bal = randomInt(90000, 250000);
+        const bank = banks[randomInt(0, banks.length - 1)]
+        const vert = await g
+            .addV("Account")
+            .property("accountId", `A${i}`)
+            .property("balance", bal)
+            .property("bank", bank)
+            .next()
+        hubsArr.push(vert)
+    }
+
+    //Connect accounts and Shady people
+    for(let i = 0; i < hubs; i++){
+        await g
+            .addE("owns")
+            .from_(accountsArr[i].value)
+            .to(hubsArr[i].value)
+            .property("since", `${2020 + randomInt(-15, 5)}`)
+            .iterate()
+    }
+
+    //Make Transactions
+    for (let i = 0; i < hubs; i++) {
+        let goonsAmt = randomInt(5, 8)
+        let goons = await g.V().hasLabel("Account").sample(goonsAmt).toList()
+        startTransInd++
+        for (let k = 0; k < goons.length; k++) {
+            const goon = goons[k]
+            for (let j = 0; j < randomInt(9, 25); j++) {
+                const amt = randomInt(5000, 30000);
+                const txId = `T${startTransInd}`;
+                const type = Math.random() < 0.5 ? "debit" : "credit";
+                const year = String(randomInt(2000, 2025))
+                const month = String(randomInt(1, 12)).padStart(2, "0");
+                const day = String(randomInt(1, 28)).padStart(2, "0");
+                const date = `${year}-${month}-${day}`;
+                const device = devices[randomInt(0, devices.length - 1)];
+                await g
+                    .addE("Transaction")
+                    .from_(hubsArr[i].value)
+                    .to(goon)
+                    .property("transactionId", txId)
+                    .property("amount", amt)
+                    .property("device", device)
+                    .property("type", type)
+                    .property("timestamp", convertTimestampToLong(date))
+                    .iterate();
+            }
+        }
+    }
+
+}
 // Returns the D3 formatted elements of paths between two given users
 async function transactionsBetweenUsers(user1, user2) {
     if (user1 === user2) { // edge case where user chooses 2 of the same user
@@ -285,8 +375,11 @@ function randomInt(min, max) {
 
 (async () => {
     try {
-        console.log("Connecting to graph and populating data...");
-        //await populateGraph(g);
+        console.log("Connecting to graph...");
+        await populateGraph(g);
+        if(serverFlag){
+            console.log(`Server listening on http://localhost:${HTTP_PORT}`)
+        }
     } catch (e) {
         console.error("Failed initial graph population:", e);
     }
