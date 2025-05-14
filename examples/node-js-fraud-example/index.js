@@ -12,6 +12,7 @@ import {P} from "gremlin/lib/process/traversal.js";
 const {traversal} = gremlin.process.AnonymousTraversalSource;
 const {DriverRemoteConnection} = gremlin.driver;
 const {t, direction} = gremlin.process;
+const __ = gremlin.process.statics;
 
 // Connection Variables
 const HOST = "localhost";
@@ -52,6 +53,27 @@ app.get("/graph", async (req, res) => {
             case "outgoing":
                 newGraph = await userTransactions(user1, "out");
                 break;
+            case "hub":
+                const fraud = await grabMostFraudulent()
+                const increase = fraud.increase.toFixed(2)
+                const id = (fraud.fraudVert.get("accountId"))
+                const vert  =  await g.V()
+                    .has("accountId",id)
+                    .inE("owns")                             // traverse incoming “owns” edges → User
+                    .otherV()
+                    .hasLabel("User")
+                    .valueMap(true)
+                    .toList()
+                const name = vert[0].get("name")[0]
+                const state = {
+                    userVert: vert,
+                    name: name,
+                    increase,
+                    id
+                }
+                const {nodes, links} = await userTransactions(name, "out");
+                newGraph = {nodes, links, state, stateName: "hub"}
+                break;
             case "incoming":
                 newGraph = await userTransactions(user1, "in");
                 break;
@@ -77,6 +99,15 @@ app.get("/names", async (req, res) => {
     }
 });
 
+app.get("/hub", async (req, res) => {
+    try {
+        const hub = await grabMostFraudulent()
+        res.json({hub});
+    } catch (e) {
+        console.error("Error in /graph:", e);
+        res.status(500).json({error: e.message});
+    }
+});
 // Shut down server and clear graph data
 async function closeConnection() {
     try {
@@ -182,20 +213,18 @@ async function populateGraph() {
     }
 }
 
-async function generateHubs(startingVertIndex, startingTransIndex, hubs){
-    let startVertInd = startingVertIndex
-    let startTransInd = startingTransIndex
+//Creates hub nodes (dense nodes) that could be fraudulent actors
+async function generateHubs(startingVertIndex, startingTransIndex, numHubs){
     let hubsArr = []
     let accountsArr = []
 
     //Make Hub Vertices
-    for(let i = 0; i<hubs; i++){
-        startVertInd++
+    for(let i = 0; i<numHubs; i++){
         const bal = randomInt(90000, 250000);
         const bank = banks[randomInt(0, banks.length - 1)]
         const vert = await g
             .addV("User")
-            .property("userId", `U${i + 1}`)
+            .property("userId", `U${startingVertIndex + i + 1}`)
             .property("name", "ShadyMan" + i)
             .property("age", 25 + randomInt(-6, 45))
             .next()
@@ -203,14 +232,12 @@ async function generateHubs(startingVertIndex, startingTransIndex, hubs){
     }
 
     //Make accounts
-    startVertInd = startingVertIndex
-    for(let i = 0; i<hubs; i++){
-        startVertInd++
+    for(let i = 0; i<numHubs; i++){
         const bal = randomInt(90000, 250000);
         const bank = banks[randomInt(0, banks.length - 1)]
         const vert = await g
             .addV("Account")
-            .property("accountId", `A${i}`)
+            .property("accountId", `A${startingVertIndex + i + 1}`)
             .property("balance", bal)
             .property("bank", bank)
             .next()
@@ -218,7 +245,7 @@ async function generateHubs(startingVertIndex, startingTransIndex, hubs){
     }
 
     //Connect accounts and Shady people
-    for(let i = 0; i < hubs; i++){
+    for(let i = 0; i < numHubs; i++){
         await g
             .addE("owns")
             .from_(accountsArr[i].value)
@@ -228,15 +255,14 @@ async function generateHubs(startingVertIndex, startingTransIndex, hubs){
     }
 
     //Make Transactions
-    for (let i = 0; i < hubs; i++) {
+    for (let i = 0; i < numHubs; i++) {
         let goonsAmt = randomInt(5, 8)
         let goons = await g.V().hasLabel("Account").sample(goonsAmt).toList()
-        startTransInd++
         for (let k = 0; k < goons.length; k++) {
             const goon = goons[k]
             for (let j = 0; j < randomInt(9, 25); j++) {
                 const amt = randomInt(5000, 30000);
-                const txId = `T${startTransInd}`;
+                const txId = `T${startingTransIndex + i + 1}`;
                 const type = Math.random() < 0.5 ? "debit" : "credit";
                 const year = String(randomInt(2000, 2025))
                 const month = String(randomInt(1, 12)).padStart(2, "0");
@@ -257,6 +283,49 @@ async function generateHubs(startingVertIndex, startingTransIndex, hubs){
         }
     }
 
+}
+
+//Returns the given top amount of accounts in terms of outgoing
+// null amount gives whole list of vertices
+async function poorMansPageRank(amount = null){
+    //const accounts = g.V().hasLabel("Account").toList();
+    const lists = await g.V()
+        .hasLabel("Account")
+        .project("accountId","totalAmount") //make map with keys
+        .by("accountId") //fill accountId bin with vertexes accountId prop
+        .by(__.coalesce( //run anonymous traversal and grab transactionEdges
+            __.outE("Transaction").values("amount").sum(),
+            __.constant(0)//default to 0
+        ))
+        .toList();
+
+    lists.sort((a, b) => {
+        const totalA = a.get("totalAmount")
+        const totalB = b.get("totalAmount")
+        return totalB - totalA
+    })
+    if(amount){
+        return lists.slice(0, amount)
+    }
+    return lists;
+}
+
+async function grabMostFraudulent(){
+    const lists = await poorMansPageRank(null)
+    const amounts = lists.map(item => item.get("totalAmount"));
+
+    const n  = lists.length;
+    const q3 = amounts[Math.floor(n * 0.25)];
+    const q1 = amounts[Math.ceil(n * 0.75)];
+    const iqr = q3 - q1;
+
+    const lowerFence = q1 - 1.5 * iqr;
+    const upperFence = q3 + 1.5 * iqr;
+
+    const filtered = amounts.filter(x => x >= lowerFence && x <= upperFence);
+    const mean =
+        filtered.reduce((sum, x) => sum + x, 0) / filtered.length;
+    return {fraudVert: lists[0], increase: amounts[0]/mean}
 }
 // Returns the D3 formatted elements of paths between two given users
 async function transactionsBetweenUsers(user1, user2) {
@@ -377,6 +446,7 @@ function randomInt(min, max) {
     try {
         console.log("Connecting to graph...");
         await populateGraph(g);
+
         if(serverFlag){
             console.log(`Server listening on http://localhost:${HTTP_PORT}`)
         }
