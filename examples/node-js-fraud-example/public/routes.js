@@ -3,15 +3,8 @@
 import {select1El, select2El, updateSelectRefs} from "./state.js";
 import {drawGraph} from "./d3Graph.js"
 import {addListeners} from "./autocompleteSelect.js";
+import {getState, setState} from "./state.js";
 
-let state = {}
-
-export function setState(stateName, props){
-    state = {stateName, props}
-}
-function getState(){
-    return state
-}
 function userSelectHTML(selectId, datalistId, defaultValue = "") {
     return `
     <input
@@ -49,6 +42,7 @@ export async function getGraph() {
     return {nodes, links}
 }
 
+// Produces list of all usernames in the database
 export async function getNames() {
     const resp = await fetch(`/names`);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);

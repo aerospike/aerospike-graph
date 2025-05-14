@@ -24,3 +24,8 @@ export const userNames = [
 export const banks = ["RBC", "BMO", "TD", "Island Savings", "Orange", "FWCU"]
 
 export const devices = ["mobile", "terminal", "web"];
+
+// Connection Variables
+export const HOST = "localhost";
+export const PORT = 8182;
+export const HTTP_PORT = 5000;
