@@ -1,16 +1,18 @@
 // Handles routing to the different queries
 
-import {select1El, select2El, updateSelectRefs} from "./state.js";
+import {getSelect1Val, select1El, select2El, updateSelectRefs} from "./state.js";
 import {drawGraph} from "./d3Graph.js"
 import {addListeners} from "./autocompleteSelect.js";
 import {getState, setState} from "./state.js";
 
-function userSelectHTML(selectId, datalistId, defaultValue = "") {
+function userSelectHTML(num) {
+    const selectId = "user-select-" + num
+    const datalistId = "data-list-" + num
     return `
     <input
       id="${selectId}"
       list="${datalistId}"
-      placeholder="Type a user name…"
+      placeholder="Search for User ${selectId}"
     />
     <datalist id="${datalistId}"></datalist>
   `;
@@ -33,7 +35,6 @@ export async function getGraph() {
     const jsonData = await resp.json();
     let {nodes, links: rawLinks, state, stateName} = jsonData;
     if(state){
-        console.log(state)
         setState(stateName, state)
     }
     const links = rawLinks.map((l) => ({
@@ -44,7 +45,12 @@ export async function getGraph() {
 
 // Produces list of all usernames in the database
 export async function getNames() {
-    const resp = await fetch(`/names`);
+    const name = getSelect1Val()
+    const params = new URLSearchParams({
+            name: name
+        }
+    )
+    const resp = await fetch(`/names?${params}`);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const jsonData = await resp.json();
     let {names} = await jsonData;
@@ -56,8 +62,8 @@ const routes = {
     between: {
         title: 'Transactions Between Users', render: container => {
             container.innerHTML = `
-        ${userSelectHTML("user-select-1", "data-list-1", "Alice")}
-        ${userSelectHTML("user-select-2", "data-list-2", "Bob")}
+        ${userSelectHTML(1)}
+        ${userSelectHTML(2)}
       `;
             updateSelectRefs()
         }
@@ -65,7 +71,7 @@ const routes = {
     incoming: {
         title: 'Incoming Transactions to User', render: container => {
             container.innerHTML = `
-        ${userSelectHTML("user-select-1", "data-list-1", "Bob")}
+        ${userSelectHTML(1)}
       `;
             updateSelectRefs()
         }
@@ -73,7 +79,7 @@ const routes = {
     outgoing: {
         title: 'Outgoing Transactions from User', render: container => {
             container.innerHTML = `
-        ${userSelectHTML("user-select-1", "data-list-1", "Bob")}
+        ${userSelectHTML(1)}
       `;
             updateSelectRefs()
         }
@@ -101,7 +107,6 @@ async function router() {
     if (hash === "hub") {
         const hubName = document.getElementById("hub-content");
         const {props} = getState()
-        console.log(props)
         hubName.innerHTML = `
             <div id="hub-content">
               <h3>Possible Fraud Detected - ${props.name}</h3>

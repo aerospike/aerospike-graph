@@ -5,7 +5,7 @@ export async function addListeners() {
     const list1 = document.getElementById("data-list-1");
     const input2 = document.getElementById("user-select-2");
     const list2 = document.getElementById("data-list-2");
-    const {names} = await getNames()
+    const {names} = await getNames("")
 
     if (input1 && list1) {
         input1.addEventListener("focus", () => {
@@ -19,9 +19,11 @@ export async function addListeners() {
         })
         input1.addEventListener("input", () => {
             const q = input1.value.toLowerCase();
-
+            const empty = q === "" || q === undefined
+            if(input2){
+                input2.disabled = empty;
+            }
             list1.innerHTML = "";
-
             names
                 .filter(name => name.toLowerCase().includes(q))
                 .forEach(name => {
@@ -32,29 +34,33 @@ export async function addListeners() {
         });
     }
     if(input2 && list2){
-        console.log("WE ARE IN")
+        input2.disabled = true
         input2.addEventListener("focus", () => {
-            console.log("WE ARE DOING")
-            list2.innerHTML = "";
-            names
-                .forEach(name => {
+            getNames(input1.value).then(namesWrapper => {
+                const { names } = namesWrapper
+                list2.innerHTML = "";
+                names.forEach(name => {
                     const opt = document.createElement("option");
                     opt.value = name;
                     list2.append(opt);
                 });
+            }).catch(err => {
+                console.error("Failed to load names:", err);
+            });
         })
         input2.addEventListener("input", () => {
-            const q = input2.value.toLowerCase();
-
-            list2.innerHTML = "";
-
-            names
-                .filter(name => name.toLowerCase().includes(q))
-                .forEach(name => {
-                    const opt = document.createElement("option");
-                    opt.value = name;
-                    list2.append(opt);
-                });
+            getNames(input1.value).then(namesWrapper => {
+                const { names } = namesWrapper
+                const q = input2.value.toLowerCase();
+                list2.innerHTML = "";
+                names
+                    .filter(name => name.toLowerCase().includes(q))
+                    .forEach(name => {
+                        const opt = document.createElement("option");
+                        opt.value = name;
+                        list2.append(opt);
+                    })
+            })
         });
     }
 }

@@ -139,8 +139,7 @@ async function generateHubs(startingVertIndex, startingTransIndex, numHubs) {
     for (let i = 0; i < numHubs; i++) {
         let goonsAmt = randomInt(5, 8)
         let goons = await g.V().hasLabel("Account").sample(goonsAmt).toList()
-        for (let k = 0; k < goons.length; k++) {
-            const goon = goons[k]
+        for (const goon in goons) {
             for (let j = 0; j < randomInt(9, 25); j++) {
                 const amt = randomInt(5000, 30000);
                 const txId = `T${startingTransIndex + i + 1}`;
@@ -168,7 +167,7 @@ async function generateHubs(startingVertIndex, startingTransIndex, numHubs) {
 
 //Returns the given top amount of accounts in terms of outgoing
 // null amount gives whole list of vertices
-export async function poorMansPageRank(amount = null) {
+export async function rankMostTraffic(amount = null) {
     const lists = await g.V()
         .hasLabel("Account")
         .project("accountId", "totalAmount", "ownerVert") //make map with keys
@@ -193,8 +192,15 @@ export async function poorMansPageRank(amount = null) {
     return lists;
 }
 
-export async function getAllNames() {
-    return await g.V().hasLabel("User").values("name").toList()
+export async function getAllNames(name) {
+    if(name === ""){
+        return await g.V().hasLabel("User").values("name").toList()
+    }else{ // Grab all names of people affiliated with user
+        return await g.V().has("User", "name", name)
+            .out("owns").bothE("Transaction")
+            .otherV().in_("owns").hasLabel("User")
+            .values("name").dedup().toList()
+    }
 }
 
 // Given list of paths, produces the list of values for nodes and edges

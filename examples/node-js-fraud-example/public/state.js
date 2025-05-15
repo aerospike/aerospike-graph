@@ -9,6 +9,16 @@ export function updateSelectRefs() {
     select2El = document.getElementById('user-select-2');
 }
 
+export function getSelect1Val() {
+    select1El = document.getElementById('user-select-1');
+    let val = ""
+    if(select1El){
+        val = select1El.value
+    }
+    return val;
+
+}
+
 export function setState(stateName, props){
     state = {stateName, props}
 }

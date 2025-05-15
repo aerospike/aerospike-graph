@@ -5,7 +5,7 @@ import {fileURLToPath} from 'url';
 import {HTTP_PORT} from "./public/consts.js";
 
 // Function Imports
-import {populateGraph, userTransactions, transactionsBetweenUsers, getAllNames, poorMansPageRank} from "./gremlin.js";
+import {populateGraph, userTransactions, transactionsBetweenUsers, getAllNames, rankMostTraffic} from "./gremlin.js";
 
 // Connection Variables
 let serverFlag = false;
@@ -67,7 +67,8 @@ app.get("/graph", async (req, res) => {
 
 app.get("/names", async (req, res) => {
     try {
-        const names = await getAllNames()
+        const {name} = req.query;
+        const names = await getAllNames(name)
         res.json({names});
     } catch (e) {
         console.error("Error in /graph:", e);
@@ -86,7 +87,7 @@ app.get("/hub", async (req, res) => {
 });
 
 async function grabMostFraudulent(){
-    const lists = await poorMansPageRank(null)
+    const lists = await rankMostTraffic(null)
     const amounts = lists.map(item => item.get("totalAmount"));
 
     const n  = lists.length;
