@@ -17,14 +17,14 @@ export const g = traversal().withRemote(drc);
 // Populates gremlin server with transaction data
 export async function populateGraph() {
     try {
-        await g.V().drop().iterate(); // Clear the graph before populating
         console.log("Populating graph...");
-
         const check = await g.inject(0).next();
         if (check.value !== 0) {
             console.error("Failed to connect to Gremlin server");
             return;
         }
+
+        await g.V().drop().iterate(); // Clear the graph before populating
 
         // Create people
         const accountVertices = [];
