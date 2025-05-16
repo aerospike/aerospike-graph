@@ -139,7 +139,7 @@ async function generateHubs(startingVertIndex, startingTransIndex, numHubs) {
     for (let i = 0; i < numHubs; i++) {
         let goonsAmt = randomInt(5, 8)
         let goons = await g.V().hasLabel("Account").sample(goonsAmt).toList()
-        for (const goon in goons) {
+        for (const goon of goons) {
             for (let j = 0; j < randomInt(9, 25); j++) {
                 const amt = randomInt(5000, 30000);
                 const txId = `T${startingTransIndex + i + 1}`;
