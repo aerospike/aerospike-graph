@@ -14,5 +14,5 @@ python3 -m pip install gremlinpython async_timeout
 
 Execute the python example
 ```
-python3 ./python-example.py 
+python3 ./python_example.py 
 ```
