@@ -43,8 +43,8 @@ def load_graph_data(vertices_path, edges_path):
 
 def main():
     # Convert relative paths to absolute paths
-    vertices_path = "/data/python_example/swimato/vertices"
-    edges_path = "/data/python_example/swimato/edges"
+    vertices_path = "/data/python_example/food_delivery_app/vertices"
+    edges_path = "/data/python_example/food_delivery_app/edges"
 
     # Load data.
     load_graph_data(vertices_path, edges_path)
