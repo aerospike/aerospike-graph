@@ -78,7 +78,7 @@ public class Main {
 
         // Add Transactions
         final Random random = new Random();
-        for (final int i = 1; i <= 50; i++) {
+        for (int i = 1; i <= 50; i++) {
             final Vertex fromAccount = g.V().hasLabel("Account").sample(1).next();
             final Vertex toAccount = g.V().hasLabel("Account").sample(1).next();
             final int amount = random.nextInt(1000) + 1; // Random amount between 1 and 1000
