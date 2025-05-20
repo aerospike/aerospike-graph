@@ -128,8 +128,6 @@ async function closeConnection() {
 async function populateGraph() {
     try {
         // Clear existing vertices before populating
-        // g.V() selects all vertices
-        // drop() removes them from the graph
         await g.V().drop().iterate();
 
         // Verify connection by injecting test value
