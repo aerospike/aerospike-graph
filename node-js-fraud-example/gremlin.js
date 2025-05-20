@@ -193,9 +193,9 @@ export async function rankMostTraffic(amount = null) {
 }
 
 export async function getAllNames(name) {
-    if(name === ""){
+    if (name === "") {
         return await g.V().hasLabel("User").values("name").toList()
-    }else{ // Grab all names of people affiliated with user
+    } else { // Grab all names of people affiliated with user
         return await g.V().has("User", "name", name)
             .out("owns").bothE("Transaction")
             .otherV().in_("owns").hasLabel("User")
