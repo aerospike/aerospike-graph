@@ -1,14 +1,15 @@
 ## Prerequisites
 
+
 1. **Node.js 14+** (for the Express app)
 
 2. **Docker** (for Aerospike Graph)
 
----
 
 ## Install Dependencies
 
-Navigate to the `node-js-fraud-example` directory and run
+
+Navigate to the `node-js-example` directory and run
 the following command:
 
 ```bash
@@ -48,6 +49,7 @@ then see all transactions they sent to other users.
 Select a single user at the top right of the web page.
 then see all transactions other users sent to them.
 
-### Full Graph
+### Fraud Detection
 
-No input is required for this query. It displays the full graph.
+Queries the database and ranks users by most to least likely
+to be fraudulent. Displays the graph of the most likely node.

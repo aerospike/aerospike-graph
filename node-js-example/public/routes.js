@@ -1,18 +1,20 @@
 // Handles routing to the different queries
 
-import {updateSelectRefs} from "./state.js";
-import {select1El, select2El} from './state.js';
+import {getSelect1Val, select1El, select2El, updateSelectRefs} from "./state.js";
 import {drawGraph} from "./d3Graph.js"
+import {addListeners} from "./autocompleteSelect.js";
+import {getState, setState} from "./state.js";
 
-const userNames = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Heidi", "Ivan", "Judy",];
-
-function userSelectHTML(selectId, defaultValue = "") {
+function userSelectHTML(num) {
+    const selectId = "user-select-" + num
+    const datalistId = "data-list-" + num
     return `
-    <select id="${selectId}">
-      ${userNames
-        .map(name => `<option id="${selectId}-option-${name}" value="${name}" ${name === defaultValue ? "selected" : ""}>${name}</option>`)
-        .join("")}
-    </select>
+    <input
+      id="${selectId}"
+      list="${datalistId}"
+      placeholder="Search for User ${selectId}"
+    />
+    <datalist id="${datalistId}"></datalist>
   `;
 }
 
@@ -31,12 +33,29 @@ export async function getGraph() {
 
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const jsonData = await resp.json();
+    let {nodes, links: rawLinks, state, stateName} = jsonData;
+    if(state){
+        setState(stateName, state)
+    }
 
-    let {nodes, links: rawLinks} = jsonData;
     const links = rawLinks.map((l) => ({
         ...l, label: l.transactionId || l.type || l.label || "",
     }));
     return {nodes, links}
+}
+
+// Produces list of all usernames in the database
+export async function getNames() {
+    const name = getSelect1Val()
+    const params = new URLSearchParams({
+            name: name
+        }
+    )
+    const resp = await fetch(`/names?${params}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const jsonData = await resp.json();
+    let {names} = await jsonData;
+    return {names}
 }
 
 // Defines elements of each route to be used
@@ -44,8 +63,8 @@ const routes = {
     between: {
         title: 'Transactions Between Users', render: container => {
             container.innerHTML = `
-        ${userSelectHTML("user-select-1", "Alice")}
-        ${userSelectHTML("user-select-2", "Bob")}
+        ${userSelectHTML(1)}
+        ${userSelectHTML(2)}
       `;
             updateSelectRefs()
         }
@@ -53,7 +72,7 @@ const routes = {
     incoming: {
         title: 'Incoming Transactions to User', render: container => {
             container.innerHTML = `
-        ${userSelectHTML("user-select-1", "Bob")}
+        ${userSelectHTML(1)}
       `;
             updateSelectRefs()
         }
@@ -61,17 +80,17 @@ const routes = {
     outgoing: {
         title: 'Outgoing Transactions from User', render: container => {
             container.innerHTML = `
-        ${userSelectHTML("user-select-1", "Bob")}
+        ${userSelectHTML(1)}
       `;
             updateSelectRefs()
         }
     },
-    home: {
-        title: 'Full Graph',
-        render: container => {
-            container.innerHTML = ` 
+    hub: {
+        title: '', render: container => {
+            container.innerHTML = `
+        <div id="hub-content"><h3>Detecting Fraud... </h3></div>
       `;
-            updateSelectRefs()
+
         }
     }
 };
@@ -85,8 +104,19 @@ async function router() {
 
     const contentDiv = document.getElementById('nav-content');
     contentDiv.innerHTML = '';
-    route.render(contentDiv);
+    await route.render(contentDiv);
+    addListeners();
     await drawGraph()
+    if (hash === "hub") {
+        const hubName = document.getElementById("hub-content");
+        const {props} = getState()
+        hubName.innerHTML = `
+            <div id="hub-content">
+              <h3>Possible Fraud Detected - ${props.name}</h3>
+              <h4>Outgoing Transactions are ${props.increase}x the average</h4>
+            </div>
+         `;
+    }
 }
 
 // Listen for hash changes and initial load

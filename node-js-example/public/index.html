@@ -4,8 +4,10 @@
     <meta charset="UTF-8"/>
     <title>Aerospike Graph Visualization</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="./d3Graph.js" type="module"></script>
-    <script src="/routes.js" type="module"></script>
+    <script type="module" src="d3Graph.js"></script>
+    <script type="module" src="routes.js"></script>
+    <script type="module" src="autocompleteSelect.js" defer></script>
+
     <style>
         body {
             margin: 0;
@@ -157,6 +159,7 @@
             cursor: pointer;
             font-size: 1.2em;
         }
+
     </style>
 </head>
 <body>
@@ -182,7 +185,7 @@
         <li><a href="#between">Transactions Between Users</a></li>
         <li><a href="#outgoing">Outgoing Transactions from User</a></li>
         <li><a href="#incoming">Incoming Transactions from User</a></li>
-        <li><a href="#home">Full Graph</a></li>
+        <li><a href="#hub">Fraud Detection</a></li>
     </ul>
 </div>
 
