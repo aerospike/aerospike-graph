@@ -37,6 +37,7 @@ export async function getGraph() {
     if(state){
         setState(stateName, state)
     }
+
     const links = rawLinks.map((l) => ({
         ...l, label: l.transactionId || l.type || l.label || "",
     }));
@@ -89,6 +90,7 @@ const routes = {
             container.innerHTML = `
         <div id="hub-content"><h3>Detecting Fraud... </h3></div>
       `;
+
         }
     }
 };
@@ -97,6 +99,7 @@ const routes = {
 async function router() {
     const hash = location.hash.slice(1) || 'between';
     const route = routes[hash] || routes.between;
+
     document.getElementById('query-title').textContent = route.title;
 
     const contentDiv = document.getElementById('nav-content');
