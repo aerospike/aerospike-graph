@@ -1,5 +1,5 @@
 /**
- * Fraud Detection Example using Gremlin Graph Database
+ * Node JS Example using Aerospike Graph
  * This file implements a server that manages a graph database of users, accounts, and transactions
  * to demonstrate fraud detection patterns using graph traversal.
  */
