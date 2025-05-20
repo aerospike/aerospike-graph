@@ -1,33 +1,48 @@
 import gremlin from "gremlin"
 
-// Gremlin imports
+// Import specific Gremlin components for graph traversal and connection
 const {traversal} = gremlin.process.AnonymousTraversalSource;
 const {DriverRemoteConnection} = gremlin.driver;
 const {t, direction} = gremlin.process;
 const __ = gremlin.process.statics;
 import {P} from "gremlin/lib/process/traversal.js";
 
+// Import required functions and data
 import {banks, devices, userNames, HOST, PORT} from "./public/consts.js";
 import {randomInt, convertTimestampToLong} from "./index.js";
 
+// Initialize Gremlin connection and graph traversal source
+// This creates the main graph traversal object used throughout the application
 export const drc = new DriverRemoteConnection(`ws://${HOST}:${PORT}/gremlin`);
-
 export const g = traversal().withRemote(drc);
 
-// Populates gremlin server with transaction data
+/**
+ * Initializes the graph database with sample data
+ * Creates:
+ * - User vertices with properties (userId, name, age)
+ * - Account vertices with properties (accountId, balance)
+ * - Ownership edges between Users and Accounts
+ * - Random Transaction edges between Accounts
+ * - Fraudulent Hub Nodes
+ */
 export async function populateGraph() {
     try {
         console.log("Populating graph...");
+
+        // Verify connection by injecting test value
+        // Returns 0 if connection is successful
         const check = await g.inject(0).next();
         if (check.value !== 0) {
             console.error("Failed to connect to Gremlin server");
             return;
         }
 
-        await g.V().drop().iterate(); // Clear the graph before populating
+        // Clear existing vertices before populating
+        await g.V().drop().iterate();
 
-        // Create people
-        const accountVertices = [];
+        // Create user vertices with properties
+        // g.addV("User") - creates vertex with "User" label
+        // property() - adds properties to the vertex
         const userVertices = await Promise.all(userNames.map((name, i) => g
             .addV("User")
             .property("userId", `U${i + 1}`)
@@ -35,7 +50,10 @@ export async function populateGraph() {
             .property("age", 25 + randomInt(-6, 45))
             .next()));
 
-
+        // Create account vertices
+        // g.addV("Account") - creates vertex with "Account" label
+        // property() - adds accountId and balance properties
+        const accountVertices = [];
         for (let i = 0; i < userNames.length; i++) {
             const bal = randomInt(500, 10000);
             const bank = banks[randomInt(0, banks.length - 1)]
@@ -49,7 +67,10 @@ export async function populateGraph() {
             accountVertices.push(result);
         }
 
-        // Link Users to Accounts
+        // Create edges between users and accounts
+        // addE("owns") - creates edge with "owns" label
+        // from_() - specifies source vertex
+        // to() - specifies target vertex
         await Promise.all(userVertices.map((u, i) => g
             .addE("owns")
             .from_(u.value)
@@ -94,12 +115,19 @@ export async function populateGraph() {
     }
 }
 
-//Creates hub nodes (dense nodes) that could be fraudulent actors
+/**
+ * Creates given number of fraudulent Hub nodes in graph database
+ * @param {Integer} startingVertIndex - Index where new vertexes should be added starting from
+ * @param {Integer} startingTransIndex - Index where new transaction edges should be added starting from
+ * @param {Integer} numHubs - Number of Hubs to be created
+ */
 async function generateHubs(startingVertIndex, startingTransIndex, numHubs) {
     let hubsArr = []
     let accountsArr = []
 
-    //Make Hub Vertices
+    // Create user vertices with properties
+    // g.addV("User") - creates vertex with "User" label
+    // property() - adds properties to the vertex
     for (let i = 0; i < numHubs; i++) {
         const bal = randomInt(90000, 250000);
         const bank = banks[randomInt(0, banks.length - 1)]
@@ -112,7 +140,9 @@ async function generateHubs(startingVertIndex, startingTransIndex, numHubs) {
         accountsArr.push(vert)
     }
 
-    //Make accounts
+    // Create account vertices
+    // g.addV("Account") - creates vertex with "Account" label
+    // property() - adds accountId and balance properties
     for (let i = 0; i < numHubs; i++) {
         const bal = randomInt(90000, 250000);
         const bank = banks[randomInt(0, banks.length - 1)]
@@ -125,7 +155,10 @@ async function generateHubs(startingVertIndex, startingTransIndex, numHubs) {
         hubsArr.push(vert)
     }
 
-    //Connect accounts and Shady people
+    // Create edges between users and accounts
+    // addE("owns") - creates edge with "owns" label
+    // from_() - specifies source vertex
+    // to() - specifies target vertex
     for (let i = 0; i < numHubs; i++) {
         await g
             .addE("owns")
@@ -135,7 +168,7 @@ async function generateHubs(startingVertIndex, startingTransIndex, numHubs) {
             .iterate()
     }
 
-    //Make Transactions
+    //Make Random Large amount of Transactions
     for (let i = 0; i < numHubs; i++) {
         let goonsAmt = randomInt(5, 8)
         let goons = await g.V().hasLabel("Account").sample(goonsAmt).toList()
@@ -162,11 +195,13 @@ async function generateHubs(startingVertIndex, startingTransIndex, numHubs) {
             }
         }
     }
-
 }
 
-//Returns the given top amount of accounts in terms of outgoing
-// null amount gives whole list of vertices
+/**
+ * Queries all accounts in database and ranks them based on total outgoing transaction amount
+ * @param {Integer} amount - top amount of accounts from ranking returned, if null returns whole array
+ * @returns {Array} - Array of objects containing accountID, totalAmount of outgoing transactions in $, and reference to owner Vertex
+ */
 export async function rankMostTraffic(amount = null) {
     const lists = await g.V()
         .hasLabel("Account")
@@ -192,6 +227,11 @@ export async function rankMostTraffic(amount = null) {
     return lists;
 }
 
+/**
+ * Queries for either all usernames in graph database, or all usernames of users that interact with given username
+ * @param {String} name - "" or username in database
+ * @returns {Array} - List of username strings
+ */
 export async function getAllNames(name) {
     if (name === "") {
         return await g.V().hasLabel("User").values("name").toList()
@@ -203,7 +243,11 @@ export async function getAllNames(name) {
     }
 }
 
-// Given list of paths, produces the list of values for nodes and edges
+/**
+ * Processes raw graph paths into vertex and edge data
+ * @param {Array} paths - Array of graph paths
+ * @returns {Object} Object containing processed vertex and edge data
+ */
 async function processPaths(paths) {
     const vertexes = new Set(), edges = new Set();
     if (paths.length === 0) {
@@ -224,7 +268,12 @@ async function processPaths(paths) {
     return {vData, eData}
 }
 
-// Given lists of values for nodes and edges, format them for D3 Visualization
+/**
+ * Converts raw graph data into D3-compatible format
+ * @param {Array} vData - Array of vertex data
+ * @param {Array} eData - Array of edge data
+ * @returns {Object} Formatted data for D3 visualization
+ */
 export function makeD3Els(vData, eData) {
     const nodes = vData.map(v => {
         const props = Object.fromEntries(Array.from(v.entries()).map(([k, val]) => [k, Array.isArray(val) && val.length === 1 ? val[0] : val]));
@@ -251,7 +300,12 @@ export function makeD3Els(vData, eData) {
     return {nodes, links}
 }
 
-// Returns the D3 formatted elements of paths between two given users
+/**
+ * Finds and formats all paths of transactions between two users
+ * @param {string} user1 - Name of the first user
+ * @param {string} user2 - Name of the second user
+ * @returns {Object} D3-formatted graph data showing transaction paths
+ */
 export async function transactionsBetweenUsers(user1, user2) {
     if (user1 === user2) { // edge case where user chooses 2 of the same user
         return {nodes: [], links: []};
@@ -275,16 +329,27 @@ export async function transactionsBetweenUsers(user1, user2) {
     return makeD3Els(vData, eData)
 }
 
-// Returns D3 Formatted elements either outgoing or incoming transactions of user1
+/**
+ * Retrieves all transactions (incoming or outgoing) for a specific user
+ * @param {string} user1 - Name of the user
+ * @param {string} dir - Direction of transactions ('in' or 'out')
+ * @returns {Object} D3-formatted graph data showing user's transactions
+ */
 export async function userTransactions(user1, dir) {
     const p1 = await g.V().hasLabel("User").has("name", user1).id().next()
     let paths
-    if (dir === "out") paths = await g.V(p1.value)
-        .outE().otherV().outE()
-        .otherV().bothE().otherV().hasLabel("User").path().by(t.id).toList()
-    else paths = await g.V(p1.value)
-        .outE().otherV().inE()
-        .otherV().bothE().otherV().hasLabel("User").path().by(t.id).toList()
+    if (dir === "out")
+        paths = await g.V(p1.value)            // Start from user vertex
+            .outE().otherV().outE()            // Follow outgoing transaction path
+            .otherV().bothE().otherV()         // Continue to connected vertices
+            .hasLabel("User")                  // End at user vertices
+            .path().by(t.id).toList()          // Collect path with IDs
+    else
+        paths = await g.V(p1.value)            // Start from user vertex
+            .outE().otherV().inE()             // Follow incoming transaction path
+            .otherV().bothE().otherV()         // Continue to connected vertices
+            .hasLabel("User")                  // End at user vertices
+            .path().by(t.id).toList()          // Collect path with IDs
     const processedPath = await processPaths(paths)
     const {vData, eData} = processedPath
 

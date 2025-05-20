@@ -27,5 +27,5 @@ export const devices = ["mobile", "terminal", "web"];
 
 // Connection Variables
 export const HOST = "localhost";
-export const PORT = 8182;
-export const HTTP_PORT = 5000;
+export const PORT = 8182; // Gremlin Server Port
+export const HTTP_PORT = 5000; // Express App Server Port

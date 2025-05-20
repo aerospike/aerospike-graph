@@ -1,23 +1,29 @@
-// Holds main server/app and gremlin logic
+/**
+ * Node JS Example using Aerospike Graph
+ * This file implements a server that manages a graph database of users, accounts, and transactions
+ * to demonstrate fraud detection patterns using graph traversal.
+ */
 import express from "express"
 import path, {dirname} from "path"
 import {fileURLToPath} from 'url';
 import {HTTP_PORT} from "./public/consts.js";
 
-// Function Imports
+// Gremlin Function Imports
 import {populateGraph, userTransactions, transactionsBetweenUsers, getAllNames, rankMostTraffic} from "./gremlin.js";
 
-// Connection Variables
+
+// Initialize Express App
 let serverFlag = false;
-// Create Express app
 const app = express();
 const server = app.listen(HTTP_PORT, () =>
     serverFlag = true
 );
 
+// Setup ES module compatibility for __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Serve the main application page
 app.use(express.static(path.join(__dirname, "public"), {
     dotfiles: 'allow',
 }));
@@ -26,6 +32,14 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+/**
+ * API endpoint to fetch graph data based on different query parameters
+ * Supports different view modes:
+ * - hub: full graph view of most likely fraudulent node
+ * - outgoing: transactions originating from a user
+ * - incoming: transactions received by a user
+ * - between: transactions between two users (default)
+ */
 app.get("/graph", async (req, res) => {
     try {
         let newGraph
@@ -65,6 +79,7 @@ app.get("/graph", async (req, res) => {
     }
 });
 
+// API Endpoint to retreive list of names in the Graph DB
 app.get("/names", async (req, res) => {
     try {
         const {name} = req.query;
@@ -76,6 +91,7 @@ app.get("/names", async (req, res) => {
     }
 });
 
+// API Endpoint to return list of vertices in order of most fraudulent to least with increase of mean outgoing transactions
 app.get("/hub", async (req, res) => {
     try {
         const hub = await grabMostFraudulent()
@@ -86,6 +102,7 @@ app.get("/hub", async (req, res) => {
     }
 });
 
+// Returns sorted list of vertices from most likely fraudulent to least based on outgoing transactions
 async function grabMostFraudulent(){
     const lists = await rankMostTraffic(null)
     const amounts = lists.map(item => item.get("totalAmount"));
@@ -113,7 +130,10 @@ export function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Shut down server and clear graph data
+/**
+ * Shuts down the server and clears graph data
+ * Triggered on SIGINT and SIGTERM signals
+ */
 async function closeConnection() {
     try {
         console.log("Closing connection...");
@@ -124,6 +144,7 @@ async function closeConnection() {
     }
 }
 
+// Initialize the graph database when the application starts
 (async () => {
     try {
         console.log("Connecting to graph...");
