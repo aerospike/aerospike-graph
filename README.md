@@ -10,12 +10,6 @@ docker compose up -d
 ```
 Please note that Graph will wait for the database to complete start up before it attempts to start.
 
-
-Navigate to the examples folder and try out the examples in different languages
-```shell
-cd examples
-```
-
 # Query tracing with Zipkin
 
 Aerospike Graph utilizes Zipkin for query tracing [OpenZipkin](https://aerospike.com/docs/graph/operating/monitoring/query-tracing).
