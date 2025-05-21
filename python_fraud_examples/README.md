@@ -16,8 +16,8 @@ refresh data and query for different users.
 3. Run the Example:
    `python fraud_mimic.py`
    OR
-   `python transctions_between_users.py`
+   `python transactions_between_users.py`
 4. Open the Web Application:
    Open your web browser and navigate to `http://localhost:8050/` to view the web application.
-   There is only a web application for the `transctions_between_users.py` example.
-   The  `fraud_mimic.py` example is a command line application.
+   There is only a web application for the `transactions_between_users.py` example.
+   The `fraud_mimic.py` example is a command line application.

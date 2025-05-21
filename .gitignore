@@ -4,5 +4,5 @@
 .DS_Store
 node-js-example/node_modules
 .idea/
-examples/*/target
+**/target/
 *.csv
