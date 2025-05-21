@@ -26,7 +26,7 @@ store and query large-scale graph data.
 
 A spark cluster is required to run Aerospike Graph OLAP.
 Please refer to [AWS EMR](./aws-setup/OLAP_AWS.md), [GCP Dataproc](./gcp-setup/OLAP_GCP.md)
-and [on prem Spark](./local-setup/OLAP_ON_PREM.md) examples for help.
+and [Local Spark](./local-setup/OLAP_LOCAL.md) examples for help.
 
 Based on initial experimentation, having 1 spark executor per 3 aerospike
 db cores seems to yield max performance. The actual
