@@ -15,7 +15,7 @@ Food Delivery App consists of two main components:
 - Python 3.8+
 - Aerospike Graph database
 - Python virtual environment (recommended)
-- Set up Aerospike Graph (see the root directory [README.md](../../../README.md) for more information)
+- Set up Aerospike Graph (see the root directory [README.md](../../README.md) for more information)
 
 
 1. Create and activate a virtual environment:
