@@ -3,24 +3,25 @@ import sys
 from gremlin_python.process.anonymous_traversal import traversal
 from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
 
-# Create an SSL context that trusts your CA
-ssl_context = ssl.create_default_context(
-    cafile="./security/ca.crt"
-)
-
-# (Optional) disable hostname check if your cert CN doesn't match:
-ssl_context.check_hostname = False
-
-# Connect over WSS with context
-connection = DriverRemoteConnection(
-    'wss://localhost:8182/gremlin',
-    'g',
-    ssl_context=ssl_context
-)
-g = traversal().withRemote(connection)
-
 def main():
     try:
+        # Create an SSL context that trusts your CA
+        ssl_context = ssl.create_default_context(
+            cafile="./security/ca.crt"
+        )
+
+        # (Optional) disable hostname check if your cert CN doesn't match:
+        ssl_context.check_hostname = False
+
+        # Connect over WSS with ssl context
+        connection = DriverRemoteConnection(
+            'wss://localhost:8182/gremlin',
+            'g',
+            ssl_context=ssl_context
+        )
+
+        g = traversal().withRemote(connection)
+
         print("Testing Connection to Graph")
         if g.inject(0).next() != 0:
             print("Failed to connect to graph instance")

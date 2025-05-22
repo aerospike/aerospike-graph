@@ -23,13 +23,13 @@ services:
     ports:
       - "8182:8182"
     volumes:
-      - ./g-tls:/opt/aerospike-graph/gremlin-server-tls:ro
-      - ./security/ca.crt:/opt/aerospike-graph/gremlin-server-ca/ca.crt:ro
+      - ./g-tls:/opt/aerospike-graph/gremlin-server-tls:ro # Mount the server cert and key ONLY here
+      - ./security/ca.crt:/opt/aerospike-graph/gremlin-server-ca/ca.crt:ro # Mount CA cert ONLY here
     environment:
       aerospike.client.host: gremlin-tls-aerospike-db
       aerospike.client.port: 3000
       aerospike.client.namespace: test
-      aerospike.graph-service.ssl.enabled: true
+      aerospike.graph-service.ssl.enabled: true # Enable Gremlin SSL
     networks:
       - gremlin-tls-asgraph-net
       

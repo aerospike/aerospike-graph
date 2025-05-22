@@ -3,11 +3,11 @@ from gremlin_python.process.anonymous_traversal import traversal
 from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
 from gremlin_python.driver import client, serializer
 
-remote_conn = DriverRemoteConnection('ws://localhost:8182/gremlin', 'g')
-g = traversal().with_remote(remote_conn)
-
 def main():
     try:
+        remote_conn = DriverRemoteConnection('ws://localhost:8182/gremlin', 'g')
+        g = traversal().with_remote(remote_conn)
+
         print("Testing Connection to Graph")
         if g.inject(0).next() != 0:
             print("Failed to connect to graph instance")

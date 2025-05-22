@@ -8,13 +8,13 @@ services:
       - "3000-3002:3000-3002"
       - "4000:4000"
       - "4182:4182"
-    command: ["--config-file", "/opt/aerospike/etc/aerospike.conf"]
+    command: ["--config-file", "/opt/aerospike/etc/aerospike.conf"] # Specify conf file to use
     environment:
       - DEFAULT_TTL=0
     volumes:
-      - ./security:/opt/aerospike/etc/
-      - ./aerospike.conf:/opt/aerospike/etc/aerospike.conf
-    healthcheck:
+      - ./security:/opt/aerospike/etc/ # Mount volume with certificates and keys
+      - ./aerospike.conf:/opt/aerospike/etc/aerospike.conf # Mount conf file to use
+    healthcheck: # Health check specifically for TLS port
         test: ["CMD",
                "asinfo",
                "-h", "tls-aerospike-db:exampleCluster:4000",
@@ -35,11 +35,11 @@ services:
     ports:
       - "8182:8182"
     volumes:
-      - ./security/ca.crt:/opt/aerospike-graph/aerospike-client-tls/ca.crt
+      - ./security/ca.crt:/opt/aerospike-graph/aerospike-client-tls/ca.crt # Mount certificates ONLY into AGS
       - ./security/server.crt:/opt/aerospike-graph/aerospike-client-tls/server.crt
     environment:
-      aerospike.client.host: tls-aerospike-db:exampleCluster:4000
-      aerospike.client.tls: "true"
+      aerospike.client.host: tls-aerospike-db:exampleCluster:4000 # Must use this naming convention of host:tls-name:tls-port
+      aerospike.client.tls: "true" # Enable TLS for AGS
       aerospike.client.namespace: test
     networks:
       - tls-asgraph-net
