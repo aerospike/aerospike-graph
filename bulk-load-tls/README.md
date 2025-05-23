@@ -148,3 +148,25 @@ spark-submit \
   --conf "spark.executor.extraJavaOptions=-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
   ...
 ```
+
+### Debugging
+
+Debugging steps:
+1. SSH into a worker and the master node
+2. Look for the truststore 
+```
+ls -l /etc/aerospike-graph-tls/truststore.jks)
+```
+You should see a truststore with appropriate permissions here (`-r--r--r--`)
+If you do not, then the truststore.jks is not correctly being generated.
+If the permissions are wrong, investigate the chmod command being used to adjust them, it should be `chmod 444`.
+3. Run a simple test with docker:
+```
+docker run -e aerospike.client.host=aerolab4-lyndon-olap-tls-1:tls1:4333 -e aerospike.client.tls=true \
+     -e JAVA_OPTIONS="-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
+     -v /etc/aerospike-graph-tls/truststore.jks:/etc/aerospike-graph-tls/truststore.jks \
+     aerospike/aerospike-graph-service:latest-slim
+```
+If this connects correctly and you see `Channel started at port 8182.` at the bottom, then everything is setup correctly.
+Note there could still be a file permissions issue here as docker generally runs with sudo level permissions, which is
+greater than the permissions level that spark executors get.
