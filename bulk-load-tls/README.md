@@ -162,7 +162,7 @@ If you do not, then the truststore.jks is not correctly being generated.
 If the permissions are wrong, investigate the chmod command being used to adjust them, it should be `chmod 444`.
 3. Run a simple test with docker:
 ```
-docker run -e aerospike.client.host=aerolab4-lyndon-olap-tls-1:tls1:4333 -e aerospike.client.tls=true \
+docker run -e aerospike.client.host=<ip_of_aerospike_node>:<tls_name_of_cluster>:<port_for_tls_name> -e aerospike.client.tls=true \
      -e JAVA_OPTIONS="-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
      -v /etc/aerospike-graph-tls/truststore.jks:/etc/aerospike-graph-tls/truststore.jks \
      aerospike/aerospike-graph-service:latest-slim
