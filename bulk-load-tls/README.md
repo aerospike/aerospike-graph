@@ -24,16 +24,16 @@ mkdir -p $DEST_DIR
 # Download CA certificate. Use one of the following commands.
 
 # For local file system
-# cp $GCS_BUCKET $CA_CERT
+# cp $CA_CERT_REMOTE $CA_CERT
 
 # For HDFS
-# hdfs dfs -copyToLocal $GCS_BUCKET $CA_CERT
+# hdfs dfs -copyToLocal $CA_CERT_REMOTE $CA_CERT
 
 # For GCP
-# gsutil cp $GCS_BUCKET $CA_CERT
+# gsutil cp $CA_CERT_REMOTE $CA_CERT
 
 # For AWS
-# aws s3 cp $GCS_BUCKET $CA_CERT
+# aws s3 cp $CA_CERT_REMOTE $CA_CERT
 
 # Create truststore from CA cert.
 keytool -import -trustcacerts \
