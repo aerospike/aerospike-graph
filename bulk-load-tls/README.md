@@ -28,11 +28,23 @@ mkdir -p $DEST_DIR
 # For HDFS
 # hdfs dfs -copyToLocal $CA_CERT_REMOTE $CA_CERT
 
-# For GCP
+# For GCP Dataproc
 # gsutil cp $CA_CERT_REMOTE $CA_CERT
 
-# For AWS
+# For AWS EMR
 # aws s3 cp $CA_CERT_REMOTE $CA_CERT
+# Note for AWS You will also need something like this (see AWS EMR section below)
+# cat > spark-tls-config.json <<EOF
+# [
+#   {
+#     "Classification": "spark-defaults",
+#     "Properties": {
+#       "spark.driver.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit",
+#       "spark.executor.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit"
+#     }
+#   }
+# ]
+# EOF
 
 # Create truststore from CA cert.
 keytool -import -trustcacerts \
