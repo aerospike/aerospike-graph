@@ -20,8 +20,6 @@ TRUSTSTORE=${DEST_DIR}/truststore.jks
 # Create directory.
 mkdir -p $DEST_DIR
 
-
-
 # Download CA certificate. Use one of the following commands.
 
 # For local file system
@@ -93,7 +91,36 @@ gcloud dataproc clusters create "$dataproc_name" \
 
 ### AWS EMR
 
-TODO
+In AWS EMR you must add this command:
+--bootstrap-actions Path="s3://<path_to_script>
+
+and this json file must be created and added to the local filesystem for each worker using the script above.
+```
+[
+  {
+    "Classification": "spark-defaults",
+    "Properties": {
+      "spark.driver.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit",
+      "spark.executor.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit"
+    }
+  }
+]
+```
+
+```
+aws emr create-cluster \
+    --name "My Spark TLS Cluster" \
+    --release-label emr-6.13.0 \
+    --applications Name=Spark \
+    --instance-type m5.xlarge \
+    --instance-count 3 \
+    --use-default-roles \
+    --ec2-attributes KeyName=your-key \
+    --bootstrap-actions Path="s3://<path_to_script>" \
+    --configurations file://spark-tls-config.json <--- json from above that needs to be generated via tls script above.
+```
+
+You may also require 
 
 ### On Premises
 
