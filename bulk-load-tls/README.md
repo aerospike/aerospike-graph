@@ -138,15 +138,14 @@ You may also require
 
 In an on prem cluster, the script may be needed to be run by hand before introducing the node to the spark cluster.
 
-Spark does not provide a native way to do this.
+Spark does not provide a native way to run an init script on each worker.
 
-In this case you may need to add the following:
+What you need to do:
+1. Ensure each worker has access to the java keystore, with appropriate permissions to access it (`chmod 444`)
+2. Your spark-defaults.conf file is configured in the right location for with the appropriate settings
 ```
-spark-submit \
-  ....
-  --conf "spark.driver.extraJavaOptions=-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
-  --conf "spark.executor.extraJavaOptions=-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
-  ...
+"spark.driver.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit",
+"spark.executor.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit"
 ```
 
 ### Debugging
