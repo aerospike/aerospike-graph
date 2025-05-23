@@ -7,6 +7,9 @@ following steps are required:
 
 ## Example TLS Setup Script
 
+Note you need to uncomment one of the line below (or add your own) 
+to transfer the file from the remote to the local worker.
+
 ```bash
 CA_CERT_REMOTE="<path>/cacert.pem"
 DEST_DIR="/etc/aerospike-graph-tls"
@@ -16,8 +19,21 @@ TRUSTSTORE=${DEST_DIR}/truststore.jks
 # Create directory.
 mkdir -p $DEST_DIR
 
-# Download CA certificate from remote location to local.
-gsutil cp $CA_CERT_REMOTE $CA_CERT
+
+
+# Download CA certificate. Use one of the following commands.
+
+# For local file system
+# cp $GCS_BUCKET $CA_CERT
+
+# For HDFS
+# hdfs dfs -copyToLocal $GCS_BUCKET $CA_CERT
+
+# For GCP
+# gsutil cp $GCS_BUCKET $CA_CERT
+
+# For AWS
+# aws s3 cp $GCS_BUCKET $CA_CERT
 
 # Create truststore from CA cert.
 keytool -import -trustcacerts \
