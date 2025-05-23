@@ -1,5 +1,7 @@
 Follow all the way through here: https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md
 
+aerolab cluster create -n testcluster -c 3 --instance e2-medium --zone us-central1-a --region  us-central1 --disk pd-balanced:20 --disk pd-ssd:40 --disk pd-ssd:40
+
 You now have a cluster called testcluster
 Find its IP using
 ```bash
@@ -20,33 +22,18 @@ https://aerospike.com/download/graph/loader/
 ```bash
 gsutil cp C:\Users\chengstler_aerospike\Downloads gs://gcp-bl-test/jars/
 ```
+Make a service account and add the info to the properties file:
 
 Upload the config
 ```bash
 gsutil cp bulk-loader.properties gs://gcp-bl-test/configs/
 ```
 
-gcloud dataproc clusters create testcluster \
---enable-component-gateway \
---region us-central1 \
---zone us-central1-a \
---master-machine-type n2d-highmem-8 \
---master-boot-disk-type pd-ssd \
---master-boot-disk-size 500 \
---num-workers 8 \
---worker-machine-type n2d-highmem-8 \
---worker-boot-disk-type pd-ssd \
---worker-boot-disk-size 500 \
---image-version 2.1-debian11 \
---project my-project
+Now run the shell script:
+```bash
+run-spark.sh
+```
 
-gcloud dataproc jobs submit spark \
---cluster testcluster \
---region us-central1 \
---class com.aerospike.firefly.bulkloader.SparkBulkLoader \
---jars gs://my-bucket/jars/aerospike-graph-bulk-loader-2.6.0.jar \
--- \
--c gs://my-bucket/configs/bulk-loader.properties
 
 gcloud dataproc jobs list --region us-central1
 gcloud dataproc jobs wait <JOB_ID> --region us-central1
