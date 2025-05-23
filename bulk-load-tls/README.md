@@ -155,7 +155,7 @@ Debugging steps:
 1. SSH into a worker and the master node
 2. Look for the truststore 
 ```
-ls -l /etc/aerospike-graph-tls/truststore.jks)
+ls -l /etc/aerospike-graph-tls/truststore.jks
 ```
 You should see a truststore with appropriate permissions here (`-r--r--r--`)
 If you do not, then the truststore.jks is not correctly being generated.
