@@ -4,6 +4,7 @@ To bulk load a TLS enabled Aerospike cluster the
 following steps are required:
 1. The x509 ca cert file (generally a .pem file) must be in a location that is available to all workers
 2. A tls setup script must be in a location that is available to all workers
+3. The script must be run on all workers to configure the JVM and spark.
 
 ## Example TLS Setup Script
 
@@ -63,3 +64,48 @@ aerospike.client.tls=true
 
 The important piece here is that `aerospike.client.tls=true` is set to `true`, 
 and the `aerospike.client.host` is set accordingly.
+
+## Run Initialization Script on Spark Cluster
+
+### GCP Dataproc
+
+In GCP you must add this command:
+--initialization-actions=gs://<path_to_script>
+
+Example:
+```
+gcloud dataproc clusters create "$dataproc_name" \
+    --enable-component-gateway \
+    --region $region \
+    --zone $zone \
+    --master-machine-type "$master_instance_type" \
+    --master-boot-disk-type pd-ssd \
+    --master-boot-disk-size 500 \
+    --num-workers "$num_workers" \
+    --worker-machine-type "$instance_type" \
+    --worker-boot-disk-type pd-ssd \
+    --worker-boot-disk-size 500 \
+    --image-version 2.1-debian11 \
+    --properties spark:spark.history.fs.gs.outputstream.type=FLUSHABLE_COMPOSITE \
+    --initialization-actions=gs://<path_to_script> \
+    --project $project
+```
+
+### AWS EMR
+
+TODO
+
+### On Premises
+
+In an on prem cluster, the script may be needed to be run by hand before introducing the node to the spark cluster.
+
+Spark does not provide a native way to do this.
+
+In this case you may need to add the following:
+```
+spark-submit \
+  ....
+  --conf "spark.driver.extraJavaOptions=-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
+  --conf "spark.executor.extraJavaOptions=-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
+  ...
+```
