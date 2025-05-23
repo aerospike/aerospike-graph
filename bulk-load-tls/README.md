@@ -73,7 +73,7 @@ aerospike.client.tls=true
 ```
 
 The important piece here is that `aerospike.client.tls=true` is set to `true`, 
-and the `aerospike.client.host` is set accordingly.
+and the `aerospike.client.host` is set according to your tls connection.
 
 ## Run Initialization Script on Spark Cluster
 
