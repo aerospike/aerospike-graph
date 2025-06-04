@@ -26,7 +26,7 @@ zone=us-central1-a
 instance_type=n2d-standard-4
 master_instance_type=n2d-standard-4
 num_workers=1
-project=firefly-aerospike
+project=your-gcp-project
 # rename with your bucket name
 bulk_jar_uri="gs://name-of-bucket/aerospike-graph-bulk-loader-2.6.0.jar"
 properties_file_uri="gs://name-of-bucket/bulk-loader.properties"
