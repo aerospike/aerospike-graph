@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Aerospike Graph Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="module" src="d3Graph.js"></script>
+    <script type="module" src="routes.js"></script>
+    <script type="module" src="autocompleteSelect.js" defer></script>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: grid;
+            grid-template-rows: 60px 1fr;
+            grid-template-columns: 200px 1fr;
+            grid-template-areas:
+          "navbar navbar"
+          "sidebar content";
+        }
+
+        button {
+            margin: 0 0 0 10px;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0.5em 0;
+            line-height: 1.2;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        .link {
+            stroke-width: 1.5px;
+        }
+
+        .link-label {
+            font-size: 10px;
+            pointer-events: none;
+        }
+
+        .node circle {
+            fill: #0074d9;
+            stroke: #fff;
+            stroke-width: 1.5px;
+            cursor: pointer;
+        }
+
+        .link-label {
+            font: 10px sans-serif;
+            fill: #555;
+            pointer-events: none;
+        }
+
+        .node text {
+            font: 10px sans-serif;
+            pointer-events: none;
+        }
+
+        #navbar {
+            grid-area: navbar;
+            background: #333;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            justify-content: space-between;
+        }
+
+        #navbar h4 {
+            margin: 0 10px 0 0;
+        }
+
+        #sidebar {
+            grid-area: sidebar;
+            background: #f4f4f4;
+            height: 100%;
+            padding: 1rem;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 60%;
+        }
+
+        #sidebar li {
+            width: 100%;
+        }
+
+        #sidebar a {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            color: #333;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            border-radius: 4px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        #sidebar a:hover {
+            background: #e0e0e0;
+            color: #111;
+        }
+
+        #sidebar a:active,
+        #sidebar a.active {
+            background: #007acc;
+            color: white;
+        }
+
+        #content {
+            grid-area: content;
+            padding: 1rem;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 1em;
+            border-radius: 6px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow: auto;
+        }
+
+        .modal-close {
+            float: right;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+    </style>
+</head>
+<body>
+<div id="navbar">
+    <div style="flex-direction: row; display: flex; align-items: center">
+        <img
+                src="aero.png"
+                alt="Aerospike Logo"
+                style="height: 40px; margin-right: 10px"
+        />
+        <h3>
+            Aerospike Graph Visualization
+        </h3>
+    </div>
+    <div style="flex-direction: row; display: flex; align-items: center; justify-content: space-evenly">
+        <h4 id="query-title"></h4>
+        <div id="nav-content"></div>
+        <button id="refresh-btn">Reload Graph</button>
+    </div>
+</div>
+<div id="sidebar">
+    <ul>
+        <li><a href="#between">Transactions Between Users</a></li>
+        <li><a href="#outgoing">Outgoing Transactions from User</a></li>
+        <li><a href="#incoming">Incoming Transactions from User</a></li>
+        <li><a href="#hub">Fraud Detection</a></li>
+    </ul>
+</div>
+
+<div id="content">
+    <div id="property-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="modal-close" class="modal-close">&times;</span>
+            <h3 id="modal-h3"></h3>
+            <pre id="modal-body"></pre>
+        </div>
+    </div>
+    <svg></svg>
+</div>
+</body>
+</html>

@@ -2,5 +2,7 @@
 
 .vscode/
 .DS_Store
-
-examples/*/target
+node-js-example/node_modules
+.idea/
+**/target/
+*.csv

@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "aerospike": "^6.2.0",
+    "crpyto": "^0.0.1-security",
+    "d3": "^7.9.0",
+    "express": "^5.1.0",
+    "gremlin": "^3.7.3",
+    "path": "^0.12.7"
+  },
+  "name": "node-js-fraud-example",
+  "version": "1.0.0",
+  "description": "An example of a Node.js application that uses Aerospike as a graph database for fraud detection.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Connor Hengstler",
+  "license": "ISC",
+  "type": "module"
+}
