@@ -1,39 +1,83 @@
-Follow all the way through here: https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md
+# Aerolab and GCP L3 Bulkload Example
+All files have explanatory comments for further details
 
-aerolab cluster create -n testcluster -c 3 --instance e2-medium --zone us-central1-a --region  us-central1 --disk pd-balanced:20 --disk pd-ssd:40 --disk pd-ssd:40
+Setup aerolab by following this tutorial
+**https://github.com/aerospike/aerolab/blob/master/docs/GETTING_STARTED.md**
 
-You now have a cluster called testcluster
-Find its IP using
+Configure aerolab for gcp
 ```bash
-aerolab cluster list
+aerolab config backend -t gcp -o project-name
 ```
-Make a buckit: gsutil mb gs://gcp-bl-test
+Make sure zones are consistent
+```bash
+aerolab config defaults -k '*.Zone' -v 'us-central1-a'
+gcloud config set compute/zone us-central1-a
+```
 
-load the vertices and edges to the bucket
-```bash
-gsutil cp ./vertices.csv gs://gcp-bl-test/vertices/
-```
-```bash
-gsutil cp ./edges.csv gs://gcp-bl-test/edges/
-```
-Download bulk loader jar to this directory:
+Download bulkloader jar and put in top level of bucket-files dir
 https://aerospike.com/download/graph/loader/
 
+Configure bulk loader properties in bucket files dir, changing the name,
+and path to vertices/edges.
+Upload the data to a gcp bucket using
 ```bash
-gsutil cp C:\Users\chengstler_aerospike\Downloads gs://gcp-bl-test/jars/
+gsutil -m cp -r bucket-files/* gs://name-of-bucket
 ```
-Make a service account and add the info to the properties file:
+now the bucket should look like this
+```
+-name-of-bucket
+    |
+    |--- edges
+    |      |--- edges.csv
+    |
+    |--- vertices
+    |      |--- vertices.csv
+    |
+    |--- bulk-loader.properties
+    |--- aerospike-graph-bulk-loader-2.6.0.jar
+```
+You can use your own data instead, or make your own, formatting like this:
+Edges:
+```csv
+~label,~to,~from,property1,property2
+label,1789265,1,value1,value2
+```
 
-Upload the config
+Vertices:
+```csv
+~id,~label,property1,property2
+1,label,value1,value2
+```
+
+Configure set variables script changing names and paths to your gcp bucket
+
+Now create your Aerospike cluster in Aerolab 
 ```bash
-gsutil cp bulk-loader.properties gs://gcp-bl-test/configs/
+./create_ag_stack.sh
 ```
 
-Now run the shell script:
+After running that successfully, bulkload your data to the server
 ```bash
-run-spark.sh
+./bulkload.sh
 ```
 
+In cmd run
+```bash
+aerolab client list
+```
+find your graph instance i.e. ```name-of-cluster-g```
+take the external ip and place it into test-bl.py
 
-gcloud dataproc jobs list --region us-central1
-gcloud dataproc jobs wait <JOB_ID> --region us-central1
+install dependencies and run
+```bash
+pip install gremlin-python
+python3 test-bl.py
+```
+
+You should see output like
+```
+Successfully connected to Aerospike Graph Instance!
+Vertice count: 10
+Properties of vertice 100752818: 
+[{'name': [' joe']}]
+```
