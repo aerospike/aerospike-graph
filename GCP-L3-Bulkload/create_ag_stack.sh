@@ -12,7 +12,7 @@ aerolab cluster create \
     --disk local-ssd@"$aerospike_ssd_count" \
     --start n
 
-# partuition the cluster
+# partition the cluster
 aerolab cluster partition create \
       --name "$name" \
       --filter-type nvme \

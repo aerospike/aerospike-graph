@@ -1,7 +1,7 @@
 # Aerolab Settings
-name="name-of-bucket" # cluster name
-graph_name="name-of-bucket-g"
-client_name="name-of-bucket-c"
+name="aerolab-cluster-name" # cluster name
+graph_name="aerolab-cluster-name-g"
+client_name="aerolab-cluster-name-c"
 
 # If you are loading your own data, adjust these settings to the size of your loaded data
 aerospike_count=1 # number of nodes
@@ -20,12 +20,13 @@ client_test_name="./tests/test"
 # Edit all these variable to match your GCP environment.
 # Ensure that the bulk loader .jar file is correctly named and
 # accessible by your CLI profile.
-dataproc_name="cluster-name"
+dataproc_name="dp-cluster-name"
 region=us-central1
 zone=us-central1-a
 instance_type=n2d-standard-4
 master_instance_type=n2d-standard-4
 num_workers=1
 project=firefly-aerospike
+# rename with your bucket name
 bulk_jar_uri="gs://name-of-bucket/aerospike-graph-bulk-loader-2.6.0.jar"
 properties_file_uri="gs://name-of-bucket/bulk-loader.properties"
