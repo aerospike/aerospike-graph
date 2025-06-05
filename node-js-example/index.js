@@ -15,7 +15,7 @@ import {populateGraph, userTransactions, transactionsBetweenUsers, getAllNames, 
 // Initialize Express App
 let serverFlag = false;
 const app = express();
-const server = app.listen(HTTP_PORT, () =>
+export const server = app.listen(HTTP_PORT, () =>
     serverFlag = true
 );
 
@@ -30,6 +30,11 @@ app.use(express.static(path.join(__dirname, "public"), {
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.get("/ping", (req, res) => {
+    console.log("pong")
+    res.json("pong")
 });
 
 /**
@@ -145,17 +150,18 @@ async function closeConnection() {
 }
 
 // Initialize the graph database when the application starts
-(async () => {
-    try {
-        console.log("Connecting to graph...");
-        await populateGraph();
-        if(serverFlag){
-            console.log(`Server listening on http://localhost:${HTTP_PORT}`)
+if (process.env.NODE_ENV !== "test") {
+    (async () => {
+        try {
+            console.log("Connecting to graph...");
+            await populateGraph();
+            if (serverFlag) {
+                console.log(`Server listening on http://localhost:${HTTP_PORT}`)
+            }
+        } catch (e) {
+            console.error("Failed initial graph population:", e);
         }
-    } catch (e) {
-        console.error("Failed initial graph population:", e);
-    }
-})();
-
+    })();
+}
 process.on('SIGINT', closeConnection);
 process.on('SIGTERM', closeConnection);
