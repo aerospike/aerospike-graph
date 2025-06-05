@@ -35,7 +35,6 @@ python3 -m pip install gremlinpython async_timeout
 
 make-certs.sh creates the certificates and keys needed for TLS
 
-Navigate to the AGS_AeroDB directory, and run the command:
 ```bash
 ./make-certs.sh
 ```
