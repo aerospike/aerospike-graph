@@ -32,7 +32,17 @@ jobs:
           cd node-js-example
           npm ci
 
-      - name: Run JavaScript tests
+      - name: Compile Java sources
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Check Java Example compilation
+        working-directory: java-example
+        run: |
+          mvn compile -DskipTests
+
+      - name: Run Node JS example tests
         working-directory: node-js-example
         run: |
           npm test
