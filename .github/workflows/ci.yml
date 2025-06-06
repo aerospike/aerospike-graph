@@ -33,6 +33,6 @@ jobs:
           npm ci
 
       - name: Run JavaScript tests
-        working-directory: js-client
+        working-directory: node-js-example
         run: |
           npm test
