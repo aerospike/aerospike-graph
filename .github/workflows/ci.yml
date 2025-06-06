@@ -18,7 +18,7 @@ jobs:
           docker-compose up -d
           # wait for Aerospike
           for i in {1..20}; do
-            if nc -z aerospike-server 3000; then break; fi
+            if nc -z aerospike-db 3000; then break; fi
             sleep 2
           done
 

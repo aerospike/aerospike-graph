@@ -15,7 +15,7 @@
   "description": "An example of a Node.js application that uses Aerospike as a graph database for fraud detection.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "cross-env NODE_ENV=test mocha \"test/**/*.spec.js\" --timeout 10000"
   },
   "keywords": [],

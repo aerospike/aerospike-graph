@@ -1,19 +1,16 @@
 import { describe, it, before, after } from 'mocha'
 import { expect } from 'chai'
 import gremlin from "gremlin";
-const {DriverRemoteConnection} = gremlin.driver;
+import {drc} from "../gremlin.js";
 const {traversal} = gremlin.process.AnonymousTraversalSource;
 const __ = gremlin.process.statics;
-import {HOST, PORT} from "../public/consts.js";
 
 describe('Aerospike Graph connectivity', function() {
-    let gremlinConn;
     let g;
 
     before(async function() {
         this.timeout(10_000);
-        gremlinConn = new DriverRemoteConnection(`ws://${HOST}:${PORT}/gremlin`);
-        g = traversal().withRemote(gremlinConn);
+        g = traversal().withRemote(drc);
         const check = await g.inject(0).next();
         if (check.value !== 0) {
             console.error("Failed to connect to Gremlin server");
@@ -23,9 +20,9 @@ describe('Aerospike Graph connectivity', function() {
     });
 
     after(async function() {
-        if (gremlinConn) {
-            await gremlinConn.close();
-        }
+        // Close the Gremlin connection
+        await drc.close()
+        console.log("Closing Graph Connection")
     });
 
     it('should be able to run a simple Gremlin query', async function() {

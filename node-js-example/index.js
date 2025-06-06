@@ -13,11 +13,8 @@ import {populateGraph, userTransactions, transactionsBetweenUsers, getAllNames, 
 
 
 // Initialize Express App
-let serverFlag = false;
-const app = express();
-export const server = app.listen(HTTP_PORT, () =>
-    serverFlag = true
-);
+export const app = express();
+
 
 // Setup ES module compatibility for __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -134,34 +131,3 @@ export function convertTimestampToLong(dateStr) {
 export function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-/**
- * Shuts down the server and clears graph data
- * Triggered on SIGINT and SIGTERM signals
- */
-async function closeConnection() {
-    try {
-        console.log("Closing connection...");
-        server.close(() => process.exit(0));
-        console.log("Connection Closed!");
-    } catch (error) {
-        console.error("Error closing connection:", error);
-    }
-}
-
-// Initialize the graph database when the application starts
-if (process.env.NODE_ENV !== "test") {
-    (async () => {
-        try {
-            console.log("Connecting to graph...");
-            await populateGraph();
-            if (serverFlag) {
-                console.log(`Server listening on http://localhost:${HTTP_PORT}`)
-            }
-        } catch (e) {
-            console.error("Failed initial graph population:", e);
-        }
-    })();
-}
-process.on('SIGINT', closeConnection);
-process.on('SIGTERM', closeConnection);
