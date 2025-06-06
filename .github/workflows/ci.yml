@@ -11,7 +11,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Docker Compose (if you have an Aerospike container)
+      - name: Set up Aerospike Server and Graph
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
@@ -22,10 +22,10 @@ jobs:
             sleep 2
           done
 
-      - name: Use Node.js 16.x
+      - name: Setup Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: Install dependencies
         run: |
