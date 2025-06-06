@@ -1,0 +1,38 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Compose (if you have an Aerospike container)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+          docker-compose up -d
+          # wait for Aerospike
+          for i in {1..20}; do
+            if nc -z aerospike-server 3000; then break; fi
+            sleep 2
+          done
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: |
+          cd node-js-example
+          npm ci
+
+      - name: Run JavaScript tests
+        working-directory: js-client
+        run: |
+          npm test
