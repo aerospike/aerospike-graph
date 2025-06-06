@@ -42,7 +42,15 @@ The `food_delivery_datasetgen.py` script generates sample food delivery orders w
 - Drivers
 - Delivery addresses
 
-To generate sample data run the following command:
+To generate sample data, use the following script with or without any of 
+the following options to customize the size of the dataset:
+```
+--n-customers x                #default is 100000
+--n-restaurants x              #default is 1000
+--n-drivers x                  #default is 500
+--min-orders-per-customer x    #default is 1
+--max-orders-per-customer x    #default is 5
+```
 
 ```bash
 python food_delivery_datasetgen.py
