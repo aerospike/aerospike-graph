@@ -33,7 +33,7 @@ services:
       - aerospike.graph.query-tracing.threshold-ms=5
       - aerospike.graph.query-tracing.opentelemetry-host=zipkin
     volumes:
-      - ./examples:/data
+      - ./:/data
     networks:
       - asgraph_net
   zipkin:

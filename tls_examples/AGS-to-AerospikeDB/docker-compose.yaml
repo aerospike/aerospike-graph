@@ -1,0 +1,49 @@
+services:
+  tls-aerospike-db:
+    image: aerospike/aerospike-server-enterprise:7.1
+    container_name: tls-aerospike-db
+    networks:
+      - tls-asgraph-net
+    ports:
+      - "3000-3002:3000-3002"
+      - "4000:4000"
+      - "4182:4182"
+    command: ["--config-file", "/opt/aerospike/etc/aerospike.conf"] # Specify conf file to use
+    environment:
+      - DEFAULT_TTL=0
+    volumes:
+      - ./security:/opt/aerospike/etc/ # Mount volume with certificates and keys
+      - ./aerospike.conf:/opt/aerospike/etc/aerospike.conf # Mount conf file to use
+    healthcheck: # Health check specifically for TLS port
+        test: ["CMD",
+               "asinfo",
+               "-h", "tls-aerospike-db:exampleCluster:4000",
+               "--tls-enable",
+               "--tls-cafile=/opt/aerospike/etc/ca.crt",
+               "-v", "status"
+        ]
+        interval: 5s
+        timeout: 10s
+        retries: 3
+  aerospike-graph-service:
+    image: aerospike/aerospike-graph-service:latest
+    container_name:
+      tls-aerospike-graph-service
+    depends_on:
+      tls-aerospike-db:
+        condition: service_healthy
+    ports:
+      - "8182:8182"
+    volumes:
+      - ./security/ca.crt:/opt/aerospike-graph/aerospike-client-tls/ca.crt # Mount certificates ONLY into AGS
+      - ./security/server.crt:/opt/aerospike-graph/aerospike-client-tls/server.crt
+    environment:
+      aerospike.client.host: tls-aerospike-db:exampleCluster:4000 # Must use this naming convention of host:tls-name:tls-port
+      aerospike.client.tls: "true" # Enable TLS for AGS
+      aerospike.client.namespace: test
+    networks:
+      - tls-asgraph-net
+      
+networks:
+  tls-asgraph-net:
+    name: tls-asgraph-net
