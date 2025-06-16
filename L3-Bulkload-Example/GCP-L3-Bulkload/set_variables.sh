@@ -18,15 +18,13 @@ client_test_name="./tests/test"
 
 # Dataproc settings
 # Edit all these variable to match your GCP environment.
-# Ensure that the bulk loader .jar file is correctly named and
-# accessible by your CLI profile.
-dataproc_name="dp-cluster-name"
+dataproc_name="dp-cluster-name" # change to what you want your dataproc name to be
 region=us-central1
 zone=us-central1-a
 instance_type=n2d-standard-4
 master_instance_type=n2d-standard-4
-num_workers=1
-project=your-gcp-project
-# rename with your bucket name
-bulk_jar_uri="gs://name-of-bucket/aerospike-graph-bulk-loader-2.6.0.jar"
-properties_file_uri="gs://name-of-bucket/bulk-loader.properties"
+num_workers=2
+project=your-gcp-project # rename to your GCP project
+bulk_jar_uri="gs://name-of-bucket/jars/aerospike-graph-bulk-loader-2.6.0.jar" # rename with your bucket name
+properties_file_uri="gs://name-of-bucket/configs/bulk-loader.properties" # rename with your bucket name
+
