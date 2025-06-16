@@ -21,7 +21,7 @@ To ```bucket-files/jars```
 
 Edit the properties file in ```bucket-files/jars``` and edit the following variables:
 ```
-aerospike.host=<cluster-host> #Set to the IP found earlier 
+aerospike.client.host=<cluster-host> #Set to the IP found earlier 
 aerospike.graphloader.vertices=gs://name-of-bucket/vertices/ #Set <name-of-bucket> to the name of your created bucket
 aerospike.graphloader.edges=   gs://name-of-bucket/edges/
 aerospike.graphloader.temp-directory=gs://name-of-bucket/temp/
