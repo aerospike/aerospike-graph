@@ -64,7 +64,10 @@ def signal_handler(signum, frame):
     cleanup()
     sys.exit(1)
 
-def get_shard_path(base_dir: str, worker_id: int, total_disks: int) -> str:
+def get_shard_path(base_dir: str, worker_id: int, total_disks: int, out_dir: str = None) -> str:
+    """Get path for output files. If out_dir is specified, use that, otherwise use mounted disks."""
+    if out_dir:
+        return os.path.join(out_dir, base_dir)
     disk_number = worker_id % total_disks + 1
     return os.path.join(f"/mnt/data{disk_number}", base_dir)
 
@@ -87,15 +90,15 @@ def sample_targets(n, u, k, rng):
             targets.add(v)
     return list(targets)
 
-def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks, total_workers):
+def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks, total_workers, out_dir=None):
     """Process vertices and edges for a worker using shared memory."""
     # Get shared memory array
     existing_shm = shared_memory.SharedMemory(name=shm_name)
     deg_seq = np.ndarray(shape, dtype=dtype, buffer=existing_shm.buf)
 
     # Setup output directories
-    edge_output_dir = get_shard_path("edges", worker_id, total_disks)
-    vertex_output_dir = get_shard_path("vertices", worker_id, total_disks)
+    edge_output_dir = get_shard_path("edges", worker_id, total_disks, out_dir)
+    vertex_output_dir = get_shard_path("vertices", worker_id, total_disks, out_dir)
     os.makedirs(edge_output_dir, exist_ok=True)
     os.makedirs(vertex_output_dir, exist_ok=True)
 
@@ -106,7 +109,7 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
     edge_file_path = os.path.join(edge_output_dir, f'edges_part_{worker_id:02d}_{edge_file_index:03d}.csv')
     edge_file = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
     edge_writer = csv.writer(edge_file)
-    edge_writer.writerow(['~from', '~to', '~label:String', 
+    edge_writer.writerow(['~from', '~to', '~label', 
                          'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
 
     vertex_buffer = []
@@ -234,30 +237,27 @@ def get_human_size(size_bytes):
         size_bytes /= 1024.0
     return f"{size_bytes:.2f} PB"
 
-def get_total_file_size(available_disks):
+def get_total_file_size(available_disks=None, out_dir=None):
     """Calculate total size of all generated files."""
     total_size = 0
     files_count = 0
     
-    for disk in available_disks:
-        vertex_dir = f"/mnt/data{disk}/vertices"
-        edge_dir = f"/mnt/data{disk}/edges"
-        
-        # Sum up vertex files
-        if os.path.exists(vertex_dir):
-            for f in os.listdir(vertex_dir):
+    def process_dir(dir_path):
+        nonlocal total_size, files_count
+        if os.path.exists(dir_path):
+            for f in os.listdir(dir_path):
                 if f.endswith('.csv'):
-                    path = os.path.join(vertex_dir, f)
+                    path = os.path.join(dir_path, f)
                     total_size += os.path.getsize(path)
                     files_count += 1
-        
-        # Sum up edge files
-        if os.path.exists(edge_dir):
-            for f in os.listdir(edge_dir):
-                if f.endswith('.csv'):
-                    path = os.path.join(edge_dir, f)
-                    total_size += os.path.getsize(path)
-                    files_count += 1
+    
+    if out_dir:
+        process_dir(os.path.join(out_dir, "vertices"))
+        process_dir(os.path.join(out_dir, "edges"))
+    else:
+        for disk in available_disks:
+            process_dir(f"/mnt/data{disk}/vertices")
+            process_dir(f"/mnt/data{disk}/edges")
     
     return total_size, files_count
 
@@ -287,6 +287,11 @@ def main():
                        help='Base RNG seed for reproducibility')
         p.add_argument('--dry-run', action='store_true',
                        help='Only show degree distribution statistics without generating files')
+        output_group = p.add_mutually_exclusive_group(required=False)
+        output_group.add_argument('--mount', action='store_true',
+                                help='Use mounted disks at /mnt/data*')
+        output_group.add_argument('--out-dir',
+                                help='Output directory for all files')
         args = p.parse_args()
 
         # Sample degree sequence
@@ -303,11 +308,16 @@ def main():
             print("\n✔ Dry run completed. No files were generated.")
             return
 
-        # Check for mounted disks
-        available_disks = [i for i in range(1, 25) if os.path.ismount(f"/mnt/data{i}")]
-        if not available_disks:
-            raise RuntimeError("No mounted disks found in /mnt/data*. Please run mount_disks.sh first.")
-        print(f"\nFound {len(available_disks)} mounted disks: {', '.join(f'/mnt/data{i}' for i in available_disks)}")
+        # Handle output location
+        available_disks = None
+        if args.mount:
+            available_disks = [i for i in range(1, 25) if os.path.ismount(f"/mnt/data{i}")]
+            if not available_disks:
+                raise RuntimeError("No mounted disks found in /mnt/data*. Please run mount_disks.sh first.")
+            print(f"\nFound {len(available_disks)} mounted disks: {', '.join(f'/mnt/data{i}' for i in available_disks)}")
+        else:
+            os.makedirs(args.out_dir, exist_ok=True)
+            print(f"\nOutput directory: {args.out_dir}")
 
         # Setup shared memory for degree sequence
         shared_mem = shared_memory.SharedMemory(create=True, size=deg_seq.nbytes)
@@ -317,7 +327,10 @@ def main():
         # Optimize worker count
         cpu_count = multiprocessing.cpu_count()
         if args.workers is None:
-            workers = max(1, min(len(available_disks), cpu_count))
+            if args.mount:
+                workers = max(1, min(len(available_disks), cpu_count))
+            else:
+                workers = max(1, min(8, cpu_count))  # Default to 8 workers for single directory
         else:
             workers = min(args.workers, cpu_count)
 
@@ -331,7 +344,9 @@ def main():
             executor = executor_ctx  # Store for cleanup
             futures = [
                 executor.submit(process_full_worker, wid, shared_mem.name, deg_seq.shape, deg_seq.dtype.name,
-                              args.seed, args.nodes, len(available_disks), workers)
+                              args.seed, args.nodes, 
+                              len(available_disks) if available_disks else workers,
+                              workers, args.out_dir)
                 for wid in range(workers)
             ]
             
@@ -348,10 +363,13 @@ def main():
         shared_mem = None
 
         total_edges = np.sum(deg_seq)
-        total_size, files_count = get_total_file_size(available_disks)
+        total_size, files_count = get_total_file_size(available_disks, args.out_dir)
         
         print(f'\n✔ Generated graph with {args.nodes:,} vertices and {total_edges:,} edges')
-        print(f'✔ Files distributed across {len(available_disks)} disks')
+        if args.mount:
+            print(f'✔ Files distributed across {len(available_disks)} disks')
+        else:
+            print(f'✔ Files written to {args.out_dir}')
         print(f'✔ Total data written: {get_human_size(total_size)} in {files_count} files')
         print(f'✔ Completed in {(time() - start):.2f} seconds')
 
