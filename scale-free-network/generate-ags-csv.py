@@ -50,7 +50,7 @@ def generate_long_property(rng: random.Random) -> int:
 
 def generate_edge_property(rng: random.Random) -> int:
     """Generate a random integer property for edges."""
-    return rng.randint(-2147483648, 2147483647)  # Int32 range
+    return rng.randint(0, 2147483647)  # Int32 range
 
 def sample_targets(n: int, u: int, deg: int, rng: np.random.Generator) -> np.ndarray:
     """Sample target vertices according to the degree distribution."""
@@ -242,7 +242,7 @@ def main():
     cpu_count = multiprocessing.cpu_count()
     if args.workers is None:
         # Use 75% of available CPUs by default
-        workers = max(1, min(len(available_disks), int(cpu_count * 0.75)))
+        workers = max(1, min(len(available_disks), int(cpu_count * 0.90)))
     else:
         workers = min(args.workers, cpu_count)
     
