@@ -31,6 +31,7 @@ import string
 import random
 import itertools
 import sys
+import time
 
 BATCH_SIZE = 50000
 MAX_EDGE_FILE_LINES = 5000000
@@ -92,6 +93,20 @@ def process_chunk(start: int, end: int, deg_seq: np.ndarray, seed: int, n: int, 
     edge_file_line_count = 0
     edge_file_index = 0
     
+    total_vertices = end - start
+    vertices_processed = 0
+    total_edges = np.sum(deg_seq[start:end])
+    edges_processed = 0
+    last_progress_time = 0
+    progress_interval = 5  # seconds
+    
+    def print_progress():
+        vertex_percent = (vertices_processed / total_vertices) * 100
+        edge_percent = (edges_processed / total_edges * 100) if total_edges > 0 else 100
+        print(f"Worker {worker_id:02d}: "
+              f"Vertices: {vertices_processed:,}/{total_vertices:,} ({vertex_percent:.1f}%) | "
+              f"Edges: {edges_processed:,}/{total_edges:,} ({edge_percent:.1f}%)")
+    
     with open(vertex_file, 'w', newline='', buffering=CSV_BUFFER_SIZE) as vf:
         vertex_writer = csv.writer(vf)
         vertex_writer.writerow(['~id', 'outDegree:Int', 'prop1:Long', 'prop2:Long', 'prop3:Long', 'prop4:Long'])
@@ -105,6 +120,13 @@ def process_chunk(start: int, end: int, deg_seq: np.ndarray, seed: int, n: int, 
         try:
             for u in range(start, end):
                 deg = deg_seq[u]
+                vertices_processed += 1
+                current_time = time.time()
+                
+                # Print progress every 5 seconds
+                if current_time - last_progress_time >= progress_interval:
+                    print_progress()
+                    last_progress_time = current_time
                 
                 # Generate vertex
                 vertex_id = generate_vertex_id(u, seed)
@@ -123,6 +145,7 @@ def process_chunk(start: int, end: int, deg_seq: np.ndarray, seed: int, n: int, 
                 if deg > 0:
                     rng = np.random.default_rng(seed + u)
                     for v in sample_targets(n, u, deg, rng):
+                        edges_processed += 1
                         erng = random.Random(int(seed + u * n + int(v)))
                         edge_props = [generate_edge_property(erng) for _ in range(5)]
                         edge_buffer.append([
@@ -156,6 +179,9 @@ def process_chunk(start: int, end: int, deg_seq: np.ndarray, seed: int, n: int, 
                 vertex_writer.writerows(vertex_buffer)
             if edge_buffer:
                 edge_writer.writerows(edge_buffer)
+            
+            # Print final progress for this worker
+            print_progress()
                 
         finally:
             ef.close()
@@ -257,6 +283,7 @@ def main():
     print(f"Total chunks: {len(chunks)}")
 
     # Process chunks in parallel
+    start_time = time.time()
     with ProcessPoolExecutor(max_workers=workers) as executor:
         futures = [
             executor.submit(process_chunk, start, end, deg_seq, args.seed, args.nodes, worker_id, workers)
@@ -268,7 +295,10 @@ def main():
         for f in futures:
             f.result()  # Wait for completion and propagate any errors
             completed += 1
-            print(f"Progress: {completed}/{len(chunks)} chunks completed ({(completed/len(chunks))*100:.1f}%)")
+            elapsed = time.time() - start_time
+            eta = (elapsed / completed) * (len(chunks) - completed) if completed > 0 else 0
+            print(f"\nOverall Progress: {completed}/{len(chunks)} chunks completed ({(completed/len(chunks))*100:.1f}%)")
+            print(f"Time elapsed: {elapsed/60:.1f} minutes | ETA: {eta/60:.1f} minutes")
 
 if __name__ == '__main__':
     main()
