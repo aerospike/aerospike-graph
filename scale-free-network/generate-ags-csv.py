@@ -27,206 +27,142 @@ import csv
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 import multiprocessing
-import string
 import random
-import itertools
-import sys
-import time
+from multiprocessing import shared_memory
+from time import time
 
-BATCH_SIZE = 50000
-MAX_EDGE_FILE_LINES = 5000000
-
-# Add buffer size for CSV writers
-CSV_BUFFER_SIZE = 1024 * 1024  # 1MB buffer
-
-def generate_vertex_id(n: int, seed: int) -> str:
-    """Generate a 25-character alphanumeric vertex ID."""
-    rng = random.Random(seed + n)
-    chars = string.ascii_uppercase + string.digits
-    return 'U' + ''.join(rng.choice(chars) for _ in range(24))
-
-def generate_long_property(rng: random.Random) -> int:
-    """Generate a random long integer property."""
-    return rng.randint(0, 9223372036854775807)
-
-def generate_edge_property(rng: random.Random) -> int:
-    """Generate a random integer property for edges."""
-    return rng.randint(0, 2147483647)  # Int32 range
-
-def sample_targets(n: int, u: int, deg: int, rng: np.random.Generator) -> np.ndarray:
-    """Sample target vertices according to the degree distribution."""
-    targets = np.arange(n)
-    if u < n:
-        targets = np.delete(targets, u)  # exclude self-loops
-    if deg <= len(targets):
-        return rng.choice(targets, size=deg, replace=False)
-    else:
-        chosen = list(targets)
-        extra = rng.choice(targets, size=deg - len(targets), replace=True)
-        return np.concatenate([chosen, extra])
+BATCH_SIZE = 1_000_000  # Increased to 1M
+MAX_EDGE_FILE_LINES = 20_000_000  # Increased to 20M
+CSV_BUFFER_SIZE = 8 * 1024 * 1024  # 8MB buffer
 
 def get_shard_path(base_dir: str, worker_id: int, total_disks: int) -> str:
-    """Get the path for a specific worker's shard across available disks."""
     disk_number = worker_id % total_disks + 1
     return os.path.join(f"/mnt/data{disk_number}", base_dir)
 
-def process_chunk(start: int, end: int, deg_seq: np.ndarray, seed: int, n: int, worker_id: int, total_workers: int):
-    """Process a chunk of vertices and generate their edges."""
-    # Determine total available disks (look for mounted /mnt/data* directories)
-    available_disks = [i for i in range(1, 25) if os.path.ismount(f"/mnt/data{i}")]
-    if not available_disks:
-        raise RuntimeError("No mounted disks found in /mnt/data*")
-    total_disks = len(available_disks)
-    
-    # Get shard-specific paths
-    vertex_dir = get_shard_path('vertices', worker_id, total_disks)
-    edge_dir = get_shard_path('edges', worker_id, total_disks)
-    
-    vertex_file = os.path.join(vertex_dir, f'vertices_part_{worker_id:02d}.csv')
-    edge_file = os.path.join(edge_dir, f'edges_part_{worker_id:02d}.csv')
-    
-    os.makedirs(vertex_dir, exist_ok=True)
-    os.makedirs(edge_dir, exist_ok=True)
+def generate_vertex_id(n: int) -> str:
+    """Generate a numeric vertex ID - much faster than alphanumeric."""
+    return f"A{n:019d}"
+
+def generate_long_property(rng: random.Random) -> int:
+    return rng.randint(0, 9223372036854775807)
+
+def generate_edge_property(rng: random.Random) -> int:
+    return rng.randint(0, 2147483647)
+
+def sample_targets(n, u, k, rng):
+    """More efficient target sampling using sets."""
+    targets = set()
+    while len(targets) < k:
+        v = int(rng.integers(0, n))
+        if v != u:
+            targets.add(v)
+    return list(targets)
+
+def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks, total_workers):
+    """Process vertices and edges for a worker using shared memory."""
+    # Get shared memory array
+    existing_shm = shared_memory.SharedMemory(name=shm_name)
+    deg_seq = np.ndarray(shape, dtype=dtype, buffer=existing_shm.buf)
+
+    # Setup output directories
+    edge_output_dir = get_shard_path("edges", worker_id, total_disks)
+    vertex_output_dir = get_shard_path("vertices", worker_id, total_disks)
+    os.makedirs(edge_output_dir, exist_ok=True)
+    os.makedirs(vertex_output_dir, exist_ok=True)
+
+    # Initialize files and buffers
+    edge_buffer = []
+    edge_file_index = 0
+    edge_file_line_count = 0
+    edge_file_path = os.path.join(edge_output_dir, f'edges_part_{worker_id:02d}_{edge_file_index:03d}.csv')
+    edge_file = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
+    edge_writer = csv.writer(edge_file)
+    edge_writer.writerow(['~from', '~to', '~label:String', 
+                         'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
 
     vertex_buffer = []
-    edge_buffer = []
-    edge_file_line_count = 0
-    edge_file_index = 0
-    
-    total_vertices = end - start
-    vertices_processed = 0
-    total_edges = np.sum(deg_seq[start:end])
-    edges_processed = 0
-    last_progress_time = 0
-    progress_interval = 5  # seconds
-    
-    def print_progress():
-        vertex_percent = (vertices_processed / total_vertices) * 100
-        edge_percent = (edges_processed / total_edges * 100) if total_edges > 0 else 100
-        print(f"Worker {worker_id:02d}: "
-              f"Vertices: {vertices_processed:,}/{total_vertices:,} ({vertex_percent:.1f}%) | "
-              f"Edges: {edges_processed:,}/{total_edges:,} ({edge_percent:.1f}%)")
-    
-    with open(vertex_file, 'w', newline='', buffering=CSV_BUFFER_SIZE) as vf:
-        vertex_writer = csv.writer(vf)
-        vertex_writer.writerow(['~id', 'outDegree:Int', 'prop1:Long', 'prop2:Long', 'prop3:Long', 'prop4:Long'])
-        
-        # Open initial edge file with buffering
-        ef = open(edge_file, 'w', newline='', buffering=CSV_BUFFER_SIZE)
-        edge_writer = csv.writer(ef)
-        edge_writer.writerow(['~from', '~to', '~label:String', 
-                            'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
-        
-        try:
-            for u in range(start, end):
-                deg = deg_seq[u]
-                vertices_processed += 1
-                current_time = time.time()
-                
-                # Print progress every 5 seconds
-                if current_time - last_progress_time >= progress_interval:
-                    print_progress()
-                    last_progress_time = current_time
-                
-                # Generate vertex
-                vertex_id = generate_vertex_id(u, seed)
-                vrng = random.Random(seed + u)
-                props = [generate_long_property(vrng) for _ in range(4)]
-                vertex_buffer.append([vertex_id, deg] + props)
-                
-                # Flush vertex buffer if needed
-                if len(vertex_buffer) >= BATCH_SIZE:
-                    vertex_writer.writerows(vertex_buffer)
-                    print(f"Worker {worker_id}: Flushed {len(vertex_buffer)} vertices to {vertex_file}")
-                    vertex_buffer.clear()
-                    vf.flush()
-                
-                # Generate edges if degree > 0
-                if deg > 0:
-                    rng = np.random.default_rng(seed + u)
-                    for v in sample_targets(n, u, deg, rng):
-                        edges_processed += 1
-                        erng = random.Random(int(seed + u * n + int(v)))
-                        edge_props = [generate_edge_property(erng) for _ in range(5)]
-                        edge_buffer.append([
-                            generate_vertex_id(u, seed),
-                            generate_vertex_id(int(v), seed),
-                            'edge'
-                        ] + edge_props)
-                        
-                        # Flush edge buffer if needed
-                        if len(edge_buffer) >= BATCH_SIZE:
-                            edge_writer.writerows(edge_buffer)
-                            print(f"Worker {worker_id}: Flushed {len(edge_buffer)} edges to {edge_file}")
-                            edge_file_line_count += len(edge_buffer)
-                            edge_buffer.clear()
-                            ef.flush()
-                            
-                            # Roll over to new edge file if needed
-                            if edge_file_line_count >= MAX_EDGE_FILE_LINES:
-                                ef.close()
-                                edge_file_index += 1
-                                edge_file = os.path.join(edge_dir, f'edges_part_{worker_id:02d}_{edge_file_index:03d}.csv')
-                                ef = open(edge_file, 'w', newline='', buffering=CSV_BUFFER_SIZE)
-                                edge_writer = csv.writer(ef)
-                                edge_writer.writerow(['~from', '~to', '~label:String',
-                                                    'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
-                                edge_file_line_count = 0
-                                print(f"Worker {worker_id}: Rolled over to new edge file {edge_file}")
-            
-            # Flush remaining buffers
-            if vertex_buffer:
-                vertex_writer.writerows(vertex_buffer)
-            if edge_buffer:
-                edge_writer.writerows(edge_buffer)
-            
-            # Print final progress for this worker
-            print_progress()
-                
-        finally:
-            ef.close()
+    vertex_file_path = os.path.join(vertex_output_dir, f'vertices_part_{worker_id:02d}.csv')
+    vertex_file = open(vertex_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
+    vertex_writer = csv.writer(vertex_file)
+    vertex_writer.writerow(['~id', 'outDegree:Int', 'prop1:Long', 'prop2:Long', 'prop3:Long', 'prop4:Long'])
 
-def print_degree_distribution(deg_seq: np.ndarray, num_bins: int = 20):
-    """Print detailed statistics about the degree distribution."""
-    max_deg = np.max(deg_seq)
-    min_deg = np.min(deg_seq)
-    mean_deg = np.mean(deg_seq)
-    median_deg = np.median(deg_seq)
-    total_edges = np.sum(deg_seq)
-    
-    print("\nDegree Distribution Statistics:")
-    print(f"Total vertices: {len(deg_seq):,}")
-    print(f"Total edges: {total_edges:,}")
-    print(f"Maximum degree: {max_deg:,}")
-    print(f"Minimum degree: {min_deg:,}")
-    print(f"Average degree: {mean_deg:.2f}")
-    print(f"Median degree: {median_deg:.2f}")
-    
-    # Print logarithmic histogram for the rest
-    print("\nLogarithmic Distribution Histogram:")
-    if max_deg > 10:
-        # Create logarithmic bins
-        high_deg_seq = deg_seq[deg_seq > 10]
-        if len(high_deg_seq) > 0:
-            log_max = np.log10(max_deg)
-            # Generate more bins than needed and then remove duplicates
-            raw_bins = np.logspace(1, log_max, num=40)
-            # Round and ensure unique, monotonically increasing bins
-            bins = np.unique(np.round(raw_bins))
-            # Add 11 as the starting point if not present
-            if bins[0] > 11:
-                bins = np.concatenate(([11], bins))
-            
-            hist, bin_edges = np.histogram(high_deg_seq, bins=bins)
-            max_count = np.max(hist)
-            
-            for count, bin_start, bin_end in zip(hist, bin_edges[:-1], bin_edges[1:]):
-                if count > 0:
-                    bar_len = int((count / max_count) * 50)
-                    percentage = (count / len(deg_seq)) * 100
-                    print(f"{bin_start:6.0f} - {bin_end:6.0f} | {'*' * bar_len} ({count:,} vertices, {percentage:.1f}%)")
+    edges_written = 0
+    vertices_written = 0
+    last_progress_time = time()
+
+    # Process vertices in strided fashion
+    for u in range(worker_id, n, total_workers):
+        deg = deg_seq[u]
+        
+        # Generate and buffer vertex
+        vertex_id = generate_vertex_id(u)
+        vrng = random.Random(seed + u)
+        props = [generate_long_property(vrng) for _ in range(4)]
+        vertex_buffer.append([vertex_id, deg] + props)
+        vertices_written += 1
+
+        # Flush vertex buffer if needed
+        if len(vertex_buffer) >= BATCH_SIZE:
+            vertex_writer.writerows(vertex_buffer)
+            print(f"Worker {worker_id}: Flushed {len(vertex_buffer)} vertices")
+            vertex_buffer.clear()
+            vertex_file.flush()
+
+        # Generate edges if needed
+        if deg > 0:
+            rng = np.random.default_rng(seed + u)
+            for v in sample_targets(n, u, deg, rng):
+                erng = random.Random(int(seed + u * n + int(v)))
+                edge_buffer.append([
+                    generate_vertex_id(u),
+                    generate_vertex_id(v),
+                    'edge'
+                ] + [generate_edge_property(erng) for _ in range(5)])
+                edges_written += 1
+
+                # Flush edge buffer if needed
+                if len(edge_buffer) >= BATCH_SIZE:
+                    edge_writer.writerows(edge_buffer)
+                    print(f"Worker {worker_id}: Flushed {len(edge_buffer)} edges")
+                    edge_file_line_count += len(edge_buffer)
+                    edge_buffer.clear()
+                    edge_file.flush()
+
+                    # Roll over edge file if needed
+                    if edge_file_line_count >= MAX_EDGE_FILE_LINES:
+                        edge_file.close()
+                        edge_file_index += 1
+                        edge_file_path = os.path.join(edge_output_dir, f'edges_part_{worker_id:02d}_{edge_file_index:03d}.csv')
+                        edge_file = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
+                        edge_writer = csv.writer(edge_file)
+                        edge_writer.writerow(['~from', '~to', '~label:String',
+                                           'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
+                        print(f"Worker {worker_id}: Rolled over to new edge file {edge_file_path}")
+                        edge_file_line_count = 0
+
+        # Print progress every 5 seconds
+        current_time = time()
+        if current_time - last_progress_time >= 5:
+            print(f"Worker {worker_id}: Processed {vertices_written:,} vertices, {edges_written:,} edges")
+            last_progress_time = current_time
+
+    # Flush remaining buffers
+    if vertex_buffer:
+        vertex_writer.writerows(vertex_buffer)
+        print(f"Worker {worker_id}: Flushed final {len(vertex_buffer)} vertices")
+    vertex_file.close()
+
+    if edge_buffer:
+        edge_writer.writerows(edge_buffer)
+        print(f"Worker {worker_id}: Flushed final {len(edge_buffer)} edges")
+    edge_file.close()
+
+    existing_shm.close()
+    print(f"Worker {worker_id}: Completed - Total {vertices_written:,} vertices, {edges_written:,} edges")
 
 def main():
+    start = time()
+
     p = argparse.ArgumentParser(
         description="Generate log-normal directed graph CSVs with parallelism"
     )
@@ -248,12 +184,9 @@ def main():
     rng = np.random.default_rng(args.seed)
     mu = np.log(args.median)
     exp_deg = rng.lognormal(mean=mu, sigma=args.sigma, size=args.nodes)
-    deg_seq = np.round(exp_deg).astype(int)
+    deg_seq = np.round(exp_deg).astype(np.int32)  # Use int32 for shared memory efficiency
     deg_seq[deg_seq < 0] = 0
 
-    # Print detailed distribution statistics
-    print_degree_distribution(deg_seq)
-    
     if args.dry_run:
         print("\n✔ Dry run completed. No files were generated.")
         return
@@ -264,41 +197,44 @@ def main():
         raise RuntimeError("No mounted disks found in /mnt/data*. Please run mount_disks.sh first.")
     print(f"\nFound {len(available_disks)} mounted disks: {', '.join(f'/mnt/data{i}' for i in available_disks)}")
 
-    # Optimize worker count based on available CPUs and disk count
+    # Setup shared memory for degree sequence
+    shm = shared_memory.SharedMemory(create=True, size=deg_seq.nbytes)
+    shm_array = np.ndarray(deg_seq.shape, dtype=deg_seq.dtype, buffer=shm.buf)
+    shm_array[:] = deg_seq[:]
+
+    # Optimize worker count
     cpu_count = multiprocessing.cpu_count()
     if args.workers is None:
-        # Use 75% of available CPUs by default
-        workers = max(1, min(len(available_disks), int(cpu_count * 0.90)))
+        workers = max(1, min(len(available_disks), cpu_count))
     else:
         workers = min(args.workers, cpu_count)
-    
-    # Calculate optimal chunk size (aim for at least 100K vertices per chunk)
-    min_chunk_size = 100000
-    chunk_size = max(min_chunk_size, (args.nodes + workers - 1) // workers)
-    chunks = [(i, min(i + chunk_size, args.nodes)) for i in range(0, args.nodes, chunk_size)]
-    
+
     print(f"\nOptimized configuration:")
     print(f"Workers: {workers} (out of {cpu_count} CPUs)")
-    print(f"Chunk size: {chunk_size:,} vertices")
-    print(f"Total chunks: {len(chunks)}")
+    print(f"Batch size: {BATCH_SIZE:,}")
+    print(f"Edge file size: {MAX_EDGE_FILE_LINES:,}")
 
-    # Process chunks in parallel
-    start_time = time.time()
+    # Process in parallel
     with ProcessPoolExecutor(max_workers=workers) as executor:
         futures = [
-            executor.submit(process_chunk, start, end, deg_seq, args.seed, args.nodes, worker_id, workers)
-            for worker_id, (start, end) in enumerate(chunks)
+            executor.submit(process_full_worker, wid, shm.name, deg_seq.shape, deg_seq.dtype.name,
+                          args.seed, args.nodes, len(available_disks), workers)
+            for wid in range(workers)
         ]
         
-        # Monitor progress
         completed = 0
         for f in futures:
-            f.result()  # Wait for completion and propagate any errors
+            f.result()
             completed += 1
-            elapsed = time.time() - start_time
-            eta = (elapsed / completed) * (len(chunks) - completed) if completed > 0 else 0
-            print(f"\nOverall Progress: {completed}/{len(chunks)} chunks completed ({(completed/len(chunks))*100:.1f}%)")
-            print(f"Time elapsed: {elapsed/60:.1f} minutes | ETA: {eta/60:.1f} minutes")
+            print(f"\nProgress: {completed}/{workers} workers completed ({(completed/workers)*100:.1f}%)")
+
+    # Cleanup shared memory
+    shm.close()
+    shm.unlink()
+
+    print(f'\n✔ Generated graph with {args.nodes:,} vertices')
+    print(f'✔ Files distributed across {len(available_disks)} disks')
+    print(f'✔ Completed in {(time() - start):.2f} seconds')
 
 if __name__ == '__main__':
     main()
