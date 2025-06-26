@@ -226,6 +226,41 @@ def print_degree_distribution(deg_seq: np.ndarray, num_bins: int = 20):
                     percentage = (count / len(deg_seq)) * 100
                     print(f"{bin_start:6.0f} - {bin_end:6.0f} | {'*' * bar_len} ({count:,} vertices, {percentage:.1f}%)")
 
+def get_human_size(size_bytes):
+    """Convert bytes to human readable format."""
+    for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+        if size_bytes < 1024.0:
+            return f"{size_bytes:.2f} {unit}"
+        size_bytes /= 1024.0
+    return f"{size_bytes:.2f} PB"
+
+def get_total_file_size(available_disks):
+    """Calculate total size of all generated files."""
+    total_size = 0
+    files_count = 0
+    
+    for disk in available_disks:
+        vertex_dir = f"/mnt/data{disk}/vertices"
+        edge_dir = f"/mnt/data{disk}/edges"
+        
+        # Sum up vertex files
+        if os.path.exists(vertex_dir):
+            for f in os.listdir(vertex_dir):
+                if f.endswith('.csv'):
+                    path = os.path.join(vertex_dir, f)
+                    total_size += os.path.getsize(path)
+                    files_count += 1
+        
+        # Sum up edge files
+        if os.path.exists(edge_dir):
+            for f in os.listdir(edge_dir):
+                if f.endswith('.csv'):
+                    path = os.path.join(edge_dir, f)
+                    total_size += os.path.getsize(path)
+                    files_count += 1
+    
+    return total_size, files_count
+
 def main():
     global shared_mem, executor
     
@@ -313,8 +348,11 @@ def main():
         shared_mem = None
 
         total_edges = np.sum(deg_seq)
+        total_size, files_count = get_total_file_size(available_disks)
+        
         print(f'\n✔ Generated graph with {args.nodes:,} vertices and {total_edges:,} edges')
         print(f'✔ Files distributed across {len(available_disks)} disks')
+        print(f'✔ Total data written: {get_human_size(total_size)} in {files_count} files')
         print(f'✔ Completed in {(time() - start):.2f} seconds')
 
     except Exception as e:
