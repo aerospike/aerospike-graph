@@ -157,6 +157,46 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
     existing_shm.close()
     print(f"Worker {worker_id:02d}: 100% complete - {vertices_written:,} vertices, {edges_written:,} edges")
 
+def print_degree_distribution(deg_seq: np.ndarray, num_bins: int = 20):
+    """Print detailed statistics about the degree distribution."""
+    max_deg = np.max(deg_seq)
+    min_deg = np.min(deg_seq)
+    mean_deg = np.mean(deg_seq)
+    median_deg = np.median(deg_seq)
+    total_edges = np.sum(deg_seq)
+    
+    print("\nDegree Distribution Statistics:")
+    print(f"Total vertices: {len(deg_seq):,}")
+    print(f"Total edges: {total_edges:,}")
+    print(f"Maximum degree: {max_deg:,}")
+    print(f"Minimum degree: {min_deg:,}")
+    print(f"Average degree: {mean_deg:.2f}")
+    print(f"Median degree: {median_deg:.2f}")
+    
+    # Print logarithmic histogram for the rest
+    print("\nLogarithmic Distribution Histogram:")
+    if max_deg > 10:
+        # Create logarithmic bins
+        high_deg_seq = deg_seq[deg_seq > 10]
+        if len(high_deg_seq) > 0:
+            log_max = np.log10(max_deg)
+            # Generate more bins than needed and then remove duplicates
+            raw_bins = np.logspace(1, log_max, num=40)
+            # Round and ensure unique, monotonically increasing bins
+            bins = np.unique(np.round(raw_bins))
+            # Add 11 as the starting point if not present
+            if bins[0] > 11:
+                bins = np.concatenate(([11], bins))
+            
+            hist, bin_edges = np.histogram(high_deg_seq, bins=bins)
+            max_count = np.max(hist)
+            
+            for count, bin_start, bin_end in zip(hist, bin_edges[:-1], bin_edges[1:]):
+                if count > 0:
+                    bar_len = int((count / max_count) * 50)
+                    percentage = (count / len(deg_seq)) * 100
+                    print(f"{bin_start:6.0f} - {bin_end:6.0f} | {'*' * bar_len} ({count:,} vertices, {percentage:.1f}%)")
+
 def main():
     start = time()
 
@@ -184,6 +224,9 @@ def main():
     deg_seq = np.round(exp_deg).astype(np.int32)  # Use int32 for shared memory efficiency
     deg_seq[deg_seq < 0] = 0
 
+    # Print detailed distribution statistics
+    print_degree_distribution(deg_seq)
+    
     if args.dry_run:
         print("\n✔ Dry run completed. No files were generated.")
         return
