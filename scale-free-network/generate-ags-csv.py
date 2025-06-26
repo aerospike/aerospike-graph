@@ -30,10 +30,39 @@ import multiprocessing
 import random
 from multiprocessing import shared_memory
 from time import time
+import signal
+import sys
+import atexit
 
 BATCH_SIZE = 1_000_000  # Increased to 1M
 MAX_EDGE_FILE_LINES = 20_000_000  # Increased to 20M
 CSV_BUFFER_SIZE = 8 * 1024 * 1024  # 8MB buffer
+
+# Global variables for cleanup
+shared_mem = None
+executor = None
+
+def cleanup():
+    """Cleanup function to handle shared resources."""
+    global shared_mem, executor
+    if executor is not None:
+        print("\nShutting down workers...", file=sys.stderr)
+        executor.shutdown(wait=False)
+    
+    if shared_mem is not None:
+        try:
+            print("Cleaning up shared memory...", file=sys.stderr)
+            shared_mem.close()
+            shared_mem.unlink()
+        except Exception:
+            pass
+
+def signal_handler(signum, frame):
+    """Handle interrupt signals."""
+    signal_name = signal.Signals(signum).name
+    print(f"\nReceived {signal_name}. Cleaning up...", file=sys.stderr)
+    cleanup()
+    sys.exit(1)
 
 def get_shard_path(base_dir: str, worker_id: int, total_disks: int) -> str:
     disk_number = worker_id % total_disks + 1
@@ -198,83 +227,99 @@ def print_degree_distribution(deg_seq: np.ndarray, num_bins: int = 20):
                     print(f"{bin_start:6.0f} - {bin_end:6.0f} | {'*' * bar_len} ({count:,} vertices, {percentage:.1f}%)")
 
 def main():
+    global shared_mem, executor
+    
+    # Register cleanup handlers
+    atexit.register(cleanup)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
     start = time()
 
-    p = argparse.ArgumentParser(
-        description="Generate log-normal directed graph CSVs with parallelism"
-    )
-    p.add_argument('--nodes', type=int, default=100000,
-                   help='Number of vertices')
-    p.add_argument('--median', type=float, default=20.0,
-                   help='Log-normal median of out-degrees')
-    p.add_argument('--sigma', type=float, default=1.0,
-                   help='Log-normal σ for out-degrees')
-    p.add_argument('--workers', type=int, default=None,
-                   help='Number of parallel workers (default = CPU count)')
-    p.add_argument('--seed', type=int, default=0,
-                   help='Base RNG seed for reproducibility')
-    p.add_argument('--dry-run', action='store_true',
-                   help='Only show degree distribution statistics without generating files')
-    args = p.parse_args()
+    try:
+        p = argparse.ArgumentParser(
+            description="Generate log-normal directed graph CSVs with parallelism"
+        )
+        p.add_argument('--nodes', type=int, default=100000,
+                       help='Number of vertices')
+        p.add_argument('--median', type=float, default=20.0,
+                       help='Log-normal median of out-degrees')
+        p.add_argument('--sigma', type=float, default=1.0,
+                       help='Log-normal σ for out-degrees')
+        p.add_argument('--workers', type=int, default=None,
+                       help='Number of parallel workers (default = CPU count)')
+        p.add_argument('--seed', type=int, default=0,
+                       help='Base RNG seed for reproducibility')
+        p.add_argument('--dry-run', action='store_true',
+                       help='Only show degree distribution statistics without generating files')
+        args = p.parse_args()
 
-    # Sample degree sequence
-    rng = np.random.default_rng(args.seed)
-    mu = np.log(args.median)
-    exp_deg = rng.lognormal(mean=mu, sigma=args.sigma, size=args.nodes)
-    deg_seq = np.round(exp_deg).astype(np.int32)  # Use int32 for shared memory efficiency
-    deg_seq[deg_seq < 0] = 0
+        # Sample degree sequence
+        rng = np.random.default_rng(args.seed)
+        mu = np.log(args.median)
+        exp_deg = rng.lognormal(mean=mu, sigma=args.sigma, size=args.nodes)
+        deg_seq = np.round(exp_deg).astype(np.int32)  # Use int32 for shared memory efficiency
+        deg_seq[deg_seq < 0] = 0
 
-    # Print detailed distribution statistics
-    print_degree_distribution(deg_seq)
-    
-    if args.dry_run:
-        print("\n✔ Dry run completed. No files were generated.")
-        return
-
-    # Check for mounted disks
-    available_disks = [i for i in range(1, 25) if os.path.ismount(f"/mnt/data{i}")]
-    if not available_disks:
-        raise RuntimeError("No mounted disks found in /mnt/data*. Please run mount_disks.sh first.")
-    print(f"\nFound {len(available_disks)} mounted disks: {', '.join(f'/mnt/data{i}' for i in available_disks)}")
-
-    # Setup shared memory for degree sequence
-    shm = shared_memory.SharedMemory(create=True, size=deg_seq.nbytes)
-    shm_array = np.ndarray(deg_seq.shape, dtype=deg_seq.dtype, buffer=shm.buf)
-    shm_array[:] = deg_seq[:]
-
-    # Optimize worker count
-    cpu_count = multiprocessing.cpu_count()
-    if args.workers is None:
-        workers = max(1, min(len(available_disks), cpu_count))
-    else:
-        workers = min(args.workers, cpu_count)
-
-    print(f"\nOptimized configuration:")
-    print(f"Workers: {workers} (out of {cpu_count} CPUs)")
-    print(f"Batch size: {BATCH_SIZE:,}")
-    print(f"Edge file size: {MAX_EDGE_FILE_LINES:,}")
-
-    # Process in parallel
-    with ProcessPoolExecutor(max_workers=workers) as executor:
-        futures = [
-            executor.submit(process_full_worker, wid, shm.name, deg_seq.shape, deg_seq.dtype.name,
-                          args.seed, args.nodes, len(available_disks), workers)
-            for wid in range(workers)
-        ]
+        # Print detailed distribution statistics
+        print_degree_distribution(deg_seq)
         
-        completed = 0
-        for f in futures:
-            f.result()
-            completed += 1
-            print(f"\nProgress: {completed}/{workers} workers completed ({(completed/workers)*100:.1f}%)")
+        if args.dry_run:
+            print("\n✔ Dry run completed. No files were generated.")
+            return
 
-    # Cleanup shared memory
-    shm.close()
-    shm.unlink()
+        # Check for mounted disks
+        available_disks = [i for i in range(1, 25) if os.path.ismount(f"/mnt/data{i}")]
+        if not available_disks:
+            raise RuntimeError("No mounted disks found in /mnt/data*. Please run mount_disks.sh first.")
+        print(f"\nFound {len(available_disks)} mounted disks: {', '.join(f'/mnt/data{i}' for i in available_disks)}")
 
-    print(f'\n✔ Generated graph with {args.nodes:,} vertices')
-    print(f'✔ Files distributed across {len(available_disks)} disks')
-    print(f'✔ Completed in {(time() - start):.2f} seconds')
+        # Setup shared memory for degree sequence
+        shared_mem = shared_memory.SharedMemory(create=True, size=deg_seq.nbytes)
+        shm_array = np.ndarray(deg_seq.shape, dtype=deg_seq.dtype, buffer=shared_mem.buf)
+        shm_array[:] = deg_seq[:]
+
+        # Optimize worker count
+        cpu_count = multiprocessing.cpu_count()
+        if args.workers is None:
+            workers = max(1, min(len(available_disks), cpu_count))
+        else:
+            workers = min(args.workers, cpu_count)
+
+        print(f"\nOptimized configuration:")
+        print(f"Workers: {workers} (out of {cpu_count} CPUs)")
+        print(f"Batch size: {BATCH_SIZE:,}")
+        print(f"Edge file size: {MAX_EDGE_FILE_LINES:,}")
+
+        # Process in parallel
+        with ProcessPoolExecutor(max_workers=workers) as executor_ctx:
+            executor = executor_ctx  # Store for cleanup
+            futures = [
+                executor.submit(process_full_worker, wid, shared_mem.name, deg_seq.shape, deg_seq.dtype.name,
+                              args.seed, args.nodes, len(available_disks), workers)
+                for wid in range(workers)
+            ]
+            
+            completed = 0
+            for f in futures:
+                f.result()
+                completed += 1
+                print(f"\nProgress: {completed}/{workers} workers completed ({(completed/workers)*100:.1f}%)")
+
+        # Normal cleanup
+        executor = None
+        shared_mem.close()
+        shared_mem.unlink()
+        shared_mem = None
+
+        total_edges = np.sum(deg_seq)
+        print(f'\n✔ Generated graph with {args.nodes:,} vertices and {total_edges:,} edges')
+        print(f'✔ Files distributed across {len(available_disks)} disks')
+        print(f'✔ Completed in {(time() - start):.2f} seconds')
+
+    except Exception as e:
+        print(f"\nError: {str(e)}", file=sys.stderr)
+        raise
 
 if __name__ == '__main__':
     main()
