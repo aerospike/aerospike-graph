@@ -30,9 +30,13 @@ import multiprocessing
 import string
 import random
 import itertools
+import sys
 
-BATCH_SIZE = 10000
-MAX_EDGE_FILE_LINES = 1000000  # 1M lines per file
+BATCH_SIZE = 50000
+MAX_EDGE_FILE_LINES = 5000000
+
+# Add buffer size for CSV writers
+CSV_BUFFER_SIZE = 1024 * 1024  # 1MB buffer
 
 def generate_vertex_id(n: int, seed: int) -> str:
     """Generate a 25-character alphanumeric vertex ID."""
@@ -88,12 +92,12 @@ def process_chunk(start: int, end: int, deg_seq: np.ndarray, seed: int, n: int, 
     edge_file_line_count = 0
     edge_file_index = 0
     
-    with open(vertex_file, 'w', newline='') as vf:
+    with open(vertex_file, 'w', newline='', buffering=CSV_BUFFER_SIZE) as vf:
         vertex_writer = csv.writer(vf)
         vertex_writer.writerow(['~id', 'outDegree:Int', 'prop1:Long', 'prop2:Long', 'prop3:Long', 'prop4:Long'])
         
-        # Open initial edge file
-        ef = open(edge_file, 'w', newline='')
+        # Open initial edge file with buffering
+        ef = open(edge_file, 'w', newline='', buffering=CSV_BUFFER_SIZE)
         edge_writer = csv.writer(ef)
         edge_writer.writerow(['~from', '~to', '~label:String', 
                             'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
@@ -140,7 +144,7 @@ def process_chunk(start: int, end: int, deg_seq: np.ndarray, seed: int, n: int, 
                                 ef.close()
                                 edge_file_index += 1
                                 edge_file = os.path.join(edge_dir, f'edges_part_{worker_id:02d}_{edge_file_index:03d}.csv')
-                                ef = open(edge_file, 'w', newline='')
+                                ef = open(edge_file, 'w', newline='', buffering=CSV_BUFFER_SIZE)
                                 edge_writer = csv.writer(ef)
                                 edge_writer.writerow(['~from', '~to', '~label:String',
                                                     'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
@@ -234,10 +238,23 @@ def main():
         raise RuntimeError("No mounted disks found in /mnt/data*. Please run mount_disks.sh first.")
     print(f"\nFound {len(available_disks)} mounted disks: {', '.join(f'/mnt/data{i}' for i in available_disks)}")
 
-    # Set up parallel processing
-    workers = args.workers or multiprocessing.cpu_count()
-    chunk_size = (args.nodes + workers - 1) // workers
+    # Optimize worker count based on available CPUs and disk count
+    cpu_count = multiprocessing.cpu_count()
+    if args.workers is None:
+        # Use 75% of available CPUs by default
+        workers = max(1, min(len(available_disks), int(cpu_count * 0.75)))
+    else:
+        workers = min(args.workers, cpu_count)
+    
+    # Calculate optimal chunk size (aim for at least 100K vertices per chunk)
+    min_chunk_size = 100000
+    chunk_size = max(min_chunk_size, (args.nodes + workers - 1) // workers)
     chunks = [(i, min(i + chunk_size, args.nodes)) for i in range(0, args.nodes, chunk_size)]
+    
+    print(f"\nOptimized configuration:")
+    print(f"Workers: {workers} (out of {cpu_count} CPUs)")
+    print(f"Chunk size: {chunk_size:,} vertices")
+    print(f"Total chunks: {len(chunks)}")
 
     # Process chunks in parallel
     with ProcessPoolExecutor(max_workers=workers) as executor:
@@ -245,12 +262,13 @@ def main():
             executor.submit(process_chunk, start, end, deg_seq, args.seed, args.nodes, worker_id, workers)
             for worker_id, (start, end) in enumerate(chunks)
         ]
+        
+        # Monitor progress
+        completed = 0
         for f in futures:
             f.result()  # Wait for completion and propagate any errors
-
-    print(f"\n✔ Generated graph with {args.nodes:,} vertices")
-    print(f"✔ Files distributed across {len(available_disks)} disks")
-    print(f"✔ Check mounted disks for output files: {', '.join(f'/mnt/data{i}' for i in available_disks)}")
+            completed += 1
+            print(f"Progress: {completed}/{len(chunks)} chunks completed ({(completed/len(chunks))*100:.1f}%)")
 
 if __name__ == '__main__':
     main()
