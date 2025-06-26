@@ -46,11 +46,6 @@ def main():
     print(f"   • {len(edge_files)} edge files")
     print(f"   • {total_files} total files")
 
-    # Create destination directories if using gsutil
-    if args.gcs.startswith("gs://"):
-        subprocess.run(["gsutil", "-q", "mkdir", "-p", f"{args.gcs}/vertices"], check=False)
-        subprocess.run(["gsutil", "-q", "mkdir", "-p", f"{args.gcs}/edges"], check=False)
-
     # Upload all files
     with ThreadPoolExecutor(max_workers=args.threads) as executor:
         for f in vertex_files + edge_files:
