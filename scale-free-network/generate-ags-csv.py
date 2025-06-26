@@ -89,6 +89,7 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
     edges_written = 0
     vertices_written = 0
     last_progress_time = time()
+    total_vertices = n // total_workers + (1 if worker_id < n % total_workers else 0)
 
     # Process vertices in strided fashion
     for u in range(worker_id, n, total_workers):
@@ -104,7 +105,6 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
         # Flush vertex buffer if needed
         if len(vertex_buffer) >= BATCH_SIZE:
             vertex_writer.writerows(vertex_buffer)
-            print(f"Worker {worker_id}: Flushed {len(vertex_buffer)} vertices")
             vertex_buffer.clear()
             vertex_file.flush()
 
@@ -123,7 +123,6 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
                 # Flush edge buffer if needed
                 if len(edge_buffer) >= BATCH_SIZE:
                     edge_writer.writerows(edge_buffer)
-                    print(f"Worker {worker_id}: Flushed {len(edge_buffer)} edges")
                     edge_file_line_count += len(edge_buffer)
                     edge_buffer.clear()
                     edge_file.flush()
@@ -137,28 +136,26 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
                         edge_writer = csv.writer(edge_file)
                         edge_writer.writerow(['~from', '~to', '~label:String',
                                            'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
-                        print(f"Worker {worker_id}: Rolled over to new edge file {edge_file_path}")
                         edge_file_line_count = 0
 
         # Print progress every 5 seconds
         current_time = time()
         if current_time - last_progress_time >= 5:
-            print(f"Worker {worker_id}: Processed {vertices_written:,} vertices, {edges_written:,} edges")
+            progress = (vertices_written / total_vertices) * 100
+            print(f"Worker {worker_id:02d}: {progress:.1f}% ({vertices_written:,}/{total_vertices:,} vertices, {edges_written:,} edges)")
             last_progress_time = current_time
 
     # Flush remaining buffers
     if vertex_buffer:
         vertex_writer.writerows(vertex_buffer)
-        print(f"Worker {worker_id}: Flushed final {len(vertex_buffer)} vertices")
     vertex_file.close()
 
     if edge_buffer:
         edge_writer.writerows(edge_buffer)
-        print(f"Worker {worker_id}: Flushed final {len(edge_buffer)} edges")
     edge_file.close()
 
     existing_shm.close()
-    print(f"Worker {worker_id}: Completed - Total {vertices_written:,} vertices, {edges_written:,} edges")
+    print(f"Worker {worker_id:02d}: 100% complete - {vertices_written:,} vertices, {edges_written:,} edges")
 
 def main():
     start = time()
