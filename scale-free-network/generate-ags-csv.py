@@ -17,24 +17,26 @@ Usage:
         --median 20.0 \
         --sigma 1.0 \
         --workers 8 \
-        --out_dirs /mnt/disk1,/mnt/disk2,/mnt/disk3 \
-        --seed 42
+        --out-dir /mnt/disk1,/mnt/disk2,/mnt/disk3 \
+        --seed 42 \
+        --dist lognormal
+        --schema-file schema.csv
 """
 
 import argparse
 import os
 import csv
+import string
+
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 import multiprocessing
-import random
 from multiprocessing import shared_memory
 import time
 import signal
 import sys
 import atexit
 import random
-from datetime import datetime, timedelta
 
 BATCH_SIZE = 1_000_000  # Increased to 1M
 MAX_EDGE_FILE_LINES = 20_000_000  # Increased to 20M
@@ -80,38 +82,38 @@ def generate_vertex_id(n: int) -> str:
 def generate_long_property(rng: random.Random) -> int:
     return rng.randint(0, 9223372036854775807)
 
+def random_string(length=8):
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
 def generate_edge_property(rng: random.Random) -> int:
     return rng.randint(0, 2147483647)
 
-def generate_edge_properties():
-    txn_days_c2c = random.randint(0, 30)
-    successful_txn_amt_c2c = round(random.uniform(0, 10000), 2)
-    failed_txn_count_c2c = random.randint(0, 10)
-    snapshot_date = int(time.time() - random.randint(0,31000000))
-    successful_txn_count_c2c = random.randint(0, 100)
-    ban = random.randint(1, 100) == 1
+def generate_random_property(type):
+    type = str(type).lower()
+    if type == "int":
+        return random.randint(0, 2147483647)
+    elif type == "double":
+        value = random.uniform(0.0, 100000.0)
+        return round(value, 2)
+    elif type == "string":
+        return random_string()
+    elif type == "date":
+        return int(time.time() - random.randint(0,31000000))
+    elif type == "long":
+        return random.randint(0, 9223372036854775807)
+    elif type == "bool":
+        return random.randint(1, 5) == 1
+    else:
+        raise ValueError(f"{type} not recognized, use either int, double, string, date, long, or bool")
 
-    return [
-        txn_days_c2c,
-        successful_txn_amt_c2c,
-        failed_txn_count_c2c,
-        snapshot_date,
-        successful_txn_count_c2c,
-        ban
-    ]
+def generate_line_properties(schema):
+    '''Grab types of each, generate random based on type'''
+    values = []
+    for property in schema:
+        type = str(property).split(':')[1]
+        values.append(generate_random_property(type))
 
-def generate_vertex_properties():
-    v_90d_distinct_devices = random.randint(1, 15)
-    v_trust_score = round(random.uniform(0.0, 1.0), 2)
-    v_snapshot_date_user_node = int(time.time() - random.randint(0,31000000))
-    v_blacklisted = random.randint(1,100) == 1
-
-    return [
-        v_90d_distinct_devices,
-        v_trust_score,
-        v_snapshot_date_user_node,
-        v_blacklisted
-    ]
+    return values
 
 def sample_targets(n, u, k, rng):
     """More efficient target sampling using sets."""
@@ -122,7 +124,7 @@ def sample_targets(n, u, k, rng):
             targets.add(v)
     return list(targets)
 
-def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks, total_workers, out_dir=None):
+def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks, total_workers, vert_schema, edge_schema, out_dir=None):
     """Process vertices and edges for a worker using shared memory."""
     # Get shared memory array
     existing_shm = shared_memory.SharedMemory(name=shm_name)
@@ -141,16 +143,12 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
     edge_file_path = os.path.join(edge_output_dir, f'edges_part_{worker_id:02d}_{edge_file_index:03d}.csv')
     edge_file = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
     edge_writer = csv.writer(edge_file)
-    edge_writer.writerow(['~from', '~to', '~label', 
-                         'txn_days_c2c:Int', 'successful_txn_amt_c2c:Double', 'failed_txn_count_c2c:Int',
-                          'snapshot_date:Long', 'successful_txn_count_c2c:Int', 'ban:Bool'])
+    edge_writer.writerow(['~from', '~to', '~label'] + edge_schema)
     vertex_buffer = []
     vertex_file_path = os.path.join(vertex_output_dir, f'vertices_part_{worker_id:02d}.csv')
     vertex_file = open(vertex_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
     vertex_writer = csv.writer(vertex_file)
-    vertex_writer.writerow(['~id', 'outDegree:Int',
-                            'v_90d_distinct_devices:Int', 'v_trust_score:Double',
-                            'v_snapshot_date_user_node:Long', 'v_blacklisted:Bool'])
+    vertex_writer.writerow(['~id', 'outDegree:Int'] + vert_schema)
     edges_written = 0
     vertices_written = 0
     last_progress_time = time.time()
@@ -163,7 +161,7 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
         # Generate and buffer vertex
         vertex_id = generate_vertex_id(u)
         vrng = random.Random(seed + u)
-        props = generate_vertex_properties()
+        props = generate_line_properties(vert_schema)
         vertex_buffer.append([vertex_id, deg] + props)
         vertices_written += 1
 
@@ -182,7 +180,7 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
                     generate_vertex_id(u),
                     generate_vertex_id(v),
                     'edge'
-                ] + generate_edge_properties())
+                ] + generate_line_properties(edge_schema))
                 edges_written += 1
 
                 # Flush edge buffer if needed
@@ -199,9 +197,7 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
                         edge_file_path = os.path.join(edge_output_dir, f'edges_part_{worker_id:02d}_{edge_file_index:03d}.csv')
                         edge_file = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
                         edge_writer = csv.writer(edge_file)
-                        edge_writer.writerow(['~from', '~to', '~label',
-                                              'txn_days_c2c:Int', 'successful_txn_amt_c2c:Double', 'failed_txn_count_c2c:Int',
-                                              'snapshot_date:Long', 'successful_txn_count_c2c:Int', 'ban:Bool'])
+                        edge_writer.writerow(['~from', '~to', '~label'] + edge_schema)
                         edge_file_line_count = 0
 
         # Print progress every 5 seconds
@@ -223,14 +219,13 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
     existing_shm.close()
     print(f"Worker {worker_id:02d}: 100% complete - {vertices_written:,} vertices, {edges_written:,} edges")
 
-def print_degree_distribution(deg_seq: np.ndarray, num_bins: int = 20):
-    """Print detailed statistics about the degree distribution."""
+def print_degree_distribution(deg_seq: np.ndarray, distribution: str = "lognormal", num_bins: int = 20):
     max_deg = np.max(deg_seq)
     min_deg = np.min(deg_seq)
     mean_deg = np.mean(deg_seq)
     median_deg = np.median(deg_seq)
     total_edges = np.sum(deg_seq)
-    
+
     print("\nDegree Distribution Statistics:")
     print(f"Total vertices: {len(deg_seq):,}")
     print(f"Total edges: {total_edges:,}")
@@ -238,30 +233,38 @@ def print_degree_distribution(deg_seq: np.ndarray, num_bins: int = 20):
     print(f"Minimum degree: {min_deg:,}")
     print(f"Average degree: {mean_deg:.2f}")
     print(f"Median degree: {median_deg:.2f}")
-    
-    # Print logarithmic histogram for the rest
-    print("\nLogarithmic Distribution Histogram:")
-    if max_deg > 10:
-        # Create logarithmic bins
-        high_deg_seq = deg_seq[deg_seq > 10]
-        if len(high_deg_seq) > 0:
-            log_max = np.log10(max_deg)
-            # Generate more bins than needed and then remove duplicates
-            raw_bins = np.logspace(1, log_max, num=40)
-            # Round and ensure unique, monotonically increasing bins
-            bins = np.unique(np.round(raw_bins))
-            # Add 11 as the starting point if not present
-            if bins[0] > 11:
-                bins = np.concatenate(([11], bins))
-            
-            hist, bin_edges = np.histogram(high_deg_seq, bins=bins)
-            max_count = np.max(hist)
-            
-            for count, bin_start, bin_end in zip(hist, bin_edges[:-1], bin_edges[1:]):
-                if count > 0:
-                    bar_len = int((count / max_count) * 50)
-                    percentage = (count / len(deg_seq)) * 100
-                    print(f"{bin_start:6.0f} - {bin_end:6.0f} | {'*' * bar_len} ({count:,} vertices, {percentage:.1f}%)")
+
+    print(f"\n {distribution} Distribution Histogram:")
+    if distribution == "lognormal":
+        if max_deg > 10:
+            # Create logarithmic bins
+            high_deg_seq = deg_seq[deg_seq > 10]
+            if len(high_deg_seq) > 0:
+                log_max = np.log10(max_deg)
+                # Generate more bins than needed and then remove duplicates
+                raw_bins = np.logspace(1, log_max, num=40)
+                # Round and ensure unique, monotonically increasing bins
+                bins = np.unique(np.round(raw_bins))
+                # Add 11 as the starting point if not present
+                if bins[0] > 11:
+                    bins = np.concatenate(([11], bins))
+                hist, bin_edges = np.histogram(high_deg_seq, bins=bins)
+                max_count = np.max(hist)
+
+                for count, bin_start, bin_end in zip(hist, bin_edges[:-1], bin_edges[1:]):
+                    if count > 0:
+                        bar_len = int((count / max_count) * 50)
+                        percentage = (count / len(deg_seq)) * 100
+                        print(f"{bin_start:6.0f} - {bin_end:6.0f} | {'*' * bar_len} ({count:,} vertices, {percentage:.1f}%)")
+    else:
+        bins = np.linspace(min_deg, max_deg + 1, num_bins).astype(int)
+        hist, bin_edges = np.histogram(deg_seq, bins=bins)
+        max_count = np.max(hist)
+        for count, bin_start, bin_end in zip(hist, bin_edges[:-1], bin_edges[1:]):
+            if count > 0:
+                bar_len = int((count / max_count) * 50)
+                percentage = (count / len(deg_seq)) * 100
+                print(f"{bin_start:6} - {bin_end:6} | {'*' * bar_len} ({count:,} vertices, {percentage:.1f}%)")
 
 def get_human_size(size_bytes):
     """Convert bytes to human readable format."""
@@ -295,6 +298,36 @@ def get_total_file_size(available_disks=None, out_dir=None):
     
     return total_size, files_count
 
+def sample_sequence(distribution, median, sigma, vertices, seed) -> np.ndarray:
+    rng = np.random.default_rng(seed)
+
+    if distribution == "lognormal":
+        mu = np.log(median)
+        seq = rng.lognormal(mean=mu, sigma=sigma, size=vertices)
+    elif distribution == "uniform":
+        low = median - sigma
+        high = median + sigma
+        seq = rng.integers(low, high + 1, size=vertices)
+    elif distribution == "gaussian":
+        mean = median
+        stddev = sigma
+        seq = rng.normal(loc=mean, scale=stddev, size=vertices)
+    elif distribution == "poisson":
+        seq = rng.poisson(lam=median, size=vertices)
+    else:
+        raise ValueError(f"Unsupported distribution: {distribution}")
+
+    deg_seq = np.round(seq).astype(np.int32)
+    deg_seq[deg_seq < 0] = 0
+    return deg_seq
+
+def load_schema(schema_file):
+    with open(schema_file) as f:
+        reader = csv.reader(f)
+        vert_header = next(reader)
+        edge_header = next(reader)
+    return vert_header, edge_header
+
 def main():
     global shared_mem, executor
     
@@ -321,22 +354,36 @@ def main():
                        help='Base RNG seed for reproducibility')
         p.add_argument('--dry-run', action='store_true',
                        help='Only show degree distribution statistics without generating files')
+        p.add_argument('--dist', type=str, default="lognormal")
+        p.add_argument('--schema-file', type=str,
+                       help='Path to CSV file defining vertex and edge schemas')
         output_group = p.add_mutually_exclusive_group(required=False)
         output_group.add_argument('--mount', action='store_true',
                                 help='Use mounted disks at /mnt/data*')
         output_group.add_argument('--out-dir',
                                 help='Output directory for all files')
         args = p.parse_args()
-
-        # Sample degree sequence
-        rng = np.random.default_rng(args.seed)
-        mu = np.log(args.median)
-        exp_deg = rng.lognormal(mean=mu, sigma=args.sigma, size=args.nodes)
-        deg_seq = np.round(exp_deg).astype(np.int32)  # Use int32 for shared memory efficiency
-        deg_seq[deg_seq < 0] = 0
+        distribution = args.dist
+        schema_file = args.schema_file
+        if schema_file:
+            vert_schema, edge_schema = load_schema(schema_file)
+        else:
+            print("No Schema File provided, resorting to defaults")
+            vert_schema = ['v_num_transactions:Int', 'v_credit_score:Double',
+                           'v_registration_date:Long', 'v_blacklisted:Bool']
+            edge_schema = ['transaction_amt:Double', 'snapshot_date:Long',
+                           'transaction_method:String', 'transaction_succeeded:Bool']
+            # Sample degree sequence
+        deg_seq = sample_sequence(
+            distribution=distribution,
+            median=args.median,
+            sigma=args.sigma,
+            vertices=args.nodes,
+            seed=args.seed
+        )
 
         # Print detailed distribution statistics
-        print_degree_distribution(deg_seq)
+        print_degree_distribution(deg_seq, distribution)
         
         if args.dry_run:
             print("\n✔ Dry run completed. No files were generated.")
@@ -380,7 +427,7 @@ def main():
                 executor.submit(process_full_worker, wid, shared_mem.name, deg_seq.shape, deg_seq.dtype.name,
                               args.seed, args.nodes, 
                               len(available_disks) if available_disks else workers,
-                              workers, args.out_dir)
+                              workers, vert_schema, edge_schema, args.out_dir)
                 for wid in range(workers)
             ]
             

@@ -1,0 +1,2 @@
+v_score:Double,v_active:Bool, v_wins:Int
+e_weight:Long,e_label:String,e_snapshot_date:Date
