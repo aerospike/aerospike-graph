@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 import subprocess
-import os
+from tqdm import tqdm
 import argparse
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from time import time
 
 def upload_file(path: Path, gcs_path: str):
@@ -48,8 +48,12 @@ def main():
 
     # Upload all files
     with ThreadPoolExecutor(max_workers=args.threads) as executor:
-        for f in vertex_files + edge_files:
-            executor.submit(upload_worker, f, args.gcs)
+        futures = {
+            executor.submit(upload_worker, f, args.gcs): f
+            for f in vertex_files + edge_files
+        }
+        for _ in tqdm(as_completed(futures), total=len(futures), desc="Uploading"):
+            pass
 
     print(f"\n✅ Completed upload in {(time() - start):.2f} seconds")
 
