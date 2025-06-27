@@ -29,10 +29,12 @@ from concurrent.futures import ProcessPoolExecutor
 import multiprocessing
 import random
 from multiprocessing import shared_memory
-from time import time
+import time
 import signal
 import sys
 import atexit
+import random
+from datetime import datetime, timedelta
 
 BATCH_SIZE = 1_000_000  # Increased to 1M
 MAX_EDGE_FILE_LINES = 20_000_000  # Increased to 20M
@@ -81,6 +83,36 @@ def generate_long_property(rng: random.Random) -> int:
 def generate_edge_property(rng: random.Random) -> int:
     return rng.randint(0, 2147483647)
 
+def generate_edge_properties():
+    txn_days_c2c = random.randint(0, 30)
+    successful_txn_amt_c2c = round(random.uniform(0, 10000), 2)
+    failed_txn_count_c2c = random.randint(0, 10)
+    snapshot_date = int(time.time() - random.randint(0,31000000))
+    successful_txn_count_c2c = random.randint(0, 100)
+    ban = random.randint(1, 100) == 1
+
+    return [
+        txn_days_c2c,
+        successful_txn_amt_c2c,
+        failed_txn_count_c2c,
+        snapshot_date,
+        successful_txn_count_c2c,
+        ban
+    ]
+
+def generate_vertex_properties():
+    v_90d_distinct_devices = random.randint(1, 15)
+    v_trust_score = round(random.uniform(0.0, 1.0), 2)
+    v_snapshot_date_user_node = int(time.time() - random.randint(0,31000000))
+    v_blacklisted = random.randint(1,100) == 1
+
+    return [
+        v_90d_distinct_devices,
+        v_trust_score,
+        v_snapshot_date_user_node,
+        v_blacklisted
+    ]
+
 def sample_targets(n, u, k, rng):
     """More efficient target sampling using sets."""
     targets = set()
@@ -110,17 +142,18 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
     edge_file = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
     edge_writer = csv.writer(edge_file)
     edge_writer.writerow(['~from', '~to', '~label', 
-                         'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
-
+                         'txn_days_c2c:Int', 'successful_txn_amt_c2c:Double', 'failed_txn_count_c2c:Int',
+                          'snapshot_date:Long', 'successful_txn_count_c2c:Int', 'ban:Bool'])
     vertex_buffer = []
     vertex_file_path = os.path.join(vertex_output_dir, f'vertices_part_{worker_id:02d}.csv')
     vertex_file = open(vertex_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
     vertex_writer = csv.writer(vertex_file)
-    vertex_writer.writerow(['~id', 'outDegree:Int', 'prop1:Long', 'prop2:Long', 'prop3:Long', 'prop4:Long'])
-
+    vertex_writer.writerow(['~id', 'outDegree:Int',
+                            'v_90d_distinct_devices:Int', 'v_trust_score:Double',
+                            'v_snapshot_date_user_node:Long', 'v_blacklisted:Bool'])
     edges_written = 0
     vertices_written = 0
-    last_progress_time = time()
+    last_progress_time = time.time()
     total_vertices = n // total_workers + (1 if worker_id < n % total_workers else 0)
 
     # Process vertices in strided fashion
@@ -130,7 +163,7 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
         # Generate and buffer vertex
         vertex_id = generate_vertex_id(u)
         vrng = random.Random(seed + u)
-        props = [generate_long_property(vrng) for _ in range(4)]
+        props = generate_vertex_properties()
         vertex_buffer.append([vertex_id, deg] + props)
         vertices_written += 1
 
@@ -149,7 +182,7 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
                     generate_vertex_id(u),
                     generate_vertex_id(v),
                     'edge'
-                ] + [generate_edge_property(erng) for _ in range(5)])
+                ] + generate_edge_properties())
                 edges_written += 1
 
                 # Flush edge buffer if needed
@@ -166,12 +199,13 @@ def process_full_worker(worker_id, shm_name, shape, dtype, seed, n, total_disks,
                         edge_file_path = os.path.join(edge_output_dir, f'edges_part_{worker_id:02d}_{edge_file_index:03d}.csv')
                         edge_file = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
                         edge_writer = csv.writer(edge_file)
-                        edge_writer.writerow(['~from', '~to', '~label:String',
-                                           'eprop1:Int', 'eprop2:Int', 'eprop3:Int', 'eprop4:Int', 'eprop5:Int'])
+                        edge_writer.writerow(['~from', '~to', '~label',
+                                              'txn_days_c2c:Int', 'successful_txn_amt_c2c:Double', 'failed_txn_count_c2c:Int',
+                                              'snapshot_date:Long', 'successful_txn_count_c2c:Int', 'ban:Bool'])
                         edge_file_line_count = 0
 
         # Print progress every 5 seconds
-        current_time = time()
+        current_time = time.time()
         if current_time - last_progress_time >= 5:
             progress = (vertices_written / total_vertices) * 100
             print(f"Worker {worker_id:02d}: {progress:.1f}% ({vertices_written:,}/{total_vertices:,} vertices, {edges_written:,} edges)")
@@ -269,7 +303,7 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     
-    start = time()
+    start = time.time()
 
     try:
         p = argparse.ArgumentParser(
@@ -371,7 +405,7 @@ def main():
         else:
             print(f'✔ Files written to {args.out_dir}')
         print(f'✔ Total data written: {get_human_size(total_size)} in {files_count} files')
-        print(f'✔ Completed in {(time() - start):.2f} seconds')
+        print(f'✔ Completed in {(time.time() - start):.2f} seconds')
 
     except Exception as e:
         print(f"\nError: {str(e)}", file=sys.stderr)
