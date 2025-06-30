@@ -5,6 +5,9 @@ generate_log_normal_directed_graph_csv_parallel.py
 Generate a directed graph whose out-degree sequence follows a log-normal distribution,
 and export vertices and edges in Aerospike Graph bulk-loader CSV format, with parallelism.
 
+If you want to specify the schema, edit schema.csv file, with the first line being
+schema for the properties of vertices, and the second line being the schema for the properties of the edges
+
 Vertices CSV format:
     ~id:String,outDegree:Int,prop1:Long,prop2:Long,prop3:Long,prop4:Long
 
