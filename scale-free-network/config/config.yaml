@@ -1,0 +1,38 @@
+#There must be an entry for each edge and vertex type
+#This should have the same edges and vertexes as in your files for schema
+#Percent of both sections must add to 100
+
+edge_distributions:
+  owns:
+    properties:
+      - edge_prop1:Long
+      - edge_prop2:String
+      - edge_prop3:Date
+    from: user
+    to: account
+    median: 2.5
+    sigma: .6
+
+  transaction:
+    properties:
+      - edge_prop1:Long
+      - edge_prop2:String
+      - edge_prop3:Date
+    from: account
+    to: account
+    median: 2.5
+    sigma: 1.6
+
+vertice_distributions:
+  account:
+    properties:
+      - vertice_prop1:Double
+      - vertice_prop2:Bool
+      - vertice_prop3:Int
+    percent: 40
+  user:
+    properties:
+      - vertice_prop1:Double
+      - vertice_prop2:Bool
+      - vertice_prop3:Int
+    percent: 60

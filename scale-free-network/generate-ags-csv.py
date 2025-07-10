@@ -5,7 +5,7 @@ generate_log_normal_directed_graph_csv_parallel.py
 Generate a directed graph whose out-degree sequence follows a log-normal distribution,
 and export vertices and edges in Aerospike Graph bulk-loader CSV format, with parallelism.
 
-If you want to specify the schema, edit schema.csv file, with the first line being
+If you want to specify the schema, edit owns.csv file, with the first line being
 schema for the properties of vertices, and the second line being the schema for the properties of the edges
 
 Vertices CSV format:
@@ -22,8 +22,8 @@ Usage:
         --workers 8 \
         --out-dir /mnt/disk1,/mnt/disk2,/mnt/disk3 \
         --seed 42 \
-        --dist lognormal
-        --schema-file schema.csv
+        --dist lognormal \
+        --schema-file owns.csv
 """
 
 import argparse
@@ -70,6 +70,45 @@ def signal_handler(signum, frame):
     print(f"\nReceived {signal_name}. Cleaning up...", file=sys.stderr)
     cleanup()
     sys.exit(1)
+
+import powerlaw
+import matplotlib.pyplot as plt
+def validate_and_plot_powerlaw(deg_seq: np.ndarray, plot_title="Degree Distribution", show_plot=True):
+    # Filter out 0s (not part of power-law support)
+    deg_seq = deg_seq[deg_seq > 0]
+
+    print("\n[Power-Law Validation]")
+    print(f"Sample size: {len(deg_seq):,}")
+    print(f"Min degree: {deg_seq.min()}, Max degree: {deg_seq.max()}")
+
+    fit = powerlaw.Fit(deg_seq, discrete=True)
+    gamma = fit.power_law.alpha
+    xmin = fit.power_law.xmin
+    D = fit.power_law.D
+
+    print(f"Estimated gamma (α): {gamma:.2f}")
+    print(f"Estimated xmin: {xmin}")
+    print(f"KS distance: {D:.4f}")
+
+    R, p = fit.distribution_compare('power_law', 'lognormal')
+    print(f"Power-law vs Log-normal loglikelihood ratio: R = {R:.3f}, p = {p:.4f}")
+    if R > 0 and p < 0.05:
+        print("✔ Power-law is a significantly better fit")
+    elif R < 0 and p < 0.05:
+        print("✘ Log-normal is a better fit")
+    else:
+        print("❓ Inconclusive: not enough evidence to favor one model")
+
+    if show_plot:
+        plt.figure(figsize=(8, 6))
+        fit.plot_pdf(color='b', label='Empirical PDF')
+        fit.power_law.plot_pdf(color='r', linestyle='--', label='Fitted Power-law')
+        plt.title(plot_title)
+        plt.xlabel("Degree k")
+        plt.ylabel("P(k)")
+        plt.legend()
+        plt.grid(True, which="both", ls=":")
+        plt.show()
 
 def get_shard_path(base_dir: str, worker_id: int, total_disks: int, out_dir: str = None) -> str:
     """Get path for output files. If out_dir is specified, use that, otherwise use mounted disks."""
@@ -387,7 +426,7 @@ def main():
 
         # Print detailed distribution statistics
         print_degree_distribution(deg_seq, distribution)
-        
+        validate_and_plot_powerlaw(deg_seq)
         if args.dry_run:
             print("\n✔ Dry run completed. No files were generated.")
             return
