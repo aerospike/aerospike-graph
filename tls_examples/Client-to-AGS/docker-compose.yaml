@@ -1,6 +1,6 @@
 services:
   gremlin-tls-aerospike-db:
-    image: aerospike/aerospike-server-enterprise:7.1
+    image: aerospike/aerospike-server-enterprise:8.0.0.7
     container_name: gremlin-tls-aerospike-db
     networks:
       - gremlin-tls-asgraph-net
@@ -14,7 +14,7 @@ services:
         timeout: 10s
         retries: 3
   aerospike-graph-service:
-    image: aerospike/aerospike-graph-service:latest
+    image: ghcr.io/citrusleaf/firefly:3.0.0-rc1
     container_name:
       gremlin-tls-aerospike-graph-service
     depends_on:
