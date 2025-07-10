@@ -6,10 +6,14 @@
 - [Aerospike Graph Service](https://aerospike.com/docs/graph/install/docker/)
 - [Aerospike Database](https://aerospike.com/docs/database/install/docker/)
 
-Navigate to the `java-example` directory and run the following
+Make sure the docker containers are running, in the root directory use 
+```bash
+docker compose up -d
+```
+Now navigate to the `java-example` directory and run the following
 shell commands:
 
-```
+```bash
 mvn clean install -q
 java -jar target/ags-java-example-1.0-jar-with-dependencies.jar
 ```

@@ -144,7 +144,7 @@ public class Main {
 
         // Clean up
         g.V().drop().iterate();
-        System.out.print("Dropping Dataset.");
+        System.out.println("Dropping Dataset.");
         try {
             System.out.println("Closing Connection...");
             cluster.close();
