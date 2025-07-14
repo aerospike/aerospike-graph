@@ -1,48 +1,53 @@
 # GCP L3 Bulkload Example
 
-Configure Aerolab for GCP following this guide: https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md
+1.Configure Aerolab for GCP
+Use this guide: https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md
 
-Now create your cluster
+2. Create your cluster
 ```bash
-aerolab cluster create -n aerolab-cluster-name -c 3 --instance e2-medium --zone us-central1-a --disk pd-balanced:20 --disk pd-ssd:40 --disk pd-ssd:40 --start n
+aerolab cluster create /name:cluster-name /count:3 /aerospike-version:8.0.0.7 /instance:e2-medium /zone:us-central1-a
 ```
 
+3. Find the cluster IP
 You now have a cluster called aerolab-cluster-name
 Find its IP using
 ```bash
 aerolab cluster list
 ```
-Make a buckit in gcp for the data: gsutil mb gs://name-of-bucket
 
-Download bulk loader jar from here:
+4. Make GCP bucket
+Make a bucket in gcp for the data: 
+```bash
+gsutil mb gs://name-of-bucket
+```
+
+Download bulk loader jar from here
 https://aerospike.com/download/graph/loader/
 
-To ```bucket-files/jars```
+and place the bulk loader JAR in your bucket directory
+```bucket-files/jars```
 
-Edit the properties file in ```bucket-files/jars``` and edit the following variables:
-```
-aerospike.client.host=<cluster-host> #Set to the IP found earlier 
-aerospike.graphloader.vertices=gs://name-of-bucket/vertices/ #Set <name-of-bucket> to the name of your created bucket
-aerospike.graphloader.edges=   gs://name-of-bucket/edges/
-aerospike.graphloader.temp-directory=gs://name-of-bucket/temp/
-aerospike.graphloader.remote-user=<private_key_id> # Change these to your GCP Credentials
-aerospike.graphloader.remote-passkey=<private_key>
-aerospike.graphloader.gcs-email=<client_email>
-```
+5. Configure properties file
+Edit the properties file in ```bucket-files/configs/bulk-loader.properties``` 
+editing the values to your bucket names and cluster IP
 
-Now upload the files to the bucket
+6. Upload files to GCP
+Now upload the files to the bucket using
 ```bash
 gsutil cp -r ./bucket-files/* gs://name-of-bucket
 ```
 
+7. Edit the variables script
 Now edit the ```set_variables.sh``` script and change values of the variables
 There are explanatory comments in it to help.
 
+8. Attach the graph stack
 Once the variables are set, run 
 ```bash
 ./create_ag_stack.sh
 ```
 
+9. Create dataproc cluster and submit the bulkload
 Now to create a dataproc cluster and submit the bulkload job run
 ```bash
 ./bulkload.sh
@@ -52,15 +57,17 @@ When it has succeeded, you should see output similar to this:
 ```
 INFO EdgeOperations: Execution time in seconds for Edge write task: 2
 INFO ProgressBar:
-        Bulk Loader Progress:
+         Bulk Loader Progress:
                 Preflight check complete
                 Temp data writing complete
                 Supernode extraction complete
+                Edge cache generation complete
                 Vertex writing complete
                         Total of 10 vertices have been successfully written
                 Vertex validation complete
                 Edge writing complete
                         Total of 5 edges have been successfully written
                 Edge validation complete
+
 
 ```
