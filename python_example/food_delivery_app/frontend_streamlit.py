@@ -156,16 +156,52 @@ elif command == "Graph Visualization":
             width="100%",
             height=600,
             directed=True,
-            nodeHighlightBehavior=True,
-            node={
-                "labelProperty": "label",
-                "renderLabel": True,
-                "highlightStrokeColor": "#000",
+            groups={ #This will be used to add icons for nodes based on label
+                "CustomerProfile": {
+                    "shape": "icon",
+                    "icon": {
+                        "face": "FontAwesome",
+                        "code": "\f007",   # e.g. beer mug icon
+                        "size": 50
+                    }
+                },
+                "Restaurant": {
+                    "shape": "icon",
+                    "icon": {
+                        "face": "FontAwesome",
+                        "code": "\f2e7",   # e.g. beer mug icon
+                        "size": 50
+                    }
+                },
+                "FoodOrder": {
+                    "shape": "icon",
+                    "icon": {
+                        "face": "FontAwesome",
+                        "code": "\e4c6",   # e.g. beer mug icon
+                        "size": 50
+                    }
+                },
+                "Driver": {
+                    "shape": "icon",
+                    "icon": {
+                        "face": "FontAwesome",
+                        "code": "\ff5e4",   # e.g. beer mug icon
+                        "size": 50
+                    }
+                },
             },
-            link={
-                "labelProperty": "label",
-                "renderLabel": True,
+            interaction={
+                "hover": True,
+                "hoverConnectedEdges": True,
+                "tooltipDelay": 200
             },
+            nodes={
+                "shape": "dot",
+                "size": 16,
+                "font":
+                    { "size": 14 }
+            },
+            edges={ "smooth": False },
             physics=True,
         )
 

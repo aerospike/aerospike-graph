@@ -10,11 +10,11 @@ services:
       - DEFAULT_TTL=0
     healthcheck:
       test: ["CMD", "asinfo", "-p", "3000", "-v", "build"]
-      interval: 30s
+      interval: 10s
       timeout: 20s
       retries: 3
   aerospike-graph-service:
-    image: ghcr.io/citrusleaf/firefly:3.0.0-rc1
+    image: aerospike/aerospike-graph-service:latest
     container_name:
       aerospike-graph-service
       #    restart: always
