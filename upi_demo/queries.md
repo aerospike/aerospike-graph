@@ -10,7 +10,7 @@ Rajesh Kumar (VPA: `8056629010@ybl`) is sending INR 40,000 to `7797767385@ybl`. 
    g.V("8056629010@ybl")
 2. Check if Sender’s VPA has transacted with Receiver’s VPA before:
    ```groovy
-   g.V("8056629010@ybl").out("transaction").hasId("7797767385@ybl").next()
+   g.V("8056629010@ybl").out("transaction").hasId("7797767385@ybl")
 3. Explore other VPAs of the sender and evaluate transactions with the receiver:
    ```groovy
    g.V("8056629010@ybl").in("owns").in("has_account").outE('has_account', 'has_card').inV().outE("owns").inV().outE("transaction").inV().path()
@@ -26,7 +26,7 @@ Rajesh Kumar (VPA: `8056629010@ybl`) is sending INR 40,000 to `7797767385@ybl`. 
    .out('owns') \
    .out('transaction') \
    .dedup() \
-   .hasId('7797767385@ybl').next()
+   .hasId('7797767385@ybl')
 
 ## Scenario 2: Evaluating First-Time Connections
 Sender `A` sends money to `9524356932@ybl (C)`. A has previously transacted with `B`, and `B` has transacted with `C`.
@@ -39,7 +39,7 @@ g.V('CQE72NZMJL') \
   .out('owns') \
   .out('transaction') \
   .dedup() \
-  .hasId('9524356932@ybl').next()
+  .hasId('9524356932@ybl')
 
 // Extend the query to include second-degree transactions:
 g.V('CQE72NZMJL') \
@@ -48,7 +48,7 @@ g.V('CQE72NZMJL') \
   .out('transaction') \
   .dedup() \
   .out('transaction') \
-  .hasId("9524356932@ybl").next()
+  .hasId("9524356932@ybl")
 ```
 ## Scenario 3: Velocity of Outgoing Transactions 
 ### Steps:

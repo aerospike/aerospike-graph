@@ -26,7 +26,7 @@ services:
         timeout: 10s
         retries: 3
   aerospike-graph-service:
-    image: ghcr.io/citrusleaf/firefly:3.0.0-rc1
+    image: aerospike/aerospike-graph-service:latest
     container_name:
       tls-aerospike-graph-service
     depends_on:
