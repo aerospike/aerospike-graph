@@ -34,7 +34,7 @@ If you get the error
 http://localhost:5000/index.html sent back and error.
 Error code 403: Forbidden
 ```
-You are most likely running a proces on the port localhost:5000 already, terminate it and try again
+You are most likely running a process on the port localhost:5000 already, terminate it and try again
 
 
 ## Play around with the Graph
