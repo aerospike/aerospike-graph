@@ -25,5 +25,5 @@ def test_inserts(g):
     v2 = g.add_v("User").property("name", "ModMurdoch").property("role", "admin").next()
     e1 = g.add_e("Banned").to(v1).from_(v2).next()
 
-    assert g.V(v2).outE().next() == e1
+    assert g.V(v2).out_e().next() == e1
     assert g.V(v1).in_().next() == v2

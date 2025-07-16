@@ -4,14 +4,15 @@ import pytest
 import sys
 from pathlib import Path
 
-print(sys.path)
 from food_delivery_app.food_delivery_datasetgen import (
     generate_dataset,
-    vertex_types, edge_types,
-    vertex_headers, edge_headers
+    vertex_types,
+    edge_types,
+    vertex_headers,
+    edge_headers,
 )
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 
 def count_lines(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -39,6 +40,7 @@ def test_small_generation(tmp_path, nc, nr, nd, min_o, max_o):
     # verify vertices
     for label, sub in vertex_types.items():
         p = ROOT / "vertices" / sub / f"{sub}.csv"
+        print(p)
         assert p.exists(), f"{sub}.csv missing"
         header = p.read_text(encoding="utf-8").splitlines()[0]
         assert header == vertex_headers[label]
@@ -46,6 +48,7 @@ def test_small_generation(tmp_path, nc, nr, nd, min_o, max_o):
     # verify edges
     for label, sub in edge_types.items():
         p = ROOT / "edges" / sub / f"{sub}.csv"
+        print(p)
         assert p.exists(), f"{sub}.csv missing"
         header = p.read_text(encoding="utf-8").splitlines()[0]
         assert header == edge_headers[label]

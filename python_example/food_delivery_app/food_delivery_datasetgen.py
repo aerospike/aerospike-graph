@@ -247,7 +247,14 @@ def generate_dataset(n_customers, n_restaurants, n_drivers, min_orders_per_custo
         f.close()
 
     print("Dataset generation complete.")
-    print("Vertex files are in the 'vertices' folder and edge files are in the 'edges' folder.")
+
+    vf = next(iter(vertex_files.values()))
+    ef = next(iter(edge_files.values()))
+    vertices_dir = os.path.abspath(os.path.dirname(os.path.dirname(vf.name)))
+    edges_dir    = os.path.abspath(os.path.dirname(os.path.dirname(ef.name)))
+
+    print("Vertex files are in:", vertices_dir)
+    print("Edge files are in:", edges_dir)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
