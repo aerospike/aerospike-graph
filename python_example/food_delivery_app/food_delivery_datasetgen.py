@@ -2,6 +2,7 @@ import os
 import random
 import time
 import argparse
+from pathlib import Path
 
 #defaults
 n_customers = 100000
@@ -129,9 +130,15 @@ def generate_dataset(n_customers, n_restaurants, n_drivers, min_orders_per_custo
     print(str(min_orders_per_customer) + " min orders per customer")
     print(str(max_orders_per_customer) + " max orders per customer")
 
+    base_dir    = Path(__file__).parent
+    vertices_dir = base_dir / "vertices"
+    edges_dir    = base_dir / "edges"
+
+    vertices_dir.mkdir(exist_ok=True)
+    edges_dir.mkdir(exist_ok=True)
     # Open file handles for vertices and edges.
-    vertex_files = open_file_handles("vertices", vertex_types, vertex_headers)
-    edge_files = open_file_handles("edges", edge_types, edge_headers)
+    vertex_files = open_file_handles(vertices_dir, vertex_types, vertex_headers)
+    edge_files = open_file_handles(edges_dir, edge_types, edge_headers)
 
     # Dictionary to hold restaurant -> menu items mapping.
     restaurant_menu_items = {}
