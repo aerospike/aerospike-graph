@@ -2,13 +2,10 @@ import { describe, it, before, after } from 'mocha'
 import { expect } from 'chai'
 import  supertest from 'supertest'
 import { app } from '../index.js';
-import gremlin from "gremlin";
-import {drc} from "../gremlin.js";
-const {traversal} = gremlin.process.AnonymousTraversalSource;
+import { g } from "./setup.spec.js";
 
 describe('Express Endpoint Testing', function() {
     let request;
-    let g;
 
     // Give the Aerospike Graph container a moment to be ready before launching Express.
     before(async function() {
@@ -36,12 +33,6 @@ describe('Express Endpoint Testing', function() {
         await g.addE("Transaction").from_(aK.value).to(aB.value).property("amount", 600).next()
         await g.addE("Transaction").from_(aA.value).to(aB.value).property("amount", 400).next()
         await g.addE("Transaction").from_(aA.value).to(aB.value).property("amount", 5600).next()
-    });
-
-    after( async function() {
-        await drc.close()
-        console.log("Closing express endpoints")
-
     });
 
     it('GET /ping should return a 200 string', async function() {

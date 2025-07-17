@@ -44,9 +44,16 @@ jobs:
           pytest -q --maxfail=1
 
       - name: Install dependencies
+        working-directory: node-js-example
+        run: npm ci
+      - name: Run Mocha tests
+        working-directory: node-js-example
+        run: npm test
+      - name: Run Playwright E2E tests
+        working-directory: node-js-example
         run: |
-          cd node-js-example
-          npm ci
+          npx playwright install --with-deps
+          npm run test:e2e
 
       - name: Compile Java sources
         uses: actions/setup-java@v3
@@ -56,7 +63,7 @@ jobs:
       - name: Check Java Example compilation
         working-directory: java-example
         run: |
-          mvn compile -DskipTests
+          mvn test
 
       - name: Run Node JS example tests
         working-directory: node-js-example

@@ -1,6 +1,6 @@
 services:
   aerospike-db:
-    image: aerospike/aerospike-server-enterprise:7.1
+    image: aerospike/aerospike-server-enterprise:8.0.0.7
     container_name: aerospike-db
     networks:
       - asgraph_net
@@ -38,13 +38,12 @@ services:
       - asgraph_net
   zipkin:
     image: openzipkin/zipkin
-    container_name:
-      asgraph-zipkin
+    container_name: asgraph-zipkin
     networks:
       - asgraph_net
     ports:
       - "9411:9411"
-      
+
 networks:
   asgraph_net:
     name: asgraph_net
