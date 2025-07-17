@@ -260,8 +260,8 @@ def generate_dataset(n_customers, n_restaurants, n_drivers, min_orders_per_custo
     vertices_dir = os.path.abspath(os.path.dirname(os.path.dirname(vf.name)))
     edges_dir    = os.path.abspath(os.path.dirname(os.path.dirname(ef.name)))
 
-    print("Vertex files are in:", vertices_dir)
-    print("Edge files are in:", edges_dir)
+    print("Vertex files are in:", vertices_dir.resolve())
+    print("Edge files are in:", edges_dir.resolve())
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
