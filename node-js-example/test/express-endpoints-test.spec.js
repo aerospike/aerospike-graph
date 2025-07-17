@@ -11,7 +11,6 @@ describe('Express Endpoint Testing', function() {
     before(async function() {
         this.timeout(15_000);
         request = supertest(app);
-        g = traversal().withRemote(drc);
         const check = await g.inject(0).next();
         if (check.value !== 0) {
             console.error("Failed to connect to Gremlin server");
