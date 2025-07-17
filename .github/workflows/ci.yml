@@ -54,18 +54,17 @@ jobs:
         run: |
           npx playwright install --with-deps
           npm run test:e2e
+      - name: Run Node JS example tests
+        working-directory: node-js-example
+        run: |
+          npm test
 
       - name: Compile Java sources
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Check Java Example compilation
+      - name: Test Java Example
         working-directory: java-example
         run: |
           mvn test
-
-      - name: Run Node JS example tests
-        working-directory: node-js-example
-        run: |
-          npm test

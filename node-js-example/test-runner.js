@@ -1,4 +1,4 @@
-import { spawn } from "child_process";
+import { spawn} from "cross-spawn"
 import { setTimeout } from "timers/promises";
 
 let serverProcess;
@@ -19,10 +19,7 @@ async function runTests() {
     console.log("Running Playwright tests...");
 
     // Run Playwright tests
-    const playwrightProcess = spawn("npx.cmd", ["playwright", "test"], {
-      stdio: ["inherit", "inherit", "inherit"],
-      shell: true,
-    });
+    const playwrightProcess = spawn('npx', ['playwright', 'test'], { stdio: 'inherit' });
 
     // Wait for Playwright tests to complete
     await new Promise((resolve, reject) => {
