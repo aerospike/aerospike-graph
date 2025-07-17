@@ -25,5 +25,5 @@ python fraud_mimic.py
 ```bash
 python transactions_between_users.py
 ```
-4. Open the Web Application:
+5. Open the Web Application:
    Open your web browser and navigate to `http://localhost:8050/` to view the web application.
