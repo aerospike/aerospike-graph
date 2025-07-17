@@ -29,7 +29,7 @@ Follow these steps to set up Aerospike Graph:
 
 ## 2. Bulk Load Data
 
-To load data into Aerospike Graph in gremlin console, set the graph traversal source:
+To load data into Aerospike Graph, set the graph traversal source using [Gremlin Console](https://aerospike.com/docs/graph/quick-start/step/2/part/1/load-data#set-up-gremlin-console):
 ```groovy
 g = traversal().withRemote(DriverRemoteConnection.using("localhost", 8182, "g"))
 ```

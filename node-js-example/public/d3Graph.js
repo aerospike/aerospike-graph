@@ -18,9 +18,9 @@ export async function drawGraph() {
 
     if (nodes.length === 0) {
         let text = ""
-        if(getSelect1Val() === ""){
+        if (getSelect1Val() === "") {
             text = "Please Select Values for the User Selects"
-        }else{
+        } else {
             text = "No Transactions Found"
         }
         debugger

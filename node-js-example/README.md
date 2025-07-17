@@ -45,7 +45,7 @@ you can do the following actions:
 
 - Left click and drag in white space to move around the graph
 - Use scroll wheel to zoom in and out of the graph
-- Left click, hold, and drag a node to move it around the graph, the connections follow electron phyiscs, so pulling to far can result in moving the entire subgraph
+- Left click, hold, and drag a node to move it around the graph. The connections follow electron physics, so pulling too far can result in moving the entire subgraph
 - Left click on a node to open a modal showing its properties
 - Left click on an edge to open a modal showing its properties
 

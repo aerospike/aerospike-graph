@@ -161,7 +161,7 @@ elif command == "Graph Visualization":
                     "shape": "icon",
                     "icon": {
                         "face": "FontAwesome",
-                        "code": "\f007",   # e.g. beer mug icon
+                        "code": "\f007",
                         "size": 50
                     }
                 },
@@ -169,7 +169,7 @@ elif command == "Graph Visualization":
                     "shape": "icon",
                     "icon": {
                         "face": "FontAwesome",
-                        "code": "\f2e7",   # e.g. beer mug icon
+                        "code": "\f2e7",
                         "size": 50
                     }
                 },
@@ -177,7 +177,7 @@ elif command == "Graph Visualization":
                     "shape": "icon",
                     "icon": {
                         "face": "FontAwesome",
-                        "code": "\e4c6",   # e.g. beer mug icon
+                        "code": "\e4c6",
                         "size": 50
                     }
                 },
@@ -185,7 +185,7 @@ elif command == "Graph Visualization":
                     "shape": "icon",
                     "icon": {
                         "face": "FontAwesome",
-                        "code": "\ff5e4",   # e.g. beer mug icon
+                        "code": "\ff5e4",
                         "size": 50
                     }
                 },

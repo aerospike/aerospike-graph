@@ -9,12 +9,21 @@ refresh data and query for different users.
 # Usage
 
 1. Start Docker Image:
-   From the root of the example directory, run the following command to start the Docker image:
-   `docker compose up -d`
+From the root of the example directory, run the following command to start the Docker image:
+```bash
+docker compose up -d
+```
 2. Install Python Dependencies:
-   `pip install gremlinpython dash dash-cytoscape dash-bootstrap-components`
+```bash
+pip install gremlinpython dash dash-cytoscape dash-bootstrap-components
+```
 3. Run the CLI Example:
-   `python fraud_mimic.py`
-
+```bash
+python fraud_mimic.py
+```
+4. Start the Web Example:
+```bash
+python transactions_between_users.py
+```
 4. Open the Web Application:
    Open your web browser and navigate to `http://localhost:8050/` to view the web application.
