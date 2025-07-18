@@ -2,6 +2,7 @@
 
 import {getGraph} from "./routes.js";
 import {showEdgeModal, showNodeModal} from "./nodeModal.js";
+import {getSelect1Val} from "./state.js";
 
 const btn = document.getElementById("refresh-btn");
 btn.addEventListener("click", drawGraph);
@@ -14,7 +15,15 @@ let simulation;
 export async function drawGraph() {
     const {nodes = [], links = []} = await getGraph();
     svg.selectAll("*").remove();
+
     if (nodes.length === 0) {
+        let text = ""
+        if (getSelect1Val() === "") {
+            text = "Please Select Values for the User Selects"
+        } else {
+            text = "No Transactions Found"
+        }
+        debugger
         svg
             .append("text")
             .attr("x", width / 2)
@@ -22,7 +31,7 @@ export async function drawGraph() {
             .attr("text-anchor", "middle")
             .attr("font-size", "24px")
             .attr("fill", "#666")
-            .text("No transactions found");
+            .text(text);
         return;
     }
 

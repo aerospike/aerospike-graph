@@ -6,7 +6,6 @@ import pytest
 import sys
 import os
 from unittest.mock import patch, MagicMock
-import streamlit as st
 from streamlit.testing.v1 import AppTest
 
 # Add parent directories to path for imports

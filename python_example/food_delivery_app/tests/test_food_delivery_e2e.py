@@ -5,8 +5,8 @@ Tests Gremlin query functionality and data operations.
 import pytest
 import sys
 import os
-from gremlin_queries import GremlinClient
-import food_delivery_datasetgen
+from food_delivery_app.gremlin_queries import GremlinClient
+from food_delivery_app.food_delivery_datasetgen import generate_dataset
 
 # Add parent directories to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 def populated_food_delivery_graph(g):
     g.V().drop().iterate()
     
-    food_delivery_datasetgen.generate_dataset(
+    generate_dataset(
         n_customers=5,
         n_restaurants=3, 
         n_drivers=3,

@@ -29,13 +29,22 @@ Follow these steps to set up Aerospike Graph:
 
 ## 2. Bulk Load Data
 
-To load data into Aerospike Graph, use the following Gremlin query:
+To load data into Aerospike Graph, set the graph traversal source using [Gremlin Console](https://aerospike.com/docs/graph/quick-start/step/2/part/1/load-data#set-up-gremlin-console):
+```groovy
+g = traversal().withRemote(DriverRemoteConnection.using("localhost", 8182, "g"))
+```
 
+Now use the following Gremlin query:
 ```groovy
 g.with("evaluationTimeout", 100000)
  .call("aerospike.graphloader.admin.bulk-load.load")
  .with("aerospike.graphloader.vertices", "/data/upi_demo/dataset/vertices")
  .with("aerospike.graphloader.edges", "/data/upi_demo/dataset/edges")
+```
+
+After running this command, to check the status of the bulkloader use:
+```groovy
+g.call("aerospike.graphloader.admin.bulk-load.status")
 ```
 
 ## 3. Run sample Queries

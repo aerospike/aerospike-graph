@@ -1,20 +1,12 @@
-/**
- * Node JS Example using Aerospike Graph
- * This file implements a server that manages a graph database of users, accounts, and transactions
- * to demonstrate fraud detection patterns using graph traversal.
- */
 import express from "express"
 import path, {dirname} from "path"
 import {fileURLToPath} from 'url';
-import {HTTP_PORT} from "./public/consts.js";
 
 // Gremlin Function Imports
-import {populateGraph, userTransactions, transactionsBetweenUsers, getAllNames, rankMostTraffic} from "./gremlin.js";
-
+import {userTransactions, transactionsBetweenUsers, getAllNames, rankMostTraffic} from "./gremlin.js";
 
 // Initialize Express App
 export const app = express();
-
 
 // Setup ES module compatibility for __dirname
 const __filename = fileURLToPath(import.meta.url);

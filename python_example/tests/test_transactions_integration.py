@@ -12,7 +12,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from gremlin_python.process.graph_traversal import __
 from gremlin_python.process.traversal import T
-from conftest import g
 
 @pytest.fixture
 def populated_graph(clean_graph_for_individual_test):

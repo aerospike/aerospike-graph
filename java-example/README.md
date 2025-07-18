@@ -9,7 +9,7 @@
 Navigate to the `java-example` directory and run the following
 shell commands:
 
-```
+```bash
 mvn clean install -q
 java -jar target/ags-java-example-1.0-jar-with-dependencies.jar
 ```
