@@ -1,6 +1,6 @@
 services:
   tls-aerospike-db:
-    image: aerospike/aerospike-server-enterprise:7.1
+    image: aerospike/aerospike-server-enterprise:8.0.0.7
     container_name: tls-aerospike-db
     networks:
       - tls-asgraph-net
