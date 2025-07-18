@@ -1,7 +1,5 @@
-import os
 import random
 import pytest
-import sys
 from pathlib import Path
 
 from food_delivery_app.food_delivery_datasetgen import (
@@ -26,7 +24,6 @@ def count_lines(path):
     ]
 )
 def test_small_generation(tmp_path, nc, nr, nd, min_o, max_o):
-    # ensure deterministic behavior
     random.seed(0)
 
     generate_dataset(
@@ -37,7 +34,6 @@ def test_small_generation(tmp_path, nc, nr, nd, min_o, max_o):
         max_orders_per_customer=max_o,
     )
 
-    # verify vertices
     for label, sub in vertex_types.items():
         p = ROOT / "vertices" / sub / f"{sub}.csv"
         print(p)
@@ -45,7 +41,6 @@ def test_small_generation(tmp_path, nc, nr, nd, min_o, max_o):
         header = p.read_text(encoding="utf-8").splitlines()[0]
         assert header == vertex_headers[label]
 
-    # verify edges
     for label, sub in edge_types.items():
         p = ROOT / "edges" / sub / f"{sub}.csv"
         print(p)
