@@ -44,9 +44,9 @@ jobs:
           pytest tests/ -v --maxfail=1
 
       - name: Run pytest against food_delivery_app
-        working-directory: python_example/food_delivery_app
+        working-directory: python_example
         run: |
-          pytest tests/ -v --maxfail=1
+          pytest food_delivery_app/tests/ -v --maxfail=1
 
       - name: Install dependencies
         working-directory: node-js-example

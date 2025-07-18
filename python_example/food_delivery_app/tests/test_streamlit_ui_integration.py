@@ -8,10 +8,6 @@ import os
 from unittest.mock import patch, MagicMock
 from streamlit.testing.v1 import AppTest
 
-# Add parent directories to path for imports
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
 import frontend_streamlit
 from gremlin_queries import GremlinClient
 
