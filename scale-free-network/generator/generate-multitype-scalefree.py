@@ -1,32 +1,22 @@
 """
-generate-multitype-scalefree.py
-
 Generate a directed graph whose out-degree sequence follows a power law distribution,
 and export vertices and edges in Aerospike Graph bulk-loader CSV format, with parallelism.
 
-If you want to specify the schema, in the output folder, in edges or vertices, add a
-csv file for each type you want in the format "label.csv", and in each csv write
-the properties for the type in "name:type" format like:
-"edge_prop1:Long,edge_prop2:String,edge_prop3:Date"
+If you want to specify the schema, in config/config.yaml edit the edges and vertices values.
+Explanations for each property and name are in the DynamicGenerator.md file
 
-Then for each type made, go to config/config.yaml and in edge_distributions: add a
-record for each edge type, as well as the from, to, median, and sigma
-In the vertice_distributions, add records for each vertex type with a property 'percent'.
-
-Explanations for each property and name are in the config file
 Usage:
-    python generate_log_normal_directed_graph_csv_parallel.py \
+    python generate-multiple-scalefree.py \
         --nodes 100000 \
         --workers 8 \
-        --out-dir /mnt/disk1,/mnt/disk2,/mnt/disk3 \
+        --out-dir output \
         --seed 42 \
-        --schema-dir owns.csv
+        -- dry-run
 """
 
 # add check that the config and schemas are both size >0
 import argparse
 import os
-import csv
 import pickle
 import tempfile
 
@@ -50,8 +40,9 @@ shared_mem = None
 executor = None
 
 class EdgeConf:
-    def __init__(self, name, from_type_idx, to_type_idx, median, sigma, index, properties):
+    def __init__(self, name, rel_key, from_type_idx, to_type_idx, median, sigma, index, properties):
         self.name = name
+        self.rel_key = rel_key
         self.from_type_idx = from_type_idx
         self.to_type_idx = to_type_idx
         self.median = median
@@ -148,29 +139,35 @@ def validate_aerospike_properties(properties, type, sub_type):
 def parse_edge_config(config, vertex_idx_mapping):
     result = []
     i = 0
-    for name, props in config.items():
-        properties = props['properties']
-        if not isinstance(properties, list):
-            raise ValueError(f"Edge properties are not a list: '{properties}'")
-        validate_aerospike_properties(properties, "Edge", name)
-        entry = EdgeConf(
-            name=name,
-            from_type_idx=vertex_idx_mapping[props['from']],
-            to_type_idx=vertex_idx_mapping[props['to']],
-            properties = properties,
-            median = float(props['median']),
-            sigma = float(props['sigma']),
-            index = i
-        )
-        result.append(entry)
-        i +=1
+    for edge_type, edge_groups in config.items():
+        for rel_key, props in edge_groups.items():
+            properties = props['properties']
+            if properties == None:
+                properties = []
+            if not isinstance(properties, list):
+                raise ValueError(f"Edge properties are not a list: '{properties}'")
+            validate_aerospike_properties(properties, "Edge", edge_type)
+            entry = EdgeConf(
+                name=edge_type,
+                rel_key=rel_key,# The edge label for the graph
+                from_type_idx=vertex_idx_mapping[props['from']],
+                to_type_idx=vertex_idx_mapping[props['to']],
+                properties=properties,
+                median=float(props['median']),
+                sigma=float(props['sigma']),
+                index=i
+            )
+            result.append(entry)
+            i += 1
     return result
 
 def parse_vert_config(config, nodes):
     result = []
     i = 0
+    total_percent = 0
     for name, props in config.items():
         properties = props['properties']
+        total_percent += props['percent']
         if not isinstance(properties, list):
             raise ValueError(f"Vertex properties are not a list: '{properties}'")
         validate_aerospike_properties(properties, "Vertex", name)
@@ -182,38 +179,9 @@ def parse_vert_config(config, nodes):
         )
         result.append(entry)
         i += 1
+    if not(total_percent == 100):
+        raise ValueError(f"Vertex percents do not add up to 100: '{total_percent}'%")
     return result
-
-def load_schemas(schema_dir, edge_schemas, vertice_schemas ):
-    for root, _, files in os.walk(schema_dir):
-        parent = os.path.basename(root)
-        for file in files:
-            file_path = os.path.join(root, file)
-            f = open(file_path)
-            reader = csv.reader(f)
-            if parent == 'edges':
-                edge_schemas[file.split('.csv')[0]] = next(reader)
-            elif parent == 'vertices':
-                vertice_schemas[file.split('.csv')[0]] = next(reader)
-
-def validate_config(edge_configs, vertice_configs, edge_schemas, vertice_schemas, nodes):
-    edge_names = set(edge_schemas.keys())
-    vertex_names = set(vertice_schemas.keys())
-
-    for edge_conf in edge_configs:
-        if edge_conf.name not in edge_names:
-            raise ValueError(f"Edge '{edge_conf.name}' not found in edge schemas")
-
-    total_count = 0
-    for vert_conf in vertice_configs:
-        if vert_conf.name not in vertex_names:
-            raise ValueError(f"Vertex '{vert_conf.name}' not found in vertex schemas")
-        if not isinstance(vert_conf.count, int):
-            raise ValueError(f"Invalid count value for vertex '{vert_conf.name}': {vert_conf.count}")
-        total_count += vert_conf.count
-
-    if total_count != nodes:
-        raise ValueError(f"Total vertex percent is {total_count}, must equal 100")
 
 def sample_log_normal_deg(N, median, sigma, rng):
     mu = np.log(median)
@@ -368,13 +336,11 @@ def main():
                        help='Number of parallel workers (default = CPU count)')
         p.add_argument('--seed', type=int, default=0,
                        help='Base RNG seed for reproducibility')
-        p.add_argument('--gamma', type=int, default=2.5,
+        p.add_argument('--gamma', type=float, default=2.5,
                        help='Gamma for power-law generation')
         p.add_argument('--dry-run', action='store_true',
                        help='Only show degree distribution statistics without generating files')
-        p.add_argument('--schema-dir', type=str,
-                       help='Path to Folder defining vertex and edge schemas')
-        p.add_argument('--validate-distribution', type=bool, default=False,
+        p.add_argument('--validate-distribution', action='store_true',
                        help='Runs a function to see the fit between lognormal and powerlaw')
         output_group = p.add_mutually_exclusive_group(required=False)
         output_group.add_argument('--mount', action='store_true',
@@ -382,19 +348,11 @@ def main():
         output_group.add_argument('--out-dir',
                                 help='Output directory for all files')
         args = p.parse_args()
-        schema_dir = args.schema_dir
-        edge_schemas = {}
-        vertice_schemas = {}
-
-        if schema_dir:
-            load_schemas(schema_dir, edge_schemas, vertice_schemas)
-        else:
-            raise RuntimeError("No Schema Directory provided")
         nodes = args.nodes
-        config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config','config.yaml')
 
+        config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config','config.yaml')
         config = parse_config_yaml(config_path)
-        vertice_configs = parse_vert_config(config.get('vertice_distributions', {}), nodes)
+        vertice_configs = parse_vert_config(config.get('vertices', {}), nodes)
 
         vertex_ranges = [0]
         running_count = 0
@@ -411,10 +369,7 @@ def main():
             vertex_local_idx[start:end] = np.arange(end - start)
             vertex_idx_mapping[t.name] = i
 
-        edge_configs = parse_edge_config(config.get('edge_distributions', {}), vertex_idx_mapping)
-
-        # check that all edge and vertice types exist in schema and config, and percent add to 100
-        validate_config(edge_configs, vertice_configs, edge_schemas, vertice_schemas, nodes)
+        edge_configs = parse_edge_config(config.get('edges', {}), vertex_idx_mapping)
 
         # Sparse COO tensor: (src_global_id, edge_type_index, degree)
         degree_records = []
@@ -472,8 +427,6 @@ def main():
             "vertex_ranges": vertex_ranges,
             "edge_configs": edge_configs,
             "vertice_configs": vertice_configs,
-            "vertice_schemas": vertice_schemas,
-            "edge_schemas": edge_schemas,
             "vertex_idx_mapping": vertex_idx_mapping
         }
         aux_path = dump_pickle(aux_payload)

@@ -64,7 +64,8 @@ def sample_targets(n, u, k, rng):
 def sample_targets_from_pool(pool: np.ndarray, k: int, seed: int):
     rng = np.random.default_rng(seed)
     if k > len(pool):
-        raise ValueError("Not enough targets in pool")
+        print("ERROR: Not enough targets in pool, defaulting to using whole pool")
+        return rng.choice(pool, size=len(pool), replace=False)
     return rng.choice(pool, size=k, replace=False)
 
 
@@ -86,14 +87,11 @@ def process_full_worker(
         total_disks: int,
         total_workers: int,
         out_dir: str | None = None) -> None:
-    """Process vertices and edges for a worker using shared memory."""
     # Get shared memory array
     payload = pickle.load(open(aux_path, "rb"))
     vertex_ranges = payload["vertex_ranges"]
     vertice_configs = payload["vertice_configs"]
     edge_configs = payload["edge_configs"]
-    edge_schemas = payload["edge_schemas"]
-    vertice_schemas = payload["vertice_schemas"]
     vertex_idx_mapping = payload["vertex_idx_mapping"]
 
     shm = shared_memory.SharedMemory(name=shm_name)
@@ -115,20 +113,22 @@ def process_full_worker(
 
     vertex_writers = {}
     for V in vertice_configs:
+        vertex_subdir = os.path.join(get_shard_path("vertices", worker_id, total_disks, out_dir), V.name)
+        os.makedirs(vertex_subdir, exist_ok=True)
         fname = f'vertices_{V.name}_{worker_id:02d}.csv'
-        path  = get_shard_path("vertices", worker_id, total_disks, out_dir)
-        os.makedirs(path, exist_ok=True)
-        f = open(os.path.join(path, fname), "w", newline="", buffering=CSV_BUFFER_SIZE)
-        w = csv.writer(f);  w.writerow(['~id', 'outDegree:Int'] + vertice_schemas[V.name])
-        vertex_writers[vertex_idx_mapping[V.name]] = (w, f, [])      # writer, file handle, in‑mem buffer
+        f = open(os.path.join(vertex_subdir, fname), "w", newline="", buffering=CSV_BUFFER_SIZE)
+        w = csv.writer(f);  w.writerow(['~id', 'outDegree:Int'] + V.properties)
+        vertex_writers[vertex_idx_mapping[V.name]] = (w, f, []) # writer, file handle, in‑mem buffer
 
     edge_writers = {}
     edge_file_index = 0
     for E in edge_configs:
-        edge_file_path = os.path.join(edge_output_dir, f'edges_{E.name}_part_{worker_id:02d}_{edge_file_index:03d}.csv')
+        edge_subdir = os.path.join(get_shard_path("edges", worker_id, total_disks, out_dir), E.rel_key)
+        os.makedirs(edge_subdir, exist_ok=True)
+        edge_file_path = os.path.join(edge_subdir, f'edges_{E.rel_key}_part_{worker_id:02d}_{edge_file_index:03d}.csv')
         edge_file = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
         edge_writer = csv.writer(edge_file)
-        edge_writer.writerow(['~from', '~to', '~label'] + edge_schemas[E.name])
+        edge_writer.writerow(['~from', '~to', '~label'] + E.properties)
         edge_writers[E.index] = (edge_writer, edge_file, [])
         edge_file_index += 1
 
@@ -147,30 +147,28 @@ def process_full_worker(
         src_type = vertex_type_of(u)
         name = vertice_configs[src_type].name
         vertex_id = generate_vertex_id(name, u)
-        # 1) write vertex row
         out_deg = int(deg_mat[u].sum())          # total across edge types
         vbuf = vertex_writers[src_type][2]
-        vbuf.append([vertex_id, str(out_deg)] + generate_line_properties(vertice_schemas[name]))
+        vbuf.append([vertex_id, str(out_deg)] + generate_line_properties(vertice_configs[vertex_idx_mapping.get(name)].properties))
         vertices_written += 1
 
         flush_if_needed(vbuf, src_type, "vertex") #and write if needed
 
-        # 2) iterate over each edge type that uses this src_type
         edge_file_line_count = 0
         for E in edge_configs:      # pre‑build dict {src_type: [EdgeConf,..]}
             k = deg_mat[u, E.index]
-            if k == 0: continue # skip any vert that has no edges
+            if k == 0: continue
             tgt_ids = sample_targets_from_pool(target_pools[E.to_type_idx], k, seed)
             ebuff = edge_writers[E.index][2]
             efile = edge_writers[E.index][1]
             ewriter = edge_writers[E.index][0]
-            name = vertice_configs[E.to_type_idx].name# list associated with edge writer
+            name = vertice_configs[E.to_type_idx].name
             for v in tgt_ids:
                 ebuff.append([
                                  vertex_id,
                                  generate_vertex_id(name, v),
                                  E.name] +
-                             generate_line_properties(edge_schemas[E.name])
+                             generate_line_properties(E.properties)
                              )
                 edges_written += 1
             if len(ebuff) >= BATCH_SIZE:
@@ -186,14 +184,14 @@ def process_full_worker(
                     edge_file_path = os.path.join(edge_output_dir, f'edges_{E.name}_part_{worker_id:02d}_{edge_file_index:03d}.csv')
                     efile = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
                     edge_writer = csv.writer(efile)
-                    edge_writer.writerow(['~from', '~to', '~label'] + edge_schemas[E.name])
+                    edge_writer.writerow(['~from', '~to', '~label'] + E.properties)
                     edge_writers[E.index] = tuple([edge_writer, efile, ebuff])
                     edge_file_line_count = 0
     for vert_tuple in vertex_writers:
         buffer = vertex_writers[vert_tuple][2]
         file = vertex_writers[vert_tuple][1]
         writer = vertex_writers[vert_tuple][0]
-        if buffer: #buffer
+        if buffer:
             writer.writerows(buffer)
         if file:
             file.close()
@@ -201,7 +199,7 @@ def process_full_worker(
         buffer = edge_writers[edge_tuple][2]
         file = edge_writers[edge_tuple][1]
         writer = edge_writers[edge_tuple][0]
-        if buffer: #buffer
+        if buffer:
             writer.writerows(buffer)
         if file:
             file.close()
