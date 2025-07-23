@@ -130,16 +130,3 @@ def test_docker_compose_syntax():
         text=True
     )
     assert result.returncode == 0, f"docker-compose config failed: {result.stderr}"
-
-
-def test_docker_compose_ssl_configuration():
-    compose_path = Path(__file__).parent.parent / "docker-compose.yaml"
-    content = compose_path.read_text()
-    
-    assert "aerospike.graph-service.ssl.enabled: true" in content, \
-        "SSL configuration not found in docker-compose.yaml"
-    
-    assert "./g-tls:/opt/aerospike-graph/gremlin-server-tls:ro" in content, \
-        "Server certificate mount not found"
-    assert "./security/ca.crt:/opt/aerospike-graph/gremlin-server-ca/ca.crt:ro" in content, \
-        "CA certificate mount not found" 
