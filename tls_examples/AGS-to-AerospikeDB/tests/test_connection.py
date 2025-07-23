@@ -65,10 +65,10 @@ def test_tls_connection_with_docker():
                     stderr=subprocess.STDOUT,
                     text=True
                 )
+                assert docker_proc.returncode == 0, f"Docker Run failed: {docker_proc.stderr}"
             except:
-                print("Errored")
+                    print(f"Errored when running docker-compose")
             print("docker-compose has finished, containers are (re)started.")
-            assert docker_proc.returncode == 0, f"Docker Run failed: {docker_proc.stderr}"
 
             print("Waiting for services to start...")
 
