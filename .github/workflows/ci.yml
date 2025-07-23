@@ -95,3 +95,14 @@ jobs:
         run: |
           pytest tests/test_connection.py -v --maxfail=1
         timeout-minutes: 5
+
+      - name: Run GremlinClient-to-AGS Certificate Tests
+        working-directory: tls_examples/GremlinClient-to-AGS
+        run: |
+          pytest tests/test_certificates.py -v
+
+      - name: Run GremlinClient-to-AGS Connection Tests
+        working-directory: tls_examples/GremlinClient-to-AGS
+        run: |
+          pytest tests/test_connection.py -v --maxfail=1
+        timeout-minutes: 5
