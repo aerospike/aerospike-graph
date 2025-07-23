@@ -93,7 +93,10 @@ def test_tls_connection_with_docker():
             subprocess.run(
                 ["docker-compose", "down", "-v"],
                 cwd=temp_path,
-                capture_output=True
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True
             )
 
     finally:
