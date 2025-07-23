@@ -4,7 +4,7 @@ on:
       - main
 
 jobs:
-  test-example-apps:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -75,12 +75,9 @@ jobs:
 
       - name: Close Docker Containers
         run: |
-          docker compose down
+          docker-compose down
 
-  test-tls-examples:
-    runs-on: ubuntu-latest
-
-    steps:
+      # TLS Examples Testing
       - name: Install TLS test dependencies
         working-directory: tls_examples
         run: |
