@@ -96,7 +96,7 @@ jobs:
       - name: Run AGS-to-AerospikeDB Connection Tests
         working-directory: tls_examples/tests
         run: |
-          pytest tests/test_AGS_DB_connection.py -v --maxfail=1
+          pytest test_AGS_DB_connection.py -v --maxfail=1
         timeout-minutes: 5
 
       - name: Run GremlinClient-to-AGS Certificate Tests
