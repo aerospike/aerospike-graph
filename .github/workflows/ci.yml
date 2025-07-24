@@ -50,15 +50,15 @@ jobs:
           pytest tests/ -v --maxfail=1
 
       - name: Install dependencies node-js
-        working-directory: node-js/basic
+        working-directory: nodejs/basic
         run: npm ci
 
       - name: Run Mocha tests
-        working-directory: node-js/basic
+        working-directory: nodejs/basic
         run: npm test
 
       - name: Run Playwright E2E tests
-        working-directory: node-js/basic
+        working-directory: nodejs/basic
         run: |
           npx playwright install --with-deps
           npm run test:e2e
@@ -70,7 +70,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Test Java Example
-        working-directory: java-example
+        working-directory: java/basic
         run: |
           mvn test
 
