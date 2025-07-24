@@ -77,7 +77,6 @@ jobs:
         run: |
           docker-compose down
 
-      # TLS Examples Testing
       - name: Install TLS test dependencies
         working-directory: tls_examples
         run: |
@@ -90,23 +89,23 @@ jobs:
           sudo apt-get install -y openssl
 
       - name: Run AGS-to-AerospikeDB Certificate Tests
-        working-directory: tls_examples/AGS-to-AerospikeDB
+        working-directory: tls_examples/tests
         run: |
-          pytest tests/test_certificates.py -v
+          pytest test_AGS_DB_certificates.py -v
 
       - name: Run AGS-to-AerospikeDB Connection Tests
-        working-directory: tls_examples/AGS-to-AerospikeDB
+        working-directory: tls_examples/tests
         run: |
-          pytest tests/test_connection.py -v --maxfail=1
+          pytest tests/test_AGS_DB_connection.py -v --maxfail=1
         timeout-minutes: 5
 
       - name: Run GremlinClient-to-AGS Certificate Tests
-        working-directory: tls_examples/GremlinClient-to-AGS
+        working-directory: tls_examples/tests
         run: |
-          pytest tests/test_certificates.py -v
+          pytest test_Gremlin_AGS_certificates.py -v
 
       - name: Run GremlinClient-to-AGS Connection Tests
-        working-directory: tls_examples/GremlinClient-to-AGS
+        working-directory: tls_examples/tests
         run: |
-          pytest tests/test_connection.py -v --maxfail=1
+          pytest test_Gremlin_AGS_connection.py -v --maxfail=1
         timeout-minutes: 5
