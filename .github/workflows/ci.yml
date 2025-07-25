@@ -63,7 +63,7 @@ jobs:
           npx playwright install --with-deps
           npm run test:e2e
 
-      - name: Compile Java sources
+      - name: Set Up Java
         uses: actions/setup-java@v3
         with:
           java-version: '11'
