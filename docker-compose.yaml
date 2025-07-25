@@ -38,13 +38,12 @@ services:
       - asgraph_net
   zipkin:
     image: openzipkin/zipkin
-    container_name:
-      asgraph-zipkin
+    container_name: asgraph-zipkin
     networks:
       - asgraph_net
     ports:
       - "9411:9411"
-      
+
 networks:
   asgraph_net:
     name: asgraph_net

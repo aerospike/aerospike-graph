@@ -1,3 +1,4 @@
+#!/bin/bash
 set -euo pipefail
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
 then

@@ -1,3 +1,4 @@
+#!/bin/bash
 set -euo pipefail
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]
 then
@@ -45,7 +46,7 @@ openssl req -new -key "$SERVER_KEY" \
 echo "Signing server CERT with CA."
 # Sign it with your CA
 openssl x509 -req -in "$SERVER_CSR" -CA "$CA_CERT"  -CAkey "$CA_KEY" \
-   -out "$SERVER_CERT" -days 365 -subj  "/CN=${CA_CN}"
+   -out "$SERVER_CERT" -days 365 -CAcreateserial
 
 echo "Removing intermediate files."
 rm -f "$SEC_DIR/ca.srl" \

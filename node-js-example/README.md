@@ -19,7 +19,7 @@ npm i
 ## Start the Server
 
 ```bash
-node index.js
+npm start
 ```
 
 ## Open the Web Page

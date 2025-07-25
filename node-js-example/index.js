@@ -1,23 +1,12 @@
-/**
- * Node JS Example using Aerospike Graph
- * This file implements a server that manages a graph database of users, accounts, and transactions
- * to demonstrate fraud detection patterns using graph traversal.
- */
 import express from "express"
 import path, {dirname} from "path"
 import {fileURLToPath} from 'url';
-import {HTTP_PORT} from "./public/consts.js";
 
 // Gremlin Function Imports
-import {populateGraph, userTransactions, transactionsBetweenUsers, getAllNames, rankMostTraffic} from "./gremlin.js";
-
+import {userTransactions, transactionsBetweenUsers, getAllNames, rankMostTraffic} from "./gremlin.js";
 
 // Initialize Express App
-let serverFlag = false;
-const app = express();
-const server = app.listen(HTTP_PORT, () =>
-    serverFlag = true
-);
+export const app = express();
 
 // Setup ES module compatibility for __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -30,6 +19,11 @@ app.use(express.static(path.join(__dirname, "public"), {
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.get("/ping", (req, res) => {
+    console.log("pong")
+    res.json("pong")
 });
 
 /**
@@ -129,33 +123,3 @@ export function convertTimestampToLong(dateStr) {
 export function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-/**
- * Shuts down the server and clears graph data
- * Triggered on SIGINT and SIGTERM signals
- */
-async function closeConnection() {
-    try {
-        console.log("Closing connection...");
-        server.close(() => process.exit(0));
-        console.log("Connection Closed!");
-    } catch (error) {
-        console.error("Error closing connection:", error);
-    }
-}
-
-// Initialize the graph database when the application starts
-(async () => {
-    try {
-        console.log("Connecting to graph...");
-        await populateGraph();
-        if(serverFlag){
-            console.log(`Server listening on http://localhost:${HTTP_PORT}`)
-        }
-    } catch (e) {
-        console.error("Failed initial graph population:", e);
-    }
-})();
-
-process.on('SIGINT', closeConnection);
-process.on('SIGTERM', closeConnection);

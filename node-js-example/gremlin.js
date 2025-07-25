@@ -338,18 +338,20 @@ export async function transactionsBetweenUsers(user1, user2) {
 export async function userTransactions(user1, dir) {
     const p1 = await g.V().hasLabel("User").has("name", user1).id().next()
     let paths
-    if (dir === "out")
+    if (dir === "out") {
         paths = await g.V(p1.value)            // Start from user vertex
             .outE().otherV().outE()            // Follow outgoing transaction path
             .otherV().bothE().otherV()         // Continue to connected vertices
             .hasLabel("User")                  // End at user vertices
             .path().by(t.id).toList()          // Collect path with IDs
-    else
+         }
+    else {
         paths = await g.V(p1.value)            // Start from user vertex
             .outE().otherV().inE()             // Follow incoming transaction path
             .otherV().bothE().otherV()         // Continue to connected vertices
             .hasLabel("User")                  // End at user vertices
             .path().by(t.id).toList()          // Collect path with IDs
+         }
     const processedPath = await processPaths(paths)
     const {vData, eData} = processedPath
 

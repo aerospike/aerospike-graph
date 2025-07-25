@@ -29,7 +29,7 @@ services:
       aerospike.client.host: gremlin-tls-aerospike-db
       aerospike.client.port: 3000
       aerospike.client.namespace: test
-      aerospike.graph-service.ssl.enabled: true # Enable Gremlin SSL
+      aerospike.graph-service.ssl.enabled: "true" # Enable Gremlin SSL
     networks:
       - gremlin-tls-asgraph-net
       

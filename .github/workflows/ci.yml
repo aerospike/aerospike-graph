@@ -1,0 +1,111 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Aerospike Server and Graph
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+          docker-compose up -d
+          # wait for Aerospike
+          for i in {1..20}; do
+            if nc -z aerospike-db 3000; then break; fi
+            sleep 2
+          done
+
+      - name: Setup Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Python dependencies
+        working-directory: python_example
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run pytest against python_example
+        working-directory: python_example
+        run: |
+          pytest tests/ -v --maxfail=1
+
+      - name: Run pytest against food_delivery_app
+        working-directory: python_example
+        run: |
+          pytest food_delivery_app/tests/ -v --maxfail=1
+
+      - name: Install dependencies
+        working-directory: node-js-example
+        run: npm ci
+
+      - name: Run Mocha tests
+        working-directory: node-js-example
+        run: npm test
+
+      - name: Run Playwright E2E tests
+        working-directory: node-js-example
+        run: |
+          npx playwright install --with-deps
+          npm run test:e2e
+
+      - name: Set Up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Test Java Example
+        working-directory: java-example
+        run: |
+          mvn test
+
+      - name: Close Docker Containers
+        run: |
+          docker-compose down
+
+      - name: Install TLS test dependencies
+        working-directory: tls_examples
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install OpenSSL (required for certificate generation)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssl
+
+      - name: Run AGS-to-AerospikeDB Certificate Tests
+        working-directory: tls_examples/tests
+        run: |
+          pytest test_AGS_DB_certificates.py -v
+
+      - name: Run AGS-to-AerospikeDB Connection Tests
+        working-directory: tls_examples/tests
+        run: |
+          pytest test_AGS_DB_connection.py -v --maxfail=1
+        timeout-minutes: 5
+
+      - name: Run GremlinClient-to-AGS Certificate Tests
+        working-directory: tls_examples/tests
+        run: |
+          pytest test_Gremlin_AGS_certificates.py -v
+
+      - name: Run GremlinClient-to-AGS Connection Tests
+        working-directory: tls_examples/tests
+        run: |
+          pytest test_Gremlin_AGS_connection.py -v --maxfail=1
+        timeout-minutes: 5
