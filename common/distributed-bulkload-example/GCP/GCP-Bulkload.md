@@ -1,4 +1,4 @@
-# GCP L3 Bulkload Example
+# GCP Distributed Bulkload Example
 
 1. Configure Aerolab for GCP
 Use this guide: https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md
