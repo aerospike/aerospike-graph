@@ -1,4 +1,4 @@
-## Java application example
+## Java application basic example
 
 ### Prerequisites
 
@@ -6,16 +6,17 @@
 - [Aerospike Graph Service](https://aerospike.com/docs/graph/install/docker/)
 - [Aerospike Database](https://aerospike.com/docs/database/install/docker/)
 
-Navigate to the `java-example` directory and run the following
-shell commands:
-
+Build the project with Maven:
 ```bash
-mvn clean install -q
+mvn clean install
+```
+
+Then run the resulting JAR file:
+```bash
 java -jar target/ags-java-example-1.0-jar-with-dependencies.jar
 ```
 
 Example output:
-
 ```
 Connected to Aerospike Graph Service; Adding Data...
 Adding some users, accounts and transactions.
@@ -30,5 +31,4 @@ Transaction Amount: 282, Receiver Account ID: A5
 ...
 Dropping Dataset. 
 Closing Connection...
-
 ```
