@@ -18,4 +18,3 @@ This docker compose file includes a Zipkin service that show query traces. Once 
 ## Contributing
 
 Feel free to submit issues, fork the repository, and create pull requests for any improvements.
-

@@ -7,12 +7,12 @@
 - [Aerospike Database](https://aerospike.com/docs/database/install/docker/)
 
 Build the project with Maven:
-```bash
+```shell
 mvn clean install
 ```
 
 Then run the resulting JAR file:
-```bash
+```shell
 java -jar target/ags-java-example-1.0-jar-with-dependencies.jar
 ```
 

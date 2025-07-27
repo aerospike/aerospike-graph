@@ -10,14 +10,14 @@ Follow these steps to set up Aerospike Graph:
 
 1. **Run Docker Compose**:
    - Navigate to the root level of the repository and start the Aerospike Graph services using Docker Compose:
-     ```bash
+     ```shell
      docker compose up -d
      ```
    - This will start the Aerospike Database and Aerospike Graph Service in detached mode.
 
 2. **Verify Services**:
    - Check if the services are running:
-     ```bash
+     ```shell
      docker ps
      ```
    - Confirm that both the Aerospike Database and Aerospike Graph Service containers are running without errors.

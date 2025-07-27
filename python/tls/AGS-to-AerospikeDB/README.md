@@ -29,28 +29,30 @@ running the make-certs.sh
 ## Run it
 
 Dependencies to install:
-``` bash
+```shell
 python3 -m pip install gremlinpython async_timeout
 ```
 
 make-certs.sh creates the certificates and keys needed for TLS
 
-```bash
+```shell
 ./make-certs.sh
 ```
 
 This should create the necessary files in the security folder, ca.crt, ca.key, server.crt, and server.key.
 
 Next create the necessary docker containers by using
-```bash
+```shell
 docker-compose up -d
 ```
 
 Execute the python example to make sure you can connect to AGS and Query
-```
+```shell
 python3 ./tls_example.py
 ```
 
 If you see the output
-```Connected and Queried Successfully, TLS between AGS and Aerospike DB is set up!```
+```
+Connected and Queried Successfully, TLS between AGS and Aerospike DB is set up!
+```
 it worked correctly!
