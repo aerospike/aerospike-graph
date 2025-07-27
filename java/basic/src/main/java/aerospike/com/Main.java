@@ -1,4 +1,5 @@
 package aerospike.com;
+
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.driver.Cluster;
@@ -7,6 +8,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSo
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
 
 import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal;
+
 import org.apache.tinkerpop.gremlin.process.traversal.P;
 
 
@@ -32,7 +34,7 @@ public class Main {
         final Cluster cluster = BUILDER.create();
         // Initialize a GraphTraversalSource to interact with the graph
         final GraphTraversalSource g = traversal().withRemote(DriverRemoteConnection.using(cluster));
-        
+
         System.out.println("Connected to Aerospike Graph Service; Adding Data...");
 
         // Add users, accounts, and transactions
@@ -84,7 +86,7 @@ public class Main {
             final int amount = random.nextInt(1000) + 1; // Random amount between 1 and 1000
             final String transactionId = "T" + i;
             final String type = random.nextBoolean() ? "debit" : "credit";
-            final String timestamp = String.format("2025-%02d-%02d", random.nextInt(11) + 1,random.nextInt(28) + 1); // Random date in January 2025
+            final String timestamp = String.format("2025-%02d-%02d", random.nextInt(11) + 1, random.nextInt(28) + 1); // Random date in January 2025
 
             g.addE("Transaction")
                     .from(fromAccount).to(toAccount)
@@ -155,6 +157,7 @@ public class Main {
 
     /**
      * Converts a date string (e.g., "2023-01-15") into a long representing epoch milliseconds.
+     *
      * @param date The date string in "yyyy-MM-dd" format.
      * @return The epoch timestamp in milliseconds as a long.
      */

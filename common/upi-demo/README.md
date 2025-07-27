@@ -38,8 +38,8 @@ Now use the following Gremlin query:
 ```groovy
 g.with("evaluationTimeout", 100000)
  .call("aerospike.graphloader.admin.bulk-load.load")
- .with("aerospike.graphloader.vertices", "/data/upi_demo/dataset/vertices")
- .with("aerospike.graphloader.edges", "/data/upi_demo/dataset/edges")
+ .with("aerospike.graphloader.vertices", "/data/upi-demo/dataset/vertices")
+ .with("aerospike.graphloader.edges", "/data/upi-demo/dataset/edges")
 ```
 
 After running this command, to check the status of the bulkloader use:
