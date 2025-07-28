@@ -12,7 +12,7 @@ custom_conf="./aerospike8,rf=1.conf"
 graph_count=1
 graph_instance_type=e2-medium
 graph_disk_size=50
-graph_graph_image="aerospike/aerospike-graph-service"
+graph_graph_image="aerospike/aerospike-graph-service:latest"
 client_instance_type="n2d-standard-4"
 client_test_name="./tests/test"
 
@@ -25,7 +25,6 @@ zone=us-central1-a
 instance_type=n2d-standard-4
 master_instance_type=n2d-standard-4
 num_workers=2
-project=<gcp-project-name> # rename to your GCP project
-bulk_jar_uri="gs://${bucket_path}/jars/aerospike-graph-bulk-loader-2.6.0.jar" # rename with your bucket name
+bulk_jar_uri="gs://${bucket_path}/jars/aerospike-graph-bulk-loader-3.0.0.jar" # rename with your bucket name
 properties_file_uri="gs://${bucket_path}/configs/bulk-loader.properties" # rename with your bucket name
 
