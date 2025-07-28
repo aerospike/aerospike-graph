@@ -1,26 +1,21 @@
 # Overview
 
-The transactions-between-users.py example is a web application that
-visualizes transactions between two users in a web browser where you can
-refresh data and query for different users.
+The fraud-mimic.py example is a command line application
+that generates a graph of transactions between users, and runs sample queries.
 
 # Usage
-
 1. Start Docker Image:
-From the root of the example directory, run the following command to start the Docker image:
+   From the root of the example directory, run the following command to start the Docker image:
    ```shell
    docker compose up -d
    ```
 
-2. Install Python Dependencies:
+2. Install Gremlin Python dependency:
    ```shell
-   pip install gremlinpython dash dash-cytoscape dash-bootstrap-components
+   pip install gremlinpython
    ```
 
-3. Start the Web Example:
+3. Run the basic Python example:
    ```shell
-   python transactions_between_users.py
+   python fraud_mimic.py
    ```
-
-4. Open the Web Application:
-   Open your web browser and navigate to `http://localhost:8050/` to view the web application.
