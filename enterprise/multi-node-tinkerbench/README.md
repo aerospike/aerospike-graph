@@ -1,4 +1,4 @@
-# Tinker Bench Multi-Node Aerospike Cluster with AGS Instances in Aerolab
+# TinkerBench Multi-Node Aerospike Cluster with AGS Instances in Aerolab
 This example will demonstrate how to create a multi-node Aerospike DB cluster using Aerolab, and attach
 Aerospike Graph Service instances to each of them. Then use Tinkerbench on a dedicated VM for benchmarking.
 
@@ -12,7 +12,7 @@ https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md#prerequisites
 
 # Create Clusters
 First configure the `deploy_aerospike_gcp.sh` file to your specifications
-If you want the benchmark to run faster, scale the beench VM to a more powerful machine
+If you want the benchmark to run faster, scale the bench VM to a more powerful machine
 
 The following script will:
 1. Set environment variables for Aerospike cluster configuration
@@ -30,10 +30,10 @@ The following script will:
 This will also output the IP `Host:Port` for your clusters
 
 # SSH into the Dedicated Benchmark VM
-The VM should be named `bench_group-1`
+The VM should be named `${bench_group}-1`
 SSH into it using
 ```bash
-aerolab attach client /n connor-multi-bench -- bash
+aerolab attach client /n <$bench_group> -- bash
 ```
 
 # Connect TinkerBench to Run Benchmarks
