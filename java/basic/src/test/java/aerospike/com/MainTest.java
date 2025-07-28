@@ -1,4 +1,5 @@
-import aerospike.com.Main;
+package aerospike.com;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -9,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MainTest {
 
     @Test
-    public void testFullAppFlow() throws Exception {
+    public void testFullAppFlow() {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         final PrintStream originalOut = System.out;
         try {
