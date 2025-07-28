@@ -1,6 +1,13 @@
 # Tinker Bench Multi-Node Aerospike Cluster with AGS Instances in Aerolab
+This example will demonstrate how to create a multi-node Aerospike DB cluster using Aerolab, and attach
+Aerospike Graph Service instances to each of them. Then use Tinkerbench on a dedicated VM for benchmarking.
+
+*Note that to execute this example, a enterprise feature file is required*
+A free 60-day Enterprise Key Trial may be obtained here:
+https://aerospike.com/get-started-aerospike-database/
 
 # Configure Aerolab for GCP
+Follow the steps here to configure Aerolab for GCP 
 https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md#prerequisites
 
 # Create Clusters
