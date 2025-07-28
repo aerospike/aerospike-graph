@@ -4,12 +4,15 @@ set -a  # Export all variables automatically
 # ==== CONFIGURATION ====
 name="connor-multi" # cluster name
 graph_name="connor-multi-g"
-#client_name="<client-name>"
+bench_group="connor-multi-bench"
 namespace="test"
 
 graph_instance=n2d-standard-16
 graph_graph_image="aerospike/aerospike-graph-service:latest"
 graph_disk_size=50
+
+bench_instance=n2d-standard-16
+bench_disk_size=50
 
 aerospike_instance=n2d-standard-16
 aerospike_version=8.0.*
@@ -47,11 +50,10 @@ aerolab conf adjust -n "$name" set "namespace test.single-query-threads" 2
 
 # ==== START AEROSPIKE ====
 aerolab aerospike start --name="$name"
-
 echo "Aerospike cluster '$name' setup complete."
 
+# ==== Attach and Start AGS Instances ====
 echo "Creating Aerospike Graph Instances"
-
 aerolab client create graph \
         --cluster-name "$name" \
         --group-name "$graph_name" \
@@ -62,5 +64,19 @@ aerolab client create graph \
         --disk pd-ssd:"$graph_disk_size"
 echo "Graph Instances Created"
 
+# Create dedicated VM for benchmarking ====
+echo "Creating Benchmark VM"
+aerolab client create base \
+    --group-name "$bench_group" \
+    --count 1 \
+    --instance "$bench_instance" \
+    --disk pd-ssd:"$bench_disk_size"
+echo "→ Benchmark VM group '$bench_group' created."
+
+echo
 echo "Hosts for AGS Instances: "
 aerolab client list   | grep -A1 connor-multi   | grep -o 'gremlin[^ ]*' | sed -E 's|.*://([^:/]+):.*|\1|'
+
+echo
+echo "Benchmark VM IP:"
+aerolab client list /owner:"$name" | grep "$bench_group" | awk '{print $1}'
