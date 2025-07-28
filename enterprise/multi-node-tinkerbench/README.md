@@ -1,9 +1,12 @@
 # Tinker Bench Multi-Node Aerospike Cluster with AGS Instances in Aerolab
 
-# Configure Aerolab
+# Configure Aerolab for GCP
 https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md#prerequisites
 
 # Create Clusters
+First configure the `deploy_aerospike_gcp.sh` file to your specifications
+If you want the benchmark to run faster, scale the beench VM to a more powerful machine
+
 The following script will:
 1. Set environment variables for Aerospike cluster configuration
 2. Create a 3-Node Aerospike cluster on GCP using Aerolab
@@ -18,25 +21,26 @@ The following script will:
 ```bash
 ./deploy_aerospike_gcp.sh
 ```
-
-# Connect TinkerBench to Run Benchmarks
+This will also output the IP `Host:Port` for your clusters
 
 # SSH into the Dedicated Benchmark VM
 The VM should be named `bench_group-1`
-SSH into it using 
-!!! Benchmark VM Output echo not working
+SSH into it using
+```bash
+aerolab attach client /n connor-multi-bench -- bash
+```
 
-Setup hosts in the `benchmark.yaml` file
-The hosts will be in the last 3 lines output from the last steps command
-
+# Connect TinkerBench to Run Benchmarks
 ```bash
 git clone https://github.com/aerospike-community/tinkerbench.git
-cd tinkerbench
-mvn clean install
 ```
 
 Edit ./conf/simple.properties to add in the host you want to test
 Run the tinkerbench simple via:
 ```bash
+cd tinkerbench
+sudo apt update
+apt install maven
+mvn clean install
 ./scripts/run_simple.sh
 ```

@@ -1,19 +1,22 @@
 #!/bin/bash
 set -a  # Export all variables automatically
 
-# ==== CONFIGURATION ====
-name="connor-multi" # cluster name
-graph_name="connor-multi-g"
-bench_group="connor-multi-bench"
+# ==== Naming ====
+name="my-cluster" # cluster name
+graph_name="my-cluster-g"
+bench_group="my-cluster-bench"
 namespace="test"
 
+# ==== Graph ====
 graph_instance=n2d-standard-16
 graph_graph_image="aerospike/aerospike-graph-service:latest"
 graph_disk_size=50
 
+# ==== Bench VM ====
 bench_instance=n2d-standard-16
 bench_disk_size=50
 
+# ==== Aerospike DB ====
 aerospike_instance=n2d-standard-16
 aerospike_version=8.0.*
 aerospike_ssd_count=4
@@ -75,7 +78,7 @@ echo "→ Benchmark VM group '$bench_group' created."
 
 echo
 echo "Hosts for AGS Instances: "
-aerolab client list   | grep -A1 connor-multi   | grep -o 'gremlin[^ ]*' | sed -E 's|.*://([^:/]+):.*|\1|'
+aerolab client list   | grep -A1 connor-multi   | grep -o 'gremlin[^ ]*' | sed 's|gremlin://||'
 
 echo
 echo "Benchmark VM IP:"
