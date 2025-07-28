@@ -1,9 +1,0 @@
-connections:
-  endpoints:
-    ["ws://35.223.219.99:8182/gremlin", "ws://34.67.47.66:8182/gremlin", "ws://35.202.172.30:8182/gremlin"]
-benchmark:
-  name: "multi-ags-test"
-  queries:
-    - name: "countVertices"
-      gremlin: "g.V().count()"
-      weight: 1

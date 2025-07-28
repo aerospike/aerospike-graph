@@ -16,7 +16,6 @@ The following script will:
 6. Create and attach Graph Instances
 7. Create a separate dedicated VM for running TinkerBench
 8. Print the URLs of the Graph Instances
-9. Print the Benchmark VMs IP
 
 ```bash
 ./deploy_aerospike_gcp.sh
