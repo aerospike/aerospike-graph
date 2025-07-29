@@ -17,5 +17,5 @@ that generates a graph of transactions between users, and runs sample queries.
 
 3. Run the basic Python example:
    ```shell
-   python fraud_mimic.py
+   python example.py
    ```
