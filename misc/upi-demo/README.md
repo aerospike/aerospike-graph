@@ -10,14 +10,14 @@ Follow these steps to set up Aerospike Graph:
 
 1. **Run Docker Compose**:
    - Navigate to the root level of the repository and start the Aerospike Graph services using Docker Compose:
-     ```bash
+     ```shell
      docker compose up -d
      ```
    - This will start the Aerospike Database and Aerospike Graph Service in detached mode.
 
 2. **Verify Services**:
    - Check if the services are running:
-     ```bash
+     ```shell
      docker ps
      ```
    - Confirm that both the Aerospike Database and Aerospike Graph Service containers are running without errors.
@@ -38,8 +38,8 @@ Now use the following Gremlin query:
 ```groovy
 g.with("evaluationTimeout", 100000)
  .call("aerospike.graphloader.admin.bulk-load.load")
- .with("aerospike.graphloader.vertices", "/data/upi_demo/dataset/vertices")
- .with("aerospike.graphloader.edges", "/data/upi_demo/dataset/edges")
+ .with("aerospike.graphloader.vertices", "/data/upi-demo/dataset/vertices")
+ .with("aerospike.graphloader.edges", "/data/upi-demo/dataset/edges")
 ```
 
 After running this command, to check the status of the bulkloader use:

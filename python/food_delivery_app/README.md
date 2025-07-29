@@ -15,19 +15,16 @@ Food Delivery App consists of two main components:
 - Python 3.8+
 - Aerospike Graph database
 - Python virtual environment (recommended)
-- Set up Aerospike Graph (see the root directory [README.md](../README.md) for more information)
-
+- Set up Aerospike Graph (see the root directory [README.md](../../README.md) for more information)
 
 1. Create and activate a virtual environment:
-
-   ```bash
+   ```shell
    python -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
 2. Install dependencies:
-
-   ```bash
+   ```shell
    pip install gremlinpython streamlit_agraph streamlit
    ```
 
@@ -52,7 +49,7 @@ the following options to customize the size of the dataset:
 --max-orders-per-customer x    #default is 5
 ```
 
-```bash
+```shell
 python food_delivery_datasetgen.py
 ```
 
@@ -60,7 +57,7 @@ The data is created and mounted to the Aerospike Graph container.
 
 Run the following command to load the data into Aerospike Graph:
 
-```bash
+```shell
 python food_delivery_load.py
 ```
 
@@ -71,7 +68,7 @@ to run graph queries, as well as visualize subgraphs of the food delivery data.
 
 Start the webpage with the following command:
 
-```bash
+```shell
 streamlit run frontend_streamlit.py
 ```
 

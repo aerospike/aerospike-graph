@@ -83,7 +83,7 @@ In GCP you must add this command:
 --initialization-actions=gs://<path_to_script>
 
 Example:
-```
+```shell
 gcloud dataproc clusters create "$dataproc_name" \
     --enable-component-gateway \
     --region $region \
@@ -107,7 +107,7 @@ In AWS EMR you must add this command:
 --bootstrap-actions Path="s3://<path_to_script>
 
 and this json file must be created and added to the local filesystem for each worker using the script above.
-```
+```json
 [
   {
     "Classification": "spark-defaults",
@@ -119,7 +119,7 @@ and this json file must be created and added to the local filesystem for each wo
 ]
 ```
 
-```
+```shell
 aws emr create-cluster \
     --name "My Spark TLS Cluster" \
     --release-label emr-6.13.0 \
@@ -153,19 +153,19 @@ What you need to do:
 Debugging steps:
 1. SSH into a worker and the master node
 2. Look for the truststore 
-```
-ls -l /etc/aerospike-graph-tls/truststore.jks
-```
-You should see a truststore with appropriate permissions here (`-r--r--r--`)
-If you do not, then the truststore.jks is not correctly being generated.
-If the permissions are wrong, investigate the chmod command being used to adjust them, it should be `chmod 444`.
+    ```shell
+    ls -l /etc/aerospike-graph-tls/truststore.jks
+    ```
+    You should see a truststore with appropriate permissions here (`-r--r--r--`)
+    If you do not, then the truststore.jks is not correctly being generated.
+    If the permissions are wrong, investigate the chmod command being used to adjust them, it should be `chmod 444`.
 3. Run a simple test with docker:
-```
-docker run -e aerospike.client.host=<ip_of_aerospike_node>:<tls_name_of_cluster>:<port_for_tls_name> -e aerospike.client.tls=true \
-     -e JAVA_OPTIONS="-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
-     -v /etc/aerospike-graph-tls/truststore.jks:/etc/aerospike-graph-tls/truststore.jks \
-     aerospike/aerospike-graph-service:latest-slim
-```
-If this connects correctly and you see `Channel started at port 8182.` at the bottom, then everything is setup correctly.
+    ```shell
+    docker run -e aerospike.client.host=<ip_of_aerospike_node>:<tls_name_of_cluster>:<port_for_tls_name> -e aerospike.client.tls=true \
+         -e JAVA_OPTIONS="-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
+         -v /etc/aerospike-graph-tls/truststore.jks:/etc/aerospike-graph-tls/truststore.jks \
+         aerospike/aerospike-graph-service:latest-slim
+    ```
+If this connects correctly, and you see `Channel started at port 8182.` at the bottom, then everything is set up correctly.
 Note there could still be a file permissions issue here as docker generally runs with sudo level permissions, which is
 greater than the permissions level that spark executors get.

@@ -148,3 +148,4 @@ g.V('CQE72NZMJL') \
   .outE("transaction") \
   .has("fraud_flag", true) \
   .count()
+```

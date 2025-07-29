@@ -1,20 +1,18 @@
 package aerospike.com;
-import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.apache.tinkerpop.gremlin.structure.Edge;
+
 import org.apache.tinkerpop.gremlin.driver.Cluster;
 import org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection;
+import org.apache.tinkerpop.gremlin.process.traversal.P;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
-
-import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal;
-import org.apache.tinkerpop.gremlin.process.traversal.P;
-
+import org.apache.tinkerpop.gremlin.structure.Vertex;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
+import static org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource.traversal;
 
 public class Main {
     // Define the host and port for connecting to the Aerospike Graph service
@@ -32,7 +30,7 @@ public class Main {
         final Cluster cluster = BUILDER.create();
         // Initialize a GraphTraversalSource to interact with the graph
         final GraphTraversalSource g = traversal().withRemote(DriverRemoteConnection.using(cluster));
-        
+
         System.out.println("Connected to Aerospike Graph Service; Adding Data...");
 
         // Add users, accounts, and transactions
@@ -84,7 +82,7 @@ public class Main {
             final int amount = random.nextInt(1000) + 1; // Random amount between 1 and 1000
             final String transactionId = "T" + i;
             final String type = random.nextBoolean() ? "debit" : "credit";
-            final String timestamp = String.format("2025-%02d-%02d", random.nextInt(11) + 1,random.nextInt(28) + 1); // Random date in January 2025
+            final String timestamp = String.format("2025-%02d-%02d", random.nextInt(11) + 1, random.nextInt(28) + 1); // Random date in January 2025
 
             g.addE("Transaction")
                     .from(fromAccount).to(toAccount)
@@ -108,9 +106,8 @@ public class Main {
                 .select("transaction", "receiver")
                 .by("amount")
                 .by()
-                .forEachRemaining(result -> {
-                    System.out.println("Transaction Amount: " + result.get("transaction") + ", Receiver Account ID: " + result.get("receiver"));
-                });
+                .forEachRemaining(result ->
+                        System.out.println("Transaction Amount: " + result.get("transaction") + ", Receiver Account ID: " + result.get("receiver")));
         // Query Example 2: Aggregate total transaction amounts for each user
         System.out.println("\nQUERY 2: Total transaction amounts initiated by users:");
         g.V().hasLabel("Account")
@@ -130,17 +127,13 @@ public class Main {
                 .outV()
                 .in("owns")
                 .valueMap("name")
-                .forEachRemaining(result -> {
-                    System.out.println("User: " + result);
-                });
+                .forEachRemaining(result -> System.out.println("User: " + result));
 
         // Query Example 4: List all properties of a specific user
         System.out.println("\nQUERY 4: Properties of Bob:");
         final Vertex bob = g.V().has("User", "name", "Bob").next();
-        bob.properties().forEachRemaining(property -> {
-            System.out.println(property.key() + " : " + property.value());
-        });
-
+        bob.properties().forEachRemaining(property ->
+                System.out.println(property.key() + " : " + property.value()));
 
         // Clean up
         g.V().drop().iterate();
@@ -155,6 +148,7 @@ public class Main {
 
     /**
      * Converts a date string (e.g., "2023-01-15") into a long representing epoch milliseconds.
+     *
      * @param date The date string in "yyyy-MM-dd" format.
      * @return The epoch timestamp in milliseconds as a long.
      */

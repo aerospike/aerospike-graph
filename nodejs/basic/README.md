@@ -12,13 +12,13 @@
 Navigate to the `node-js-example` directory and run
 the following command:
 
-```bash
+```shell
 npm i
 ```
 
 ## Start the Server
 
-```bash
+```shell
 npm start
 ```
 
