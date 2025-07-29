@@ -1,18 +1,21 @@
-# Python example
+# Overview
 
-We recommended using venv for the python dependencies. You may need to install python3-venv for your system.
+The fraud-mimic.py example is a command line application
+that generates a graph of transactions between users, and runs sample queries.
 
-```shell
-python3 -m venv .venv
-source .venv/bin/activate
-```
+# Usage
+1. Start Docker Image:
+   From the root of the example directory, run the following command to start the Docker image:
+   ```shell
+   docker compose up -d
+   ```
 
-Install dependencies
-```shell
-python3 -m pip install gremlinpython async_timeout
-```
+2. Install Gremlin Python dependency:
+   ```shell
+   pip install gremlinpython
+   ```
 
-Execute the python example
-```shell
-python3 ./python-example.py 
-```
+3. Run the basic Python example:
+   ```shell
+   python fraud_mimic.py
+   ```
