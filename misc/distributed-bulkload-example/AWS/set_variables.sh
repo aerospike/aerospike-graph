@@ -12,7 +12,7 @@ BUCKET_PATH="s3://<bucket-name>"
 LOG_URI="${BUCKET_PATH}/logs/"
 SPARK_JAR="${BUCKET_PATH}/jars/aerospike-graph-bulk-loader-3.0.0.jar"
 #User may add more params suported by bulkloader
-SPARK_ARGS="-c,s3://${BUCKET_PATH}/configs/bulk-loader.properties"
+SPARK_ARGS="-c,${BUCKET_PATH}/configs/bulk-loader.properties"
 
 # ==== SPARK Job ====
 SPARK_JOB_NAME="Aerospike Graph AWS Spark Job"
@@ -32,5 +32,5 @@ SUBNET_ID="<your-subnet>" # This will be changed after creating your Aerolab Clu
 
 #Aerolab also prints out the security-group associated with the server nodes. The aerolab log looks like following
 #Using security group ID sg-098adnad21 name AeroLabServer-9abh0918awe
-SECURITY_GROUP="<your-securitygroup>" # This will be changed after creating your Aerolab Cluster
+SECURITY_GROUP="<your-security-group>" # This will be changed after creating your Aerolab Cluster
 

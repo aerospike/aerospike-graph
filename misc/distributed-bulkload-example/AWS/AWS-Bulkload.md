@@ -1,11 +1,13 @@
 # Distributed AWS Bulkload Example
 
 1. Configure Aerolab for AWS
-Use this guide: https://github.com/aerospike/aerolab/blob/master/docs/aws-setup.md
+Follow this guide to configure Aerolab for AWS: 
+https://github.com/aerospike/aerolab/blob/master/docs/aws-setup.md
+
 Make sure your default zone in Aerolab is the same as the zone you intend to make the cluster in, in this case `us-east-1`.
 Otherwise, unexpected behaviour may occur.
 
-2. Make S3 bucket
+2. Make Your S3 Bucket
 Make a bucket in AWS S3 for the data:
 ```shell
    aws s3 mb s3://<bucket-name>/ --region <my-region>
@@ -16,7 +18,7 @@ https://aerospike.com/download/graph/loader/
 and place the bulk loader JAR in your bucket directory
 bucket-files/jars`
 
-3. Edit the variables script
+3. Edit the Variables Script
 Now edit the `set_variables.sh` script and change values of the variables
 Neccesary variable changes are for:
 ```properties
@@ -28,7 +30,7 @@ Neccesary variable changes are for:
 ```
 
 4. Start the Aerolab Cluster
-Once the variables are set, run
+Once the variables (not including `SUBNET_ID` or `SECURITY_GROUP`) are set, run
 ```shell
    ./create_cluster.sh
 ```
@@ -39,7 +41,7 @@ SUBNET_ID           # This will be changed after creating your Aerolab Cluster
 SECURITY_GROUP      # This will be changed after creating your Aerolab Cluster
 ```
 
-5. Configure properties file
+5. Configure Your Properties File
 Find the Private IP for your cluster using
 ```bash
 aerolab cluster list 
@@ -47,13 +49,13 @@ aerolab cluster list
 Edit the properties file in `bucket-files/configs/bulk-loader.properties`
 editing the values to your bucket names and cluster IP
 
-6. Upload files to AWS
+6. Upload Files to AWS
 Now upload the files to the bucket using
  ```shell
    aws s3 cp ./bucket-files s3://<your-bucket-name>/ --recursive --region us-east-1
  ```
-7. Create EMR cluster and submit the bulkload
-Now to create a EMR cluster and submit the bulkload job run
+7. Create EMR Cluster and Submit the Bulkload
+Now to create a EMR cluster and submit the bulkload job run:
  ```shell
     ./bulkload.sh
  ```
