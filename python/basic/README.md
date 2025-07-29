@@ -1,6 +1,6 @@
 # Overview
 
-The fraud-mimic.py example is a command line application
+The example.py example is a command line application
 that generates a graph of transactions between users, and runs sample queries.
 
 # Usage
