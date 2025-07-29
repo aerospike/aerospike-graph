@@ -32,32 +32,33 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Python dependencies
-        working-directory: python_example
+      - name: Upgrading Pip
+        working-directory: python
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
 
-      - name: Run pytest against python_example
-        working-directory: python_example
+      - name: Run pytest against python transactions ui example
+        working-directory: python/transactions
         run: |
+          pip install -r requirements.txt
           pytest tests/ -v --maxfail=1
 
-      - name: Run pytest against food_delivery_app
-        working-directory: python_example
+      - name: Run pytest against python food_delivery_app
+        working-directory: python/food_delivery_app
         run: |
-          pytest food_delivery_app/tests/ -v --maxfail=1
+          pip install -r requirements.txt
+          pytest tests/ -v --maxfail=1
 
-      - name: Install dependencies
-        working-directory: node-js-example
+      - name: Install dependencies node-js
+        working-directory: nodejs/basic
         run: npm ci
 
       - name: Run Mocha tests
-        working-directory: node-js-example
+        working-directory: nodejs/basic
         run: npm test
 
       - name: Run Playwright E2E tests
-        working-directory: node-js-example
+        working-directory: nodejs/basic
         run: |
           npx playwright install --with-deps
           npm run test:e2e
@@ -69,7 +70,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Test Java Example
-        working-directory: java-example
+        working-directory: java/basic
         run: |
           mvn test
 
@@ -78,7 +79,7 @@ jobs:
           docker-compose down
 
       - name: Install TLS test dependencies
-        working-directory: tls_examples
+        working-directory: python/tls
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
@@ -89,23 +90,23 @@ jobs:
           sudo apt-get install -y openssl
 
       - name: Run AGS-to-AerospikeDB Certificate Tests
-        working-directory: tls_examples/tests
+        working-directory: python/tls/tests
         run: |
           pytest test_AGS_DB_certificates.py -v
 
       - name: Run AGS-to-AerospikeDB Connection Tests
-        working-directory: tls_examples/tests
+        working-directory: python/tls/tests
         run: |
           pytest test_AGS_DB_connection.py -v --maxfail=1
         timeout-minutes: 5
 
       - name: Run GremlinClient-to-AGS Certificate Tests
-        working-directory: tls_examples/tests
+        working-directory: python/tls/tests
         run: |
           pytest test_Gremlin_AGS_certificates.py -v
 
       - name: Run GremlinClient-to-AGS Connection Tests
-        working-directory: tls_examples/tests
+        working-directory: python/tls/tests
         run: |
           pytest test_Gremlin_AGS_connection.py -v --maxfail=1
         timeout-minutes: 5
