@@ -25,7 +25,7 @@ EMR_RELEASE="emr-6.15.0"
 #Switch from java8 to java 11, the minimum java version needed for Aerospike Firefly Graph.
 CONFIGURATIONS='[{"Classification":"hadoop-env","Configurations":[{"Classification":"export","Configurations":[],"Properties":{"JAVA_HOME":"/usr/lib/jvm/java-11-amazon-corretto.x86_64"}}],"Properties":{}},{"Classification":"spark-env","Configurations":[{"Classification":"export","Configurations":[],"Properties":{"JAVA_HOME":"/usr/lib/jvm/java-11-amazon-corretto.x86_64"}}],"Properties":{}},{"Classification":"spark-defaults","Properties":{"spark.executorEnv.JAVA_HOME":"/usr/lib/jvm/java-11-amazon-corretto.x86_64"}}]'
 
-#Recommend to keep the subnetid (and AWS reigon) same as of Aerospike cluster
+#Recommend to keep the subnetid (and AWS region) same as of Aerospike cluster
 #(assuming they're in the AWS as well), to have a hassle free communication between DB and Spark cluster
 # When DB is created using aerolab, it prints its subnetid
 SUBNET_ID="<your-subnet>" # This will be changed after creating your Aerolab Cluster
