@@ -2,7 +2,7 @@
 import streamlit as st
 from streamlit_agraph import agraph, Node, Edge, Config
 from gremlin_python.process.traversal import T
-from food_delivery_app.gremlin_queries import GremlinClient
+from gremlin_queries import GremlinClient
 
 client = GremlinClient()
 def pick_random(key: str, type_: str):
