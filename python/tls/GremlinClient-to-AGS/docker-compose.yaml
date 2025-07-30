@@ -1,0 +1,38 @@
+services:
+  gremlin-tls-aerospike-db:
+    image: aerospike/aerospike-server-enterprise:8.0.0.7
+    container_name: gremlin-tls-aerospike-db
+    networks:
+      - gremlin-tls-asgraph-net
+    ports:
+      - "3000-3002:3000-3002"
+    environment:
+      - DEFAULT_TTL=0
+    healthcheck:
+        test: ["CMD", "asinfo", "-p", "3000", "-v", "build"]
+        interval: 2s
+        timeout: 10s
+        retries: 3
+  aerospike-graph-service:
+    image: aerospike/aerospike-graph-service:latest
+    container_name:
+      gremlin-tls-aerospike-graph-service
+    depends_on:
+      gremlin-tls-aerospike-db:
+        condition: service_healthy
+    ports:
+      - "8182:8182"
+    volumes:
+      - ./g-tls:/opt/aerospike-graph/gremlin-server-tls:ro # Mount the server cert and key ONLY here
+      - ./security/ca.crt:/opt/aerospike-graph/gremlin-server-ca/ca.crt:ro # Mount CA cert ONLY here
+    environment:
+      aerospike.client.host: gremlin-tls-aerospike-db
+      aerospike.client.port: 3000
+      aerospike.client.namespace: test
+      aerospike.graph-service.ssl.enabled: "true" # Enable Gremlin SSL
+    networks:
+      - gremlin-tls-asgraph-net
+      
+networks:
+  gremlin-tls-asgraph-net:
+    name: gremlin-tls-asgraph-net
