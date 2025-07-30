@@ -58,7 +58,7 @@ def main():
     delete_subdirs("./dataset/vertices/")
     delete_subdirs("./dataset/edges/")
     # Generate Customers
-    subprocess.run(["python", "./Scripts/GenerateCustomers.py", str(num_records), region], check=True)
+    subprocess.run([sys.executable, "./Scripts/GenerateCustomers.py", str(num_records), region], check=True)
 
     # Generate Addresses
     print(f"Generating address records for the {region} region...")
