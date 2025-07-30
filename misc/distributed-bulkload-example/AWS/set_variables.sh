@@ -27,7 +27,7 @@ CONFIGURATIONS='[{"Classification":"hadoop-env","Configurations":[{"Classificati
 
 #Recommend to keep the subnetid (and AWS region) same as of Aerospike cluster
 #(assuming they're in the AWS as well), to have a hassle free communication between DB and Spark cluster
-# When DB is created using aerolab, it prints its subnetid
+# When DB is created using Aerolab, it prints its subnetid
 SUBNET_ID="<your-subnet>" # This will be changed after creating your Aerolab Cluster
 
 #Aerolab also prints out the security-group associated with the server nodes. The aerolab log looks like following
