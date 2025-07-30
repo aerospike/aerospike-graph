@@ -2,7 +2,7 @@
 This example will demonstrate how to create a multi-node Aerospike DB cluster using Aerolab, and attach
 Aerospike Graph Service instances to each of them. Then use Tinkerbench on a dedicated VM for benchmarking.
 
-*Note that to execute this example, a enterprise feature file is required*
+*Note that to execute this example, an enterprise feature file is required*
 A free 60-day Enterprise Trial may be obtained here:
 https://aerospike.com/get-started-aerospike-database/
 
