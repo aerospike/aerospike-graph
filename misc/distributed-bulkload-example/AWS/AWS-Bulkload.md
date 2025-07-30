@@ -20,7 +20,7 @@ bucket-files/jars`
 
 3. Edit the Variables Script
 Now edit the `set_variables.sh` script and change values of the variables
-Neccesary variable changes are for:
+Necessary variable changes are for:
 ```properties
    name
    username
