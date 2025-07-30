@@ -30,7 +30,7 @@ CONFIGURATIONS='[{"Classification":"hadoop-env","Configurations":[{"Classificati
 # When DB is created using Aerolab, it prints its subnetid
 SUBNET_ID="<your-subnet>" # This will be changed after creating your Aerolab Cluster
 
-#Aerolab also prints out the security-group associated with the server nodes. The aerolab log looks like following
+#Aerolab also prints out the security-group associated with the server nodes. The Aerolab log looks like following
 #Using security group ID sg-098adnad21 name AeroLabServer-9abh0918awe
 SECURITY_GROUP="<your-security-group>" # This will be changed after creating your Aerolab Cluster
 
