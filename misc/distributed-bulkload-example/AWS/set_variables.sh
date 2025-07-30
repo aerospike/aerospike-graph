@@ -11,7 +11,7 @@ AWS_REGION="us-east-1"
 BUCKET_PATH="s3://<bucket-name>"
 LOG_URI="${BUCKET_PATH}/logs/"
 SPARK_JAR="${BUCKET_PATH}/jars/aerospike-graph-bulk-loader-3.0.0.jar"
-#User may add more params suported by bulkloader
+#User may add more params supported by bulkloader
 SPARK_ARGS="-c,${BUCKET_PATH}/configs/bulk-loader.properties"
 
 # ==== SPARK Job ====
