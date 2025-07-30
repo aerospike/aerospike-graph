@@ -12,7 +12,7 @@ CLUSTER_ID=$(aws emr create-cluster \
     --applications Name=Spark \
     --log-uri "$LOG_URI" \
     --use-default-roles \
-    --instance-type m5.xlarge \
+    --instance-type "$emr_instance_type" \
     --instance-count "$instance_count" \
     --ec2-attributes SubnetId="$SUBNET_ID",EmrManagedSlaveSecurityGroup="$SECURITY_GROUP",EmrManagedMasterSecurityGroup="$SECURITY_GROUP" \
     --configurations "$CONFIGURATIONS" \

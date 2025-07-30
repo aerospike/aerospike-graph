@@ -5,6 +5,7 @@ echo "Creating Cluster"
 aerolab cluster create --name "$name" \
     --count "$instance_count" \
     --instance-type "$aws_instance_type" \
+    --aerospike-version "$aerospike_version" \
     --owner "$username" \
     --start n \
 
