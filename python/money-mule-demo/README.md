@@ -2,16 +2,7 @@
 
 ## Overview
 
-FraudGuard is a comprehensive fraud detection system powered by Aerospike Graph. It provides advanced money mule detection capabilities with an intuitive React-based dashboard and powerful network visualization tools.
-
-### Features
-
-- **Multi-Scenario Fraud Detection**: 8 different detection algorithms (A-H)
-- **Network Visualization**: Interactive graph visualization of transaction relationships
-- **Parallel Processing**: Multi-threaded account analysis for high performance
-- **Smart Caching**: Intelligent browser-based caching with auto-expiry
-- **Real-time Analytics**: Live transaction analysis and statistics
-- **Modern UI**: Professional Material-UI based interface
+FraudGuard is a fraud detection system powered by Aerospike Graph. It provides advanced money mule detection capabilities with an intuitive React-based dashboard and powerful network visualization tools.
 
 ---
 
@@ -36,18 +27,16 @@ FraudGuard is a comprehensive fraud detection system powered by Aerospike Graph.
 - **Node.js**: v16+ 
 - **Python**: v3.8+
 - **Aerospike Graph**: Running instance with Gremlin endpoint
-- **Git**: For cloning the repository
 
 ---
 
-## Backend Setup
-
-### 1. Navigate to Backend Directory
+## Start Aerospike Graph and load data 
+From the root of the repo
 ```bash
-cd python/money-mule-demo/backend
+docker compose up -d 
 ```
 
-### 2. Create Virtual Environment (Recommended)
+### Create Python Virtual Environment (Recommended)
 ```bash
 # Create virtual environment
 python -m venv venv
@@ -55,13 +44,22 @@ python -m venv venv
 # Activate virtual environment
 # On macOS/Linux:
 source venv/bin/activate
-# On Windows:
-venv\Scripts\activate
 ```
 
-### 3. Install Python Dependencies
+### Install Python Dependencies
 ```bash
 pip install flask flask-cors gremlinpython
+```
+### Load Data
+```bash
+python3 load_data.py
+```
+
+## Backend Setup
+
+### 1. Navigate to Backend Directory
+```bash
+cd python/money-mule-demo/backend
 ```
 
 **Required Python Packages:**
