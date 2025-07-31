@@ -9,19 +9,19 @@
 2. Create Your Cluster
     Now create your Aerospike cluster using this script:
     ```bash
-        ./create_cluster.sh
+    ./create_cluster.sh
     ```
     
 3. Find the Cluster IP
     Now that your cluster is running, find its Private IP using
     ```shell
-        aerolab cluster list
+    aerolab cluster list
     ```
     
 4. Make Your GCP Bucket
     Make a bucket in gcp for the data: 
     ```shell
-        gsutil mb gs://<name-of-bucket>
+    gsutil mb gs://<name-of-bucket>
     ```
     
     Download bulk loader jar from here
@@ -37,7 +37,7 @@
 6. Upload Files to GCP
     Now upload the files to the bucket using
     ```shell
-        gsutil cp -r ./bucket-files/* gs://<name-of-bucket>
+    gsutil cp -r ./bucket-files/* gs://<name-of-bucket>
     ```
     
 7. Edit the Variables Script
@@ -47,7 +47,7 @@
 8. Create Dataproc Cluster and Submit the Bulkload
     Now to create a dataproc cluster and submit the bulkload job run
     ```shell
-        ./bulkload.sh
+    ./bulkload.sh
     ```
     When it has succeeded, you should see output similar to this:
     ```

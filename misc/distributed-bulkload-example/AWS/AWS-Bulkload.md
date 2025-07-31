@@ -10,7 +10,7 @@
 2. Make Your S3 Bucket
     Make a bucket in AWS S3 for the data:
     ```shell
-       aws s3 mb s3://<bucket-name>/ --region <my-region>
+    aws s3 mb s3://<bucket-name>/ --region <my-region>
     ```
     Download bulk loader jar from here
     https://aerospike.com/download/graph/loader/
@@ -22,17 +22,17 @@
     Now edit the `set_variables.sh` script and change values of the variables
     Necessary variable changes are for:
     ```properties
-       name
-       username
-       BUCKET_PATH
-       SUBNET_ID           # This will be changed after creating your Aerolab Cluster
-       SECURITY_GROUP      # This will be changed after creating your Aerolab Cluster
+    name
+    username
+    BUCKET_PATH
+    SUBNET_ID           # This will be changed after creating your Aerolab Cluster
+    SECURITY_GROUP      # This will be changed after creating your Aerolab Cluster
     ```
 
 4. Start the Aerolab Cluster
     Once the variables (not including `SUBNET_ID` or `SECURITY_GROUP`) are set, run
     ```shell
-       ./create_cluster.sh
+    ./create_cluster.sh
     ```
     Make sure to grab the subnet ID and security group ID from the output
     and put them as the values for
@@ -52,17 +52,17 @@
 6. Upload Files to AWS
     Now upload the files to the bucket using
      ```shell
-       aws s3 cp ./bucket-files s3://<your-bucket-name>/ --recursive --region us-east-1
+     aws s3 cp ./bucket-files s3://<your-bucket-name>/ --recursive --region us-east-1
      ```
 7. Create EMR Cluster and Submit the Bulkload
     Now to create an EMR cluster and submit the bulkload job run:
      ```shell
-        ./bulkload.sh
+     ./bulkload.sh
      ```
     
     You can check on it using:
     ```bash
-      aws emr describe-step --cluster-id "<your-emr-cluster-id>" --step-id "<your-step-id>" --region "<your-region>"
+    aws emr describe-step --cluster-id "<your-emr-cluster-id>" --step-id "<your-step-id>" --region "<your-region>"
     ```
     When it has succeeded, you should see output similar to this:
      ```
