@@ -50,7 +50,13 @@ source venv/bin/activate
 ```bash
 pip install flask flask-cors gremlinpython
 ```
-### Load Data
+### Generate and Load Data
+
+```bash
+python3 generate_Data_Main.py
+```
+
+
 ```bash
 python3 load_data.py
 ```
