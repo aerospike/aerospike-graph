@@ -58,18 +58,47 @@ def identify_client_and_fraud_accounts(bank_account_df):
     return client_bank, fraud_accounts
 
 def identify_mule_accounts(bank_account_df, customer_address_df, customer_bank_account_df, client_bank):
+    """
+    Identifies potential money mule accounts based on suspicious patterns, primarily focusing on address sharing.
+    
+    Args:
+        bank_account_df: DataFrame containing bank account details (status, bank_code, etc.)
+        customer_address_df: DataFrame containing customer-address relationships
+        customer_bank_account_df: DataFrame containing customer-bank account relationships
+        client_bank: Bank code identifier
+        
+    Returns:
+        list: Bank account IDs identified as potential mule accounts
+    """
+    # Group addresses by location and get list of customers for each address
+    # ~to represents the address, ~from represents the customer
     shared_addresses = customer_address_df.groupby('~to')['~from'].apply(list)
+    
+    # Find customers sharing addresses with more than 3 other customers
+    # This is a common money mule pattern where multiple accounts use same address
     shared_customers = shared_addresses[shared_addresses.apply(len) > 3].explode().tolist()
     
+    # Fallback: If no shared addresses found, randomly select 2 customers
+    # This ensures we have some mule accounts for demo purposes
     if not shared_customers:
         shared_customers = customer_address_df['~from'].sample(n=min(2, len(customer_address_df)), random_state=42).tolist()
     
+    # Identify bank accounts that:
+    # 1. Belong to customers from suspicious shared addresses
+    # 2. Are not dormant or closed (active accounts only)
     mule_accounts = customer_bank_account_df[
-    customer_bank_account_df['~from'].isin(shared_customers) &
-    customer_bank_account_df['~to'].isin(bank_account_df[~bank_account_df['status'].isin(['dormant', 'closed'])]['~id'])
-]['~to'].tolist()
-    #additional_mule_accounts = bank_account_df[(bank_account_df['bank_code'] == client_bank) & (bank_account_df['status'].isin(['active', 'reactivated']))].sample(frac=0.01, random_state=42)['~id'].tolist()
+        customer_bank_account_df['~from'].isin(shared_customers) &  # Accounts belonging to suspicious customers
+        customer_bank_account_df['~to'].isin(bank_account_df[~bank_account_df['status'].isin(['dormant', 'closed'])]['~id'])  # Active accounts only
+    ]['~to'].tolist()
+
+    # Optional: Add additional mule accounts (currently disabled)
+    # This would add 1% of active accounts from the specified bank
+    #additional_mule_accounts = bank_account_df[
+    #    (bank_account_df['bank_code'] == client_bank) & 
+    #    (bank_account_df['status'].isin(['active', 'reactivated']))
+    #].sample(frac=0.01, random_state=42)['~id'].tolist()
     #mule_accounts.extend(additional_mule_accounts)
+    
     return mule_accounts
 
 def identify_dormant_accounts(bank_account_df):

@@ -3,3 +3,4 @@ pydantic
 gender_guesser
 faker
 email_validator 
+gremlinpython
