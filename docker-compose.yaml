@@ -1,7 +1,6 @@
-version: "3"
 services:
   aerospike-db:
-    image: aerospike/aerospike-server-enterprise:7.1
+    image: aerospike/aerospike-server-enterprise:8.0.0.7
     container_name: aerospike-db
     networks:
       - asgraph_net
@@ -11,9 +10,9 @@ services:
       - DEFAULT_TTL=0
     healthcheck:
       test: ["CMD", "asinfo", "-p", "3000", "-v", "build"]
-      interval: 30s
+      interval: 5s
       timeout: 20s
-      retries: 3
+      retries: 4
   aerospike-graph-service:
     image: aerospike/aerospike-graph-service:latest
     container_name:
@@ -34,18 +33,17 @@ services:
       - aerospike.graph.query-tracing.threshold-ms=5
       - aerospike.graph.query-tracing.opentelemetry-host=zipkin
     volumes:
-      - ./examples:/data
+      - ./:/data
     networks:
       - asgraph_net
   zipkin:
     image: openzipkin/zipkin
-    container_name:
-      asgraph-zipkin
+    container_name: asgraph-zipkin
     networks:
       - asgraph_net
     ports:
       - "9411:9411"
-      
+
 networks:
   asgraph_net:
     name: asgraph_net

@@ -1,0 +1,18 @@
+# FraudGuard Backend Dependencies
+# Core web framework
+flask>=2.3.0
+flask-cors>=4.0.0
+
+# Aerospike Graph / Gremlin Python driver
+gremlinpython>=3.6.0
+
+# Standard library packages (included with Python)
+# csv - Built-in
+# datetime - Built-in
+# threading - Built-in
+# concurrent.futures - Built-in
+# warnings - Built-in
+# asyncio - Built-in
+# logging - Built-in
+# atexit - Built-in
+# time - Built-in 
