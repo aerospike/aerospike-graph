@@ -21,8 +21,6 @@ def g(gremlin_connection):
 
 @pytest.fixture
 def clean_graph_for_individual_test(g):
-    print("Clean Slate Start")
     g.V().drop().iterate()
     yield g
-    print("Clean Teardown Finish")
     g.V().drop().iterate()
