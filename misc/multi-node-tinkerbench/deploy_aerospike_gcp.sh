@@ -78,4 +78,4 @@ echo "→ Benchmark VM group '$bench_group' created."
 
 echo
 echo "Hosts for AGS Instances: "
-aerolab client list   | grep -A1 connor-multi   | grep -o 'gremlin[^ ]*' | sed 's|gremlin://||'
+aerolab client list   | grep -A1 $name  | grep -o 'gremlin[^ ]*' | sed 's|gremlin://||'
