@@ -29,7 +29,8 @@ import time
 import signal
 import sys
 import atexit
-import generate as gen
+import worker as gen
+import validator
 
 BATCH_SIZE = 1_000_000
 MAX_EDGE_FILE_LINES = 20_000_000
@@ -39,23 +40,7 @@ CSV_BUFFER_SIZE = 8 * 1024 * 1024
 shared_mem = None
 executor = None
 
-class EdgeConf:
-    def __init__(self, name, rel_key, from_type_idx, to_type_idx, median, sigma, index, properties):
-        self.name = name
-        self.rel_key = rel_key
-        self.from_type_idx = from_type_idx
-        self.to_type_idx = to_type_idx
-        self.median = median
-        self.sigma = sigma
-        self.index = index
-        self.properties = properties
 
-class VertexConf:
-    def __init__(self, name, count, index, properties):
-        self.name = name
-        self.count = count
-        self.index = index
-        self.properties = properties
 
 def cleanup():
     """Cleanup function to handle shared resources."""
@@ -111,78 +96,6 @@ def get_total_file_size(available_disks=None, out_dir=None):
     
     return total_size, files_count
 
-def parse_config_yaml(config_path: str) -> dict[str, dict[str, any]]:
-    with open(config_path, 'r') as file:
-        return yaml.safe_load(file)
-AEROSPIKE_GRAPH_TYPES = {
-    "long", "int", "integer", "double", "bool", "boolean", "string", "date"
-}
-def validate_aerospike_properties(properties, type, sub_type):
-    for prop in properties:
-        val = prop.lower()
-        if ':' not in val:
-            raise ValueError(f"Invalid {type} property definition for {type} '{sub_type}': '{prop}': missing ':' separator.")
-        name, type_str = val.split(':', 1)
-        name = name.strip()
-        type_str = type_str.strip()
-        if not name:
-            raise ValueError(f"Invalid {type} {sub_type} property definition '{prop}': property name is empty.")
-        if not type_str:
-            raise ValueError(f"Invalid {type} {sub_type} property definition '{prop}': property type is empty.")
-        if type_str not in AEROSPIKE_GRAPH_TYPES:
-            raise ValueError(
-                f"Invalid {type} property type '{type_str}' for property '{name}' in {sub_type} {type}. "
-                f"Supported types are: {sorted(AEROSPIKE_GRAPH_TYPES)}"
-            )
-    return True
-
-def parse_edge_config(config, vertex_idx_mapping):
-    result = []
-    i = 0
-    for edge_type, edge_groups in config.items():
-        for rel_key, props in edge_groups.items():
-            properties = props['properties']
-            if properties == None:
-                properties = []
-            if not isinstance(properties, list):
-                raise ValueError(f"Edge properties are not a list: '{properties}'")
-            validate_aerospike_properties(properties, "Edge", edge_type)
-            entry = EdgeConf(
-                name=edge_type,
-                rel_key=rel_key,# The edge label for the graph
-                from_type_idx=vertex_idx_mapping[props['from']],
-                to_type_idx=vertex_idx_mapping[props['to']],
-                properties=properties,
-                median=float(props['median']),
-                sigma=float(props['sigma']),
-                index=i
-            )
-            result.append(entry)
-            i += 1
-    return result
-
-def parse_vert_config(config, nodes):
-    result = []
-    i = 0
-    total_percent = 0
-    for name, props in config.items():
-        properties = props['properties']
-        total_percent += props['percent']
-        if not isinstance(properties, list):
-            raise ValueError(f"Vertex properties are not a list: '{properties}'")
-        validate_aerospike_properties(properties, "Vertex", name)
-        entry = VertexConf(
-            name = name,
-            count = int(nodes * (props['percent'] / 100)),
-            index=i,
-            properties = properties
-        )
-        result.append(entry)
-        i += 1
-    if not(total_percent == 100):
-        raise ValueError(f"Vertex percents do not add up to 100: '{total_percent}'%")
-    return result
-
 def sample_log_normal_deg(N, median, sigma, rng):
     mu = np.log(median)
     degs = rng.lognormal(mean=mu, sigma=sigma, size=N)
@@ -208,9 +121,6 @@ def sample_sequence_powerlaw(n, gamma, seed=None):
     max_possible = n - 1
     degs = np.minimum(degs, max_possible)
     return degs
-
-import powerlaw
-import matplotlib.pyplot as plt
 
 def print_degree_distribution(deg_seq: np.ndarray, distribution: str = "lognormal", num_bins: int = 20):
     max_deg = np.max(deg_seq)
@@ -258,43 +168,6 @@ def print_degree_distribution(deg_seq: np.ndarray, distribution: str = "lognorma
                 bar_len = int((count / max_count) * 50)
                 percentage = (count / len(deg_seq)) * 100
                 print(f"{bin_start:6} - {bin_end:6} | {'*' * bar_len} ({count:,} vertices, {percentage:.1f}%)")
-
-
-def validate_and_plot_powerlaw(deg_seq: np.ndarray, plot_title="Degree Distribution", show_plot=True):
-    # Filter out 0s (not part of power-law support)
-    deg_seq = deg_seq[deg_seq > 0]
-
-    print("\n[Power-Law Validation]")
-    print(f"Sample size: {len(deg_seq):,}")
-    print(f"Min degree: {deg_seq.min()}, Max degree: {deg_seq.max()}")
-
-    fit = powerlaw.Fit(deg_seq, discrete=True)
-    gamma = fit.power_law.alpha
-    xmin = fit.power_law.xmin
-    D = fit.power_law.D
-    print(f"Estimated gamma (α): {gamma:.2f}")
-    print(f"Estimated xmin: {xmin}")
-    print(f"KS distance: {D:.4f}")
-
-    R, p = fit.distribution_compare('power_law', 'lognormal')
-    print(f"Power-law vs Log-normal loglikelihood ratio: R = {R:.3f}, p = {p:.4f}")
-    if R > 0 and p < 0.05:
-        print("✔ Power-law is a significantly better fit")
-    elif R < 0 and p < 0.05:
-        print("✘ Log-normal is a better fit")
-    else:
-        print("❓ Inconclusive: not enough evidence to favor one model")
-
-    if show_plot:
-        plt.figure(figsize=(8, 6))
-        fit.plot_pdf(color='b', label='Empirical PDF')
-        fit.power_law.plot_pdf(color='r', linestyle='--', label='Fitted Power-law')
-        plt.title(plot_title)
-        plt.xlabel("Degree k")
-        plt.ylabel("P(k)")
-        plt.legend()
-        plt.grid(True, which="both", ls=":")
-        plt.show()
 
 def sample_targets(n, u, k, rng):
     targets = set()
@@ -351,8 +224,8 @@ def main():
         nodes = args.nodes
 
         config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'config','config.yaml')
-        config = parse_config_yaml(config_path)
-        vertice_configs = parse_vert_config(config.get('vertices', {}), nodes)
+        config = validator.parse_config_yaml(config_path)
+        vertice_configs = validator.parse_vert_config(config.get('vertices', {}), nodes)
 
         vertex_ranges = [0]
         running_count = 0
@@ -369,7 +242,7 @@ def main():
             vertex_local_idx[start:end] = np.arange(end - start)
             vertex_idx_mapping[t.name] = i
 
-        edge_configs = parse_edge_config(config.get('edges', {}), vertex_idx_mapping)
+        edge_configs = validator.parse_edge_config(config.get('edges', {}), vertex_idx_mapping)
 
         # Sparse COO tensor: (src_global_id, edge_type_index, degree)
         degree_records = []
@@ -400,7 +273,7 @@ def main():
         degree_sequence = degree_tensor.sum(axis=1)
         print_degree_distribution(degree_sequence)
         if(args.validate_distribution):
-            validate_and_plot_powerlaw(degree_sequence)
+            validator.validate_and_plot_powerlaw(degree_sequence)
 
         if args.dry_run:
             print("\n✔ Dry run completed. No files were generated.")

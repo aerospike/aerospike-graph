@@ -1,8 +1,8 @@
 # How to use Generator
 
-python .\generate-ags-csv.py --nodes 17000000 --median 20 --sigma 1.5 --workers 4  --out-dir ./output
+python ./generate-ags-csv.py --nodes 17000000 --median 20 --sigma 1.5 --workers 4  --out-dir ./output
 
-python .\generate-ags-csv.py \
+python ./generate-ags-csv.py \
 --nodes 17000000 \
 --median 20.0 \
 --sigma 1.0 \

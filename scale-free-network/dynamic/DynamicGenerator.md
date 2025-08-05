@@ -2,6 +2,13 @@
 This generator will create Power-Law distributed graphs based on specifications made in the config.yaml
 with support for multi-type graph schemas.
 
+# Startup
+Edit the yaml with your edge and vertex types, refer to the `Edge Schemas` and `Vertex Schemas` sections for guidance
+Tune the config options too your specifications, refer to `Config Options` section for guidance.
+An example of how to run the application would be
+```shell 
+python generate-multitype-scalefree --nodes 100000 --out-dir C:\Repos\aerospike-graph\scale-free-network\output --seed 42 --gamma 2.0 --validate-distribution --dry-run
+```
 # Config Options
 `--nodes`, type=int, default=100000
 Number of vertices (nodes) in the overall Graph

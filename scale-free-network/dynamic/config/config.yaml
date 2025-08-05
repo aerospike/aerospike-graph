@@ -1,0 +1,122 @@
+edges:
+  TRACKS:
+    Delivery__Warehouse:
+      properties:
+        method:
+          type: String
+          max: 8
+          min: 2
+          chars: "aeiou123450^&*(_+{}:"
+        tracking_number:
+          type: Long
+          max: 9223372036854775807
+          min: 20
+        favourite_number:
+          type: Int
+          max: 2147483647
+          min: -2147483648
+        favourite_date:
+          type: Date
+          max: 2147483647
+          min: -2147483648
+        favourite_boolean:
+          type: Boolean
+          max: 2147483647
+          min: -2147483648
+        favourite_double:
+          type: Double
+          max: 2147483647
+          min: -2147483648
+        favourite_list:
+          type: List
+          min_length: 0
+          max_length: 100
+          element_type: Int
+          max: 2147483647
+          min: -2147483648
+
+      from: Delivery
+      to: Warehouse
+      median: 4
+      sigma: 2
+
+    Vehicle__Warehouse:
+      properties:
+        - vehicle_type:String
+        - license_plate:String
+      from: Vehicle
+      to: Warehouse
+      median: 2
+      sigma: 1
+
+  CONTAINS:
+    Warehouse__Product:
+      properties:
+        - bin_location:String
+        - stock_level:Int
+      from: Warehouse
+      to: Product
+      median: 6
+      sigma: 3
+
+vertices:
+  Delivery:
+    properties:
+      method:
+        type: String
+        max_size: 8
+        min_size: 2
+        allowed_chars: "aeiou123450^&*(_+{}:"
+      tracking_number:
+        type: Long
+        max: 9223372036854775807
+        min: 20
+      favourite_number:
+        type: Int
+        max: 2147483647
+        min: -2147483648
+      favourite_date:
+        type: Date
+        format: "YYYY-MM-DD"
+        min_year: 1998
+        max_year: 2000
+      favourite_boolean:
+        type: Boolean
+        true_chance: 50
+      favourite_double:
+        type: Double
+        max: 2147483647
+        min: -2147483648
+      favourite_list:
+        type: List
+        min_length: 0
+        max_length: 100
+        element_type: Int
+        max: 2147483647
+        min: -2147483648
+    percent: 25
+
+  Vehicle:
+    properties:
+      - model:String
+      - year:Int
+      - capacity:Double
+      - fuelType:String
+      - active:Bool
+    percent: 15
+
+  Warehouse:
+    properties:
+      - location:String
+      - area:Int
+      - temperatureControlled:Bool
+      - manager:String
+    percent: 40
+
+  Product:
+    properties:
+      - productCode:String
+      - name:String
+      - category:String
+      - expirationDate:Long
+    percent: 20
