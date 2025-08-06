@@ -1,13 +1,16 @@
+import calendar
+import datetime
 import os
 import string
 from bisect import bisect_left
 from multiprocessing import shared_memory
 import numpy as np
 import csv
-import time
 import random
 
 import pickle
+
+from numpy.random import default_rng
 
 BATCH_SIZE = 1_000_000  # Increased to 1M
 MAX_EDGE_FILE_LINES = 20_000_000  # Increased to 20M
@@ -17,41 +20,95 @@ def generate_vertex_id(vtype: string, n: int) -> str:
     """Generate a numeric vertex ID - much faster than alphanumeric."""
     return f"{vtype}{n:019d}"
 
-def generate_long_property(rng: random.Random) -> int:
-    return rng.randint(0, 9223372036854775807)
+def generate_int(rng: random.Random, props: dict) -> int:
+    minimum = props["min"]
+    maximum = props["max"]
+    return rng.randint(minimum, maximum)
 
-def random_string(length=8):
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
-def generate_edge_property(rng: random.Random) -> int:
-    return rng.randint(0, 2147483647)
+def generate_long(rng: random.Random, props: dict) -> int:
+    minimum = props["min"]
+    maximum = props["max"]
+    return rng.randint(minimum, maximum)
 
-def generate_random_property(type):
-    type = str(type).lower()
-    if type == "int":
-        return str(random.randint(0, 2147483647))
-    elif type == "double":
-        value = random.uniform(0.0, 100000.0)
-        return str(round(value, 2))
-    elif type == "string":
-        return random_string()
-    elif type == "date":
-        return str(int(time.time() - random.randint(0,31000000)))
-    elif type == "long":
-        return str(random.randint(0, 9223372036854775807))
-    elif type == "bool":
-        return str(random.randint(1, 5) == 1)
-    else:
-        raise ValueError(f"{type} not recognized, use either int, double, string, date, long, or bool")
 
-def generate_line_properties(schema):
+def generate_double(rng: random.Random, props: dict) -> float:
+    minimum = props["min"]
+    maximum = props["max"]
+    return rng.uniform(minimum, maximum)
+
+
+def generate_string(rng: random.Random, props: dict) -> str:
+    min_size = props["min_size"]
+    max_size = props["max_size"]
+    allowed = props["allowed_chars"]
+    length = rng.randint(min_size, max_size)
+    return "".join(rng.choice(allowed) for _ in range(length))
+
+
+def generate_bool(rng: random.Random, props: dict) -> bool:
+    chance = props["true_chance"] / 100.0
+    return rng.random() < chance
+
+
+def generate_date(rng: random.Random, props: dict) -> str:
+    min_year = props["min_year"]
+    max_year = props["max_year"]
+    year = rng.randint(min_year, max_year)
+    month = rng.randint(1, 12)
+    day = rng.randint(1, calendar.monthrange(year, month)[1])
+    randdate = datetime.date(year, month, day)
+    return randdate.isoformat()
+
+
+def generate_list(rng: random.Random, props: dict):
+    min_len = props["min_length"]
+    max_len = props["max_length"]
+    element = props["element"]
+    element_type = element["type"]
+    length = rng.randint(min_len, max_len)
+    return [
+        generate_property(element_type, rng, element)
+        for _ in range(length)
+    ]
+
+
+def generate_property(type_name: str, rng: random.Random, props: dict):
+    dispatch = {
+        "int":    generate_int,
+        "integer":    generate_int,
+        "long":   generate_long,
+        "double": generate_double,
+        "string": generate_string,
+        "bool":   generate_bool,
+        "boolean":   generate_bool,
+        "date":   generate_date,
+        "list":   generate_list,
+    }
+    try:
+        gen = dispatch[type_name.lower()]
+    except KeyError:
+        raise ValueError(f"Unsupported type '{type_name}'")
+    return gen(rng, props)
+
+def generate_line_properties(schema, rng):
     '''Grab types of each, generate random based on type'''
     values = []
-    for property in schema:
-        type = str(property).split(':')[1]
-        values.append(generate_random_property(type))
+    for type, props in schema.items():
+        values.append(generate_property(props["type"], rng, props))
 
     return values
+
+def get_property_list(props: dict) -> list:
+    prop_list = []
+    for key, value in props.items():
+        prop_type = value["type"].lower()
+        if prop_type == "list":
+            element_type = value["element"]["type"].lower()
+            prop_list.append(key + ":" + element_type + ":" + prop_type)
+        else:
+            prop_list.append(key + ":" + prop_type)
+    return prop_list
 
 def sample_targets(n, u, k, rng):
     targets = set()
@@ -94,6 +151,7 @@ def process_full_worker(
     edge_configs = payload["edge_configs"]
     vertex_idx_mapping = payload["vertex_idx_mapping"]
 
+    rng = random.Random(1234)
     shm = shared_memory.SharedMemory(name=shm_name)
     deg_mat = np.ndarray(shm_shape, dtype=np.dtype(shm_dtype), buffer=shm.buf)
     def vertex_type_of(u: int) -> int:
@@ -116,8 +174,11 @@ def process_full_worker(
         vertex_subdir = os.path.join(get_shard_path("vertices", worker_id, total_disks, out_dir), V.name)
         os.makedirs(vertex_subdir, exist_ok=True)
         fname = f'vertices_{V.name}_{worker_id:02d}.csv'
+        vprop_list = []
+        for key, props in V.properties.items():
+            vprop_list.append(key + ":" + props["type"])
         f = open(os.path.join(vertex_subdir, fname), "w", newline="", buffering=CSV_BUFFER_SIZE)
-        w = csv.writer(f);  w.writerow(['~id', 'outDegree:Int'] + V.properties)
+        w = csv.writer(f);  w.writerow(['~id', 'outDegree:Int'] + get_property_list(V.properties))
         vertex_writers[vertex_idx_mapping[V.name]] = (w, f, []) # writer, file handle, in‑mem buffer
 
     edge_writers = {}
@@ -128,7 +189,7 @@ def process_full_worker(
         edge_file_path = os.path.join(edge_subdir, f'edges_{E.rel_key}_part_{worker_id:02d}_{edge_file_index:03d}.csv')
         edge_file = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
         edge_writer = csv.writer(edge_file)
-        edge_writer.writerow(['~from', '~to', '~label'] + E.properties)
+        edge_writer.writerow(['~from', '~to', '~label'] + get_property_list(E.properties))
         edge_writers[E.index] = (edge_writer, edge_file, [])
         edge_file_index += 1
 
@@ -149,13 +210,13 @@ def process_full_worker(
         vertex_id = generate_vertex_id(name, u)
         out_deg = int(deg_mat[u].sum())          # total across edge types
         vbuf = vertex_writers[src_type][2]
-        vbuf.append([vertex_id, str(out_deg)] + generate_line_properties(vertice_configs[vertex_idx_mapping.get(name)].properties))
+        vbuf.append([vertex_id, str(out_deg)] + generate_line_properties(vertice_configs[vertex_idx_mapping.get(name)].properties, rng))
         vertices_written += 1
 
         flush_if_needed(vbuf, src_type, "vertex") #and write if needed
 
         edge_file_line_count = 0
-        for E in edge_configs:      # pre‑build dict {src_type: [EdgeConf,..]}
+        for E in edge_configs:
             k = deg_mat[u, E.index]
             if k == 0: continue
             tgt_ids = sample_targets_from_pool(target_pools[E.to_type_idx], k, seed)
@@ -168,7 +229,7 @@ def process_full_worker(
                                  vertex_id,
                                  generate_vertex_id(name, v),
                                  E.name] +
-                             generate_line_properties(E.properties)
+                             generate_line_properties(E.properties, rng)
                              )
                 edges_written += 1
             if len(ebuff) >= BATCH_SIZE:

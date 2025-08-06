@@ -40,8 +40,6 @@ CSV_BUFFER_SIZE = 8 * 1024 * 1024
 shared_mem = None
 executor = None
 
-
-
 def cleanup():
     """Cleanup function to handle shared resources."""
     global shared_mem, executor

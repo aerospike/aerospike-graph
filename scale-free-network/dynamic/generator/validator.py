@@ -1,7 +1,8 @@
 import re
 import string
-from dateutil.parser import isoparse
+import datetime
 import numpy as np
+import sys
 import yaml
 import powerlaw
 import matplotlib.pyplot as plt
@@ -29,46 +30,49 @@ class VertexConf:
 AEROSPIKE_GRAPH_TYPES = {
     "long", "int", "integer", "double", "bool", "boolean", "string", "date", "list"
 }
+INT_MIN, INT_MAX = -2**31, 2**31 - 1
+LONG_MIN, LONG_MAX = -2**63, 2**63 - 1
+DOUBLE_MIN, DOUBLE_MAX = -sys.float_info.max, sys.float_info.max
 
 def validate_int(props):
     max = props.get("max")
-    min = props.get("max")
-    if max is not int:
-        raise(TypeError, "Int max is not an int")
-    if max < -2147483648 or max > 2147483647:
-        raise(ValueError, "Int max is out of bounds for java int")
-    if min is not int:
-        raise(TypeError, "Int min is not an int")
-    if min < -2147483648 or min > 2147483647:
-        raise(ValueError, "Int min is out of bounds for java int")
+    min = props.get("min")
+    if not isinstance(max, int):
+        raise TypeError("Int max is not an int")
+    if max < INT_MIN or max > INT_MAX:
+        raise ValueError("Int max is out of bounds for java int")
+    if not isinstance(min, int):
+        raise TypeError("Int min is not an int")
+    if min < INT_MIN or min > INT_MAX:
+        raise ValueError("Int min is out of bounds for java int")
     if max < min:
         raise ValueError("Int max is smaller then min")
 
 def validate_long(props):
     max = props.get("max")
-    min = props.get("max")
-    if max is not int:
-        raise(TypeError, "Long max is not a number")
-    if max < -9223372036854775808 or max > 9223372036854775807:
-        raise(ValueError, "Long max is out of bounds for java Long")
-    if min is not int:
-        raise(TypeError, "Long min is not a number")
-    if min < -9223372036854775808 or min > 9223372036854775807:
-        raise(ValueError, "Long min is out of bounds for java Long")
+    min = props.get("min")
+    if not isinstance(max, int):
+        raise TypeError("Long max is not a number")
+    if max < LONG_MIN or max > LONG_MAX:
+        raise ValueError("Long max is out of bounds for java Long")
+    if not isinstance(min, int):
+        raise TypeError("Long min is not a number")
+    if min < LONG_MIN or min > LONG_MAX:
+        raise ValueError("Long min is out of bounds for java Long")
     if max < min:
         raise ValueError("Long max is smaller then min")
 
 def validate_double(props):
     max = props.get("max")
     min = props.get("min")
-    if max is not float:
-        raise(TypeError, "Double max is not a float")
-    if max < -1.7976931348623157e+308 or max > 1.7976931348623157e+308:
-        raise(ValueError, "Double max is out of bounds for java Double")
-    if min is not float:
-        raise(TypeError, "Double min is not a float")
-    if min < -1.7976931348623157e+308 or min > 1.7976931348623157e+308:
-        raise(ValueError, "Double min is out of bounds for java Double")
+    if not (isinstance(max, float) or isinstance(max, int)):
+        raise TypeError("Double max is not a python float (decimal number)")
+    if max < DOUBLE_MIN or max > DOUBLE_MAX:
+        raise ValueError("Double max is out of bounds for java Double")
+    if not (isinstance(min, float) or isinstance(min, int)):
+        raise TypeError("Double min is not a python float (decimal number)")
+    if min < DOUBLE_MIN or min > DOUBLE_MAX:
+        raise ValueError("Double min is out of bounds for java Double")
     if max < min:
         raise ValueError("Double max is smaller then min")
 
@@ -77,82 +81,80 @@ def validate_string(props):
     min_size = props.get("min_size")
     allowed_chars = props.get("allowed_chars")
 
-    if max_size is not int:
-        raise(TypeError, "String max_size is not an int")
+    if not isinstance(max_size, int):
+        raise TypeError("String max_size is not an int")
     if max_size < 0 or max_size > 2147483647:
-        raise(ValueError, "String max_size is out of bounds for java String size")
-    if min_size is not int:
-        raise(TypeError, "String min_size is not an int")
+        raise ValueError("String max_size is out of bounds for java String size")
+    if not isinstance(min_size, int):
+        raise TypeError("String min_size is not an int")
     if min_size < 0 or min_size > 2147483647:
-        raise(ValueError, "String min_size is out of bounds for java String size")
+        raise ValueError("String min_size is out of bounds for java String size")
     if max_size < min_size:
         raise ValueError("String max_size is smaller then min_size")
-    if allowed_chars is not string:
-        raise(TypeError, "String allowed_chars is not a string")
-    if bool(re.match(r'^[\x20-\x7E]*$', allowed_chars)):
-        raise(ValueError, "String allowed_chars includes non ASCII characters")
+    if not isinstance(allowed_chars, str):
+        raise TypeError("String allowed_chars is not a string")
 
 def validate_bool(props):
     true_chance = props.get("true_chance")
-    if true_chance is not float:
-        raise(TypeError, "Booleans true_chance is not a float")
+    if not (isinstance(true_chance, float) or isinstance(true_chance, int)):
+        raise TypeError("Booleans true_chance is not a float or int")
     if true_chance < 0 or true_chance > 100:
-        raise(ValueError, "Booleans true_chance is not a valid percent chance, make it between 1 and 100")
+        raise ValueError("Booleans true_chance is not a valid percent chance, make it between 1 and 100")
 
 
 def validate_date(props):
-    format = props.get("format")
     max_year = props.get("max_year")
     min_year = props.get("min_year")
-    if max_year is not int:
-        raise(TypeError, "Date max_year is not an int")
+    if not isinstance(max_year, int):
+        raise TypeError("Date max_year is not an int")
     if max_year < 0 or max_year > 9999:
-        raise(ValueError, "Date max_year is out of bounds for year")
-    if min_year is not int:
-        raise(TypeError, "Date min_year is not an int")
+        raise ValueError("Date max_year is out of bounds for year")
+    if not isinstance(min_year, int):
+        raise TypeError("Date min_year is not an int")
     if min_year < 0 or min_year > 9999:
-        raise(ValueError, "Date min_year is out of bounds for year")
+        raise ValueError("Date min_year is out of bounds for year")
     if max_year < min_year:
         raise ValueError("Date max_size is smaller then min_size")
-    try:
-        isoparse(format)
-    except ValueError:
-        raise ValueError("Date format is not ISO-8601 format")
 
 def validate_list(props):
     max_length = props.get("max_length")
     min_length = props.get("min_length")
-    element_type = props.get("element_type")
-    if max_length is not int:
-        raise(TypeError, "List max_length is not an int")
+    element = props.get("element")
+    if not isinstance(max_length, int):
+        raise TypeError("List max_length is not an int")
     if max_length < 0 or max_length > 2147483647:
-        raise(ValueError, "List max_length is out of bounds for java List size")
-    if min_length is not int:
-        raise(TypeError, "List min_length is not an int")
+        raise ValueError("List max_length is out of bounds for java List size")
+    if not isinstance(min_length, int):
+        raise TypeError("List min_length is not an int")
     if min_length < 0 or min_length > 2147483647:
-        raise(ValueError, "List min_length is out of bounds for java List size")
+        raise ValueError("List min_length is out of bounds for java List size")
     if max_length < min_length:
         raise ValueError("List max_length is smaller then min_length")
-    validate_property(element_type)
+    if not isinstance(element, dict):
+        raise TypeError("Element is not dict")
+    element_type = element.get("type")
+    if element_type == "list":
+        raise ValueError("Nested Lists are not allowed, please select another element type")
+
+    validate_property(element_type, element)
 
 def validate_property(prop_type: str, props: dict):
     name = prop_type.lower()
-    if prop_type == "int" or prop_type == "integer":
-        validate_int()
-    elif prop_type == "long":
-        validate_long()
-    elif prop_type == "double":
-        validate_double()
-    elif prop_type == "date":
-        validate_date()
-    elif prop_type == "list":
-        validate_list()
-    elif prop_type == "bool" or prop_type == "boolean":
-        validate_bool()
-    else:
-        validate_string()
-
+    dispatch = {
+        "int":    validate_int,
+        "integer":    validate_int,
+        "long":   validate_long,
+        "double": validate_double,
+        "string": validate_string,
+        "bool":   validate_bool,
+        "boolean":   validate_bool,
+        "date":   validate_date,
+        "list":   validate_list,
+    }
+    gen = dispatch[name]
+    gen(props)
     return
+
 def parse_config_yaml(config_path: str) -> dict[str, dict[str, any]]:
     with open(config_path, 'r') as file:
         return yaml.safe_load(file)
@@ -170,6 +172,7 @@ def validate_aerospike_properties(properties, type, sub_type):
                 f"Invalid {type} property type '{type_str}' for property '{name}' in {sub_type} {type}. "
                 f"Supported types are: {sorted(AEROSPIKE_GRAPH_TYPES)}"
             )
+        validate_property(type_str, props)
     return True
 
 def parse_edge_config(config, vertex_idx_mapping):
