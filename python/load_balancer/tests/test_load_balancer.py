@@ -104,7 +104,7 @@ class TestPythonLoadBalancer:
         unhealthy_found = any(health == False for health in post_container_start_available)
         assert not unhealthy_found
 
-    def stop_container_by_host_port(self, host_ip: str, host_port: int, timeout: int = 10) -> str | None:
+    def stop_container_by_host_port(self, host_ip: str, host_port: int, timeout: int = 10) -> str:
         client = docker.from_env()
 
         for container in client.containers.list():
@@ -118,7 +118,7 @@ class TestPythonLoadBalancer:
                         # found it—stop and return
                         container.stop(timeout=timeout)
                         return container.id
-        return None
+        return ""
 
     def start_container_by_host_port(self, container_id: str) -> str | None:
         client = docker.from_env()
