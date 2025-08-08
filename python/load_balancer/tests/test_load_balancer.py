@@ -99,9 +99,8 @@ class TestPythonLoadBalancer:
         assert unhealthy_found
 
         self.start_container_by_host_port(container_id)
-        sleep(8) # wait for healthcheck ping
-        post_container_start_available = rr_conn.get_available()
-        unhealthy_found = any(health == False for health in post_container_start_available)
+        sleep(7) # wait for healthcheck ping
+        unhealthy_found = any(health == False for health in rr_conn.get_available())
         assert not unhealthy_found
 
     def stop_container_by_host_port(self, host_ip: str, host_port: int, timeout: int = 10) -> str:
@@ -120,11 +119,10 @@ class TestPythonLoadBalancer:
                         return container.id
         return ""
 
-    def start_container_by_host_port(self, container_id: str) -> str | None:
+    def start_container_by_host_port(self, container_id: str):
         client = docker.from_env()
         container = client.containers.get(container_id)
         container.start()
-        return None
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
