@@ -22,22 +22,6 @@ jobs:
             sleep 2
           done
 
-      - name: Close Docker Containers
-        run: |
-          docker-compose down
-
-      - name: Run pytest against python load_balancer
-        working-directory: python/load_balancer
-        run: |
-          docker-compose up -d
-          pip install -r requirements.txt
-          pytest tests/ -v --maxfail=1
-
-      - name: Close Docker Containers
-        working-directory: python/load_balancer
-        run: |
-          docker-compose down
-
       - name: Setup Node.js 18.x
         uses: actions/setup-node@v3
         with:
@@ -92,7 +76,19 @@ jobs:
 
       - name: Close Docker Containers
         run: |
-          docker-compose down
+          dockercompose down
+
+      - name: Run pytest against python load_balancer
+        working-directory: python/load_balancer
+        run: |
+          docker-compose up -d
+          pip install -r requirements.txt
+          pytest tests/ -v --maxfail=1
+
+      - name: Close Docker Containers
+        working-directory: python/load_balancer
+        run: |
+          docker compose down
 
       - name: Install TLS test dependencies
         working-directory: python/tls

@@ -39,17 +39,18 @@ class RoundRobinClientRemoteConnection:
 
     def remove_host(self, endpoint):
         try:
-            index = -1
-            for host in self._clients:
-                if endpoint in host.url:
-                    index = self._clients.index(host)
-            if not index == -1:
-                with self._lock:
-                    del self._clients[index]
-                    del self._available[index]
-                self._logger.info("Removed host %s", endpoint)
-            else:
-                raise ValueError("")
+            with self._lock:
+                index = -1
+                for host in self._clients:
+                    if endpoint in host.url:
+                        index = self._clients.index(host)
+                if not index == -1:
+                    with self._lock:
+                        del self._clients[index]
+                        del self._available[index]
+                    self._logger.info("Removed host %s", endpoint)
+                else:
+                    self._logger.warning("Tried to remove non-existent host %s", endpoint)
         except ValueError:
             self._logger.warning("Tried to remove non-existent host %s", endpoint)
 
@@ -72,7 +73,7 @@ class RoundRobinClientRemoteConnection:
                     self._available[pick] = False
                 self._logger.warning("Connection #%d failed: %s – marking host down", pick, e)
                 last_exc = e
-            except Exception as e:
+            except Exception:
                 raise
         self._logger.error("All endpoints failed – raising")
         raise RuntimeError("All Gremlin endpoints failed") from last_exc
@@ -83,10 +84,7 @@ class RoundRobinClientRemoteConnection:
             for i, ok in enumerate(self._available):
                 if not ok:
                     try:
-                        bc = Bytecode()
-                        bc.add_step("V")
-                        bc.add_step("limit", 1)
-                        self._clients[i].submit(bc)
+                        self._clients[i].submit("g.V().limit(1)")
                         with self._lock:
                             self._available[i] = True
                             self._logger.info("Host #%d is healthy again", i)
