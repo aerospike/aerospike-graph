@@ -45,9 +45,8 @@ class RoundRobinClientRemoteConnection:
                     if endpoint in host.url:
                         index = self._clients.index(host)
                 if not index == -1:
-                    with self._lock:
-                        del self._clients[index]
-                        del self._available[index]
+                    del self._clients[index]
+                    del self._available[index]
                     self._logger.info("Removed host %s", endpoint)
                 else:
                     self._logger.warning("Tried to remove non-existent host %s", endpoint)
@@ -84,7 +83,7 @@ class RoundRobinClientRemoteConnection:
             for i, ok in enumerate(self._available):
                 if not ok:
                     try:
-                        self._clients[i].submit("g.V().limit(1)")
+                        self._clients[i]._client.submit("g.V().limit(1).toList()")
                         with self._lock:
                             self._available[i] = True
                             self._logger.info("Host #%d is healthy again", i)
