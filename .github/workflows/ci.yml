@@ -76,7 +76,7 @@ jobs:
 
       - name: Close Docker Containers
         run: |
-          dockercompose down
+          docker compose down
 
       - name: Run pytest against python load_balancer
         working-directory: python/load_balancer
