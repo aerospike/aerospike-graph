@@ -4,7 +4,7 @@ from time import sleep
 from gremlin_python.process.anonymous_traversal import traversal
 from load_balancer import RoundRobinClientRemoteConnection
 
-# Loggin Configurations
+# Logging Configurations
 root = logging.getLogger()
 root.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)
@@ -13,7 +13,7 @@ handler.setFormatter(
 )
 root.addHandler(handler)
 lb_logger = logging.getLogger("RoundRobinClientRemoteConnection")
-lb_logger.setLevel(logging.DEBUG)
+lb_logger.setLevel(logging.DEBUG) # Change this if you want less verbose output
 logging.getLogger("gremlin_python").setLevel(logging.WARNING)
 logging.getLogger("asyncio").setLevel(logging.WARNING)
 

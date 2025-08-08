@@ -78,6 +78,18 @@ jobs:
         run: |
           docker-compose down
 
+      - name: Run pytest against python load_balancer
+        working-directory: python/load_balancer
+        run: |
+          docker-compose up
+          pip install -r requirements.txt
+          pytest tests/ -v --maxfail=1
+
+      - name: Close Docker Containers
+        working-directory: python/load_balancer
+        run: |
+          docker-compose down
+
       - name: Install TLS test dependencies
         working-directory: python/tls
         run: |
