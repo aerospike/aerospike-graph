@@ -90,6 +90,23 @@ jobs:
           pip install -r requirements.txt
           pytest tests/ -v --maxfail=1
 
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.x'
+          check-latest: true
+          cache: true
+
+      - name: Tidy and Build Go Load Balancer #We can reuse the containers from python load balancer
+        working-directory: golang/load-balancer
+        run: |
+          go mod tidy
+          go build ./...
+
+      - name: Run Go Load Balancer tests
+        run: |
+          go test -v ./tests/
+
       - name: Close Docker Containers
         working-directory: python/load_balancer
         run: |
