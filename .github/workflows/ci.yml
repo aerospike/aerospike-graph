@@ -104,6 +104,7 @@ jobs:
           go build ./...
 
       - name: Run Go Load Balancer tests
+        working-directory: golang/load-balancer
         run: |
           go test -v ./tests/
 
