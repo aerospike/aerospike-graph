@@ -22,6 +22,10 @@ func setupGraph(t *testing.T, lb *loadbalancer.RoundRobinClientRemoteConnection)
 
 	{
 		_ = lb.DoIter(func(g *gremlingo.GraphTraversalSource) <-chan error {
+			return g.V().Drop().Iterate()
+		})
+
+		_ = lb.DoIter(func(g *gremlingo.GraphTraversalSource) <-chan error {
 			return g.AddV("User").Property("userId", "U1").Property("name", "Alice").Property("age", 30).Iterate()
 		})
 		_ = lb.DoIter(func(g *gremlingo.GraphTraversalSource) <-chan error {

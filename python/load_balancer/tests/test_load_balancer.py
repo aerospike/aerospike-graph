@@ -17,6 +17,7 @@ def populated_graph():
     load_balancer = RoundRobinClientRemoteConnection(ENDPOINTS, traversal_source="g", health_check_interval=2,
                                                      log_level=logging.DEBUG)
     g = traversal().withRemote(load_balancer)
+    g.V().drop().iterate()
 
     user1 = g.add_v("User").property("userId", "U1").property("name", "Alice").property("age", 30).next()
     user2 = g.add_v("User").property("userId", "U2").property("name", "Bob").property("age", 25).next()
@@ -77,9 +78,9 @@ class TestPythonLoadBalancer:
             g.V().has("name", "Alice").limit(_).to_list()
 
         msgs = [rec.getMessage() for rec in caplog.records]
-        assert msgs.count("Traversal submitted via connection #0") == 2
+        assert msgs.count("Traversal submitted via connection #0") == 1
         assert msgs.count("Traversal submitted via connection #1") == 2
-        assert msgs.count("Traversal submitted via connection #2") == 1
+        assert msgs.count("Traversal submitted via connection #2") == 2
 
     def test_health_check(self, populated_graph):
         rr_conn = populated_graph["load_balancer"]
