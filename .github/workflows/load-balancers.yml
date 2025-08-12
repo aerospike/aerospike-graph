@@ -30,7 +30,7 @@ jobs:
       - name: Install Docker compose + nc
         run: |
           sudo apt-get update
-          sudo apt-get install -y docker-compose netcat-openbsd
+          sudo apt-get install -y netcat-openbsd
 
       - name: Setup runtimes (per target)
         if: matrix.target == 'python'
