@@ -91,9 +91,9 @@ jobs:
           pytest tests/ -v --maxfail=1
 
       - name: Run Javascript load_balancer
-        working-directory: node-js/load-balancer
+        working-directory: nodejs/load-balancer
         run: |
-          npm i
+          npm ci
           npm test
 
       - name: Set up Go
