@@ -125,6 +125,11 @@ jobs:
           go mod tidy
           go build ./...
           docker compose up -d
+          # wait for Aerospike
+          for i in {1..20}; do
+            if nc -z aerospike-db 3000; then break; fi
+            sleep 2
+          done
 
       - name: Run Go Load Balancer tests
         working-directory: golang/load-balancer
