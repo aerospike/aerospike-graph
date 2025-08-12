@@ -198,7 +198,7 @@ func TestHealthCheck(t *testing.T) {
 		t.Fatalf("failed to restart container: %v", err)
 	}
 	// Health loop runs every 2s (per constructor); give it some time
-	time.Sleep(3 * time.Second)
+	time.Sleep(5 * time.Second)
 
 	avail2 := lb.GetAvailable()
 	for i, ok := range avail2 {

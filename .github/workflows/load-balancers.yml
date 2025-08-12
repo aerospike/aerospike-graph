@@ -52,10 +52,7 @@ jobs:
 
       - name: docker compose up
         working-directory: ${{ matrix.target == 'python' && 'python/load_balancer' || matrix.target == 'nodejs' && 'nodejs/load-balancer' || 'golang/load-balancer' }}
-        run: docker compose up -d
-
-      - name: Wait for Aerospike
-        run: for i in {1..20}; do nc -z aerospike-db 3000 && break || sleep 2; done
+        run: docker compose up -d --wait
 
       - name: Python LB tests
         if: matrix.target == 'python'

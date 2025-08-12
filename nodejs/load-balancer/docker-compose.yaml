@@ -17,6 +17,11 @@ services:
     image: aerospike/aerospike-graph-service:latest
     container_name:
       aerospike-graph-service-1
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 8182 || exit 1" ]
+      interval: 2s
+      timeout: 1s
+      retries: 30
     depends_on:
       aerospike-db:
         condition: service_healthy
@@ -35,6 +40,11 @@ services:
     image: aerospike/aerospike-graph-service:latest
     container_name:
       aerospike-graph-service-2
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 8182 || exit 1" ]
+      interval: 2s
+      timeout: 1s
+      retries: 30
     depends_on:
       aerospike-db:
         condition: service_healthy
@@ -52,6 +62,11 @@ services:
     image: aerospike/aerospike-graph-service:latest
     container_name:
       aerospike-graph-service-3
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 8182 || exit 1" ]
+      interval: 2s
+      timeout: 1s
+      retries: 30
     depends_on:
       aerospike-db:
         condition: service_healthy
