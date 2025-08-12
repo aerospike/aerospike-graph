@@ -40,7 +40,7 @@ jobs:
       - name: Setup Node
         if: matrix.target == 'nodejs'
         uses: actions/setup-node@v4
-        with: { node-version: '18' }
+        with: { node-version: '22' }
 
       - name: Setup Go
         if: matrix.target == 'golang'
