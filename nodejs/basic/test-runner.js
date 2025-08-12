@@ -78,7 +78,7 @@ async function runTests() {
     if (serverProcess) {
       console.log("Stopping server...");
       serverProcess.kill("SIGTERM");
-      await setTimeout(1000);
+      await setTimeout(500);
       if (!serverProcess.killed) {
         serverProcess.kill("SIGKILL");
       }
