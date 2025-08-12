@@ -90,11 +90,27 @@ jobs:
           pip install -r requirements.txt
           pytest tests/ -v --maxfail=1
 
+      - name: Close Python load_balancer Docker Containers
+        working-directory: python/load_balancer
+        run: |
+          docker compose down
+
       - name: Run Javascript load_balancer
         working-directory: nodejs/load-balancer
         run: |
+          docker-compose up -d
+          # wait for Aerospike
+          for i in {1..20}; do
+            if nc -z aerospike-db 3000; then break; fi
+            sleep 2
+          done
           npm ci
           npm test
+
+      - name: Close Javascript load_balancer Docker Containers
+        working-directory: nodejs/load-balancer
+        run: |
+          docker compose down
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -108,6 +124,7 @@ jobs:
         run: |
           go mod tidy
           go build ./...
+          docker compose up -d
 
       - name: Run Go Load Balancer tests
         working-directory: golang/load-balancer
@@ -115,7 +132,7 @@ jobs:
           go test -v ./tests/
 
       - name: Close Docker Containers
-        working-directory: python/load_balancer
+        working-directory: golang/load-balancer
         run: |
           docker compose down
 
