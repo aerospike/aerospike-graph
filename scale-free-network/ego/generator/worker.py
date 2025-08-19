@@ -207,6 +207,9 @@ def process_full_worker(
                         vertices_written+=1
                         ew(d2_elabel)["buf"].append([nbr_id, leaf_id, d2_elabel] + generate_line_properties(edge_properties[d2_elabel], rng_py))
                         edges_written+=1
+                        if random.randint(0, 100) <= node_share_chance:
+                            share_label = _edge_label(ego_label, d2_type, {})
+                            ew(share_label)["buf"].append([ego_id, leaf_id, share_label] + generate_line_properties(edge_properties[share_label], rng_py))
                     _flush_writer(ew(d2_elabel), worker_id)
                     _flush_writer(vw(leaf_label), worker_id)
             _flush_writer(vw("EgoNode"), worker_id)

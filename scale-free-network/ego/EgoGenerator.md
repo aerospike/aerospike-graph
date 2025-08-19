@@ -8,7 +8,41 @@ can make type a faker input
 
 ## Step 3: then introduce more complex distributions and faker properties etc
 
-### MVP Candidate Configs
+### Configs
+All Configs to be passed in the script call
+
+#### `--sf`
+Number of ego networks to generate
+`type = int`
+`default = 100000`
+
+#### `--workers`
+Number of parallel workers
+`type = int`
+`default = CPU Count`
+
+#### `--seed`
+Base RNG seed for reproducibility
+`type = int`
+`default = 0`
+
+#### `--node-sharingchance`
+Percent chance of the EgoNode being connected to an Alters leaf node, i.e. '(Ego->Alter->AlterLeaf ++ Ego->AlterLeaf')
+`type = int`
+`default = 0`
+
+#### `--dry-run`
+Runs the program without executing any writes or reads, useful for checking your config
+
+#### `--schema` **REQUIRED**
+Path to schema yaml file
+`type = str`
+
+#### `--mount`
+Use mounted disks at /mnt/data*
+
+#### `--out-dir`
+Output directory for all files
 
 ### Generation Algorithm
 adding to buffer:

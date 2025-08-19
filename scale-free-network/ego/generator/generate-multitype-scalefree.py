@@ -3,6 +3,7 @@ import worker as gen
 import validator
 import argparse
 import os
+from pathlib import Path
 import pickle
 import tempfile
 from concurrent.futures import ProcessPoolExecutor
@@ -48,7 +49,6 @@ def get_total_file_size(available_disks=None, out_dir=None):
     """Calculate total size of all generated files."""
     total_size = 0
     files_count = 0
-
 
     def process_dir(dir_path):
         nonlocal total_size, files_count
@@ -150,6 +150,7 @@ def main():
                                 help='Output directory for all files')
         args = p.parse_args()
         num_egos = args.sf
+        base_dir = Path(__file__).resolve().parent.parent
 
         config_path = args.schema
         config = validator.parse_config_yaml(config_path)
@@ -161,14 +162,21 @@ def main():
 
         # Handle output location
         available_disks = None
+        out_dir = None
         if args.mount:
             available_disks = [i for i in range(1, 25) if os.path.ismount(f"/mnt/data{i}")]
             if not available_disks:
                 raise RuntimeError("No mounted disks found in /mnt/data*. Please run mount_disks.sh first.")
             print(f"\nFound {len(available_disks)} mounted disks: {', '.join(f'/mnt/data{i}' for i in available_disks)}")
         else:
-            os.makedirs(args.out_dir, exist_ok=True)
-            print(f"\nOutput directory: {args.out_dir}")
+            if args.out_dir is not None:
+                os.makedirs(args.out_dir, exist_ok=True)
+                out_dir = args.out_dir
+                print(f"\nOutput directory: {args.out_dir}")
+            else:
+                out_dir = base_dir / "output"
+                out_dir.mkdir(parents=True, exist_ok=True)
+                print(f"\nOutput directory: {out_dir}")
 
         # Optimize worker count
         cpu_count = multiprocessing.cpu_count()
@@ -225,7 +233,7 @@ def main():
                 completed += 1
                 print(f"\nProgress: {completed}/{workers} workers completed ({(completed/workers)*100:.1f}%)")
 
-        total_size, files_count = get_total_file_size(available_disks, args.out_dir)
+        total_size, files_count = get_total_file_size(available_disks, out_dir)
         if args.mount:
             print(f'\n✔ Files distributed across {len(available_disks)} disks')
         else:
