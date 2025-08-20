@@ -20,7 +20,7 @@ function loggerCollector() {
 
 async function setupGraph(rr) {
     const g = traversal().withRemote(rr);
-    await g.V().drop().iterate()
+    await g.V().drop().iterate();
     const user1 = await g.addV('User').property('userId', 'U1').property('name', 'Alice').property('age', 30).next();
     const user2 = await g.addV('User').property('userId', 'U2').property('name', 'Bob').property('age', 25).next();
     const user3 = await g.addV('User').property('userId', 'U3').property('name', 'Charlie').property('age', 35).next();
@@ -32,14 +32,14 @@ async function setupGraph(rr) {
     await g.addE('owns').from_(user2.value).to(account2.value).iterate();
     await g.addE('owns').from_(user3.value).to(account3.value).iterate();
 
-    rr._pos = 0
+    rr._pos = 0;
 }
 
 describe('RoundRobinClientRemoteConnection (JS)', () => {
     test('host add and removal', async () => {
         const log = loggerCollector();
         const rr = new RoundRobinClientRemoteConnection(ENDPOINTS, 'g', 2, log.fn);
-        try{
+        try {
             const initialHosts = rr.getClients();
             const initialAvail = rr.getAvailable();
 
@@ -79,7 +79,7 @@ describe('RoundRobinClientRemoteConnection (JS)', () => {
     test('rotation logs 0,1,2,0,1', async () => {
         const log = loggerCollector();
         const rr = new RoundRobinClientRemoteConnection(ENDPOINTS, 'g', 2, log.fn);
-        try{
+        try {
             await setupGraph(rr);
             log.clear(); // ignore seed logs
 
@@ -140,7 +140,7 @@ describe('RoundRobinClientRemoteConnection (JS)', () => {
             await sleep(8000);
             const avail2 = rr.getAvailable();
             expect(avail2.every((x) => x === true)).toBe(true);
-        }finally{
+        } finally {
             await rr.close();
         }
     });
