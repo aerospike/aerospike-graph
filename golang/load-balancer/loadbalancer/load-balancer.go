@@ -219,9 +219,9 @@ func (lb *RoundRobinClientRemoteConnection) healthLoop(traversalSource string) {
 				}
 
 				_, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+				defer cancel()
 				g := gremlingo.Traversal_().WithRemote(entries[i].conn)
 				_, err := g.V().Limit(1).ToList()
-				cancel()
 
 				if err == nil {
 					lb.available[i].Store(true)
