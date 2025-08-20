@@ -18,6 +18,7 @@ class RoundRobinClientRemoteConnection:
             DriverRemoteConnection(f"ws://{host}/gremlin", traversal_source)
             for host in endpoints
         ]
+        self._traversal_source = traversal_source
         self._available = [True] * len(self._clients)
         self._pos = 0
         self._lock = threading.Lock()
@@ -33,7 +34,7 @@ class RoundRobinClientRemoteConnection:
         self._logger.debug("Initialized load-balancer with endpoints: %s", endpoints)
 
     def add_host(self, endpoint):
-        self._clients.append( DriverRemoteConnection(f"ws://{endpoint}/gremlin", 'g'))
+        self._clients.append(DriverRemoteConnection(f"ws://{endpoint}/gremlin", self._traversal_source))
         self._available.append(True)
         self._logger.info("Added host %s", endpoint)
 
@@ -62,11 +63,11 @@ class RoundRobinClientRemoteConnection:
                 pick = healthy[self._pos % len(healthy)]
                 self._pos += 1
             try:
-                 result = self._clients[pick].submit(bytecode)
-                 with self._lock:
-                     self._available[pick] = True
-                 self._logger.debug("Traversal submitted via connection #%d", pick)
-                 return result
+                result = self._clients[pick].submit(bytecode)
+                with self._lock:
+                    self._available[pick] = True
+                self._logger.debug("Traversal submitted via connection #%d", pick)
+                return result
             except (ClientConnectorError, ServerDisconnectedError) as e:
                 with self._lock:
                     self._available[pick] = False
@@ -105,6 +106,6 @@ class RoundRobinClientRemoteConnection:
         for c in self._clients:
             try:
                 c.close()
-            except:
+            except Exception:
                 pass
         self._logger.debug("Load-balancer shut down")

@@ -89,7 +89,7 @@ class TestPythonLoadBalancer:
         host_to_close = ENDPOINTS[1]
         host_ip, port = host_to_close.split(":")
         initial_available = rr_conn.get_available()
-        unhealthy_found = any(False for health in initial_available)
+        unhealthy_found = any(not health for health in initial_available)
         assert not unhealthy_found
 
         container_id = self.stop_container_by_host_port(host_ip, int(port))
