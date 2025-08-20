@@ -31,18 +31,15 @@ since you query it as you would a single node traversal.
 1. **Install dependencies**:
 
    ```bash
-       pip install gremlinpython
-   ```
+   pip install gremlinpython
 2. **Start Docker Containers**
    ```shell
-       docker compose up -d
-   ```
+   docker compose up -d
 
 3. **Run the Balancer Demo**
 
    ```shell
-      python ./use_balancer.py
-   ```
+   python ./use_balancer.py
 
 ---
 

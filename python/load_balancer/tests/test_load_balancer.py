@@ -88,8 +88,8 @@ class TestPythonLoadBalancer:
 
         host_to_close = ENDPOINTS[1]
         host_ip, port = host_to_close.split(":")
-        initial_avaiable = rr_conn.get_available()
-        unhealthy_found = any(False for health in initial_avaiable)
+        initial_available = rr_conn.get_available()
+        unhealthy_found = any(False for health in initial_available)
         assert not unhealthy_found
 
         container_id = self.stop_container_by_host_port(host_ip, int(port))
@@ -100,7 +100,7 @@ class TestPythonLoadBalancer:
         assert unhealthy_found
 
         self.start_container_by_host_port(container_id)
-        sleep(7) # wait for healthcheck ping
+        sleep(7) # wait for health check ping
         unhealthy_found = any(health == False for health in rr_conn.get_available())
         assert not unhealthy_found
 

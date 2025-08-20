@@ -27,18 +27,15 @@ since you query it as you would a single node traversal.
 1. **Start the Docker Containers**:
 
     ```shell
-      docker compose up -d
-    ```
+    docker compose up -d
 2. **Tidy the mod file**
 
    ```shell
-     go mod tidy
-   ```
+   go mod tidy
 3. **Run the Balancer Demo**
 
    ```shell
-      go run ./cmd/use_balancer
-   ```
+   go run ./cmd/use_balancer
 
 ---
 ## How it Works

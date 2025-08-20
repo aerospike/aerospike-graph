@@ -31,18 +31,15 @@ since you query it as you would a single node traversal.
 1. **Install dependencies**:
 
    ```shell
-       npm install
-   ```
+   npm install
 2. **Start Docker Containers**
    ```shell
-       docker compose up -d
-   ```
+   docker compose up -d
 
 3. **Run the Balancer Demo**
 
    ```shell
-      npm start
-   ```
+   npm start
 
 ---
 

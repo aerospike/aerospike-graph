@@ -1,4 +1,4 @@
-name: python examples, node basic, java, TLS tests
+name: Basic Example and TLS Tests
 
 on:
   pull_request:
