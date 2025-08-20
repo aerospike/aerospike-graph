@@ -219,7 +219,7 @@ def main():
                         ego_start=start_idx,
                         ego_count=count,
                         total_disks=total_disks,
-                        out_dir=args.out_dir,
+                        out_dir=out_dir,
                         node_share_chance=args.node_sharing_chance,
                         num_workers=len(parts)
                     )
@@ -237,7 +237,7 @@ def main():
         if args.mount:
             print(f'\n✔ Files distributed across {len(available_disks)} disks')
         else:
-            print(f'\n✔ Files written to {args.out_dir}')
+            print(f'\n✔ Files written to {out_dir}')
         print(f'✔ Total data written: {get_human_size(total_size)} in {files_count} files')
         print(f'✔ Vertices Written: {vertices_written}')
         print(f'✔ Edges Written: {edges_written}')

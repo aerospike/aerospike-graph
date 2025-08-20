@@ -44,14 +44,14 @@ def _edge_label(src_type: str, dst_type: str, conn_meta: Dict[str, Any]) -> str:
 
 
 def _sample_degree(meta: Dict[str, any], rng_np: np.random.Generator) -> int:
-    """Returns random int degree always >= 0, defaulted to lognormal generation"""
+    """Returns random int degree always >= 0, defaulted to normal generation"""
     if meta is None:
         return 0
-    # default: lognormal
+    # default: normal
     median = float(meta.get("median", 0))
     sigma = float(meta.get("sigma", 0.5))
     mu = np.log(median)
-    return max(0, int(min(1e6, round(rng_np.lognormal(mu, sigma)))))
+    return max(0, int(min(1e6, round(rng_np.normal(mu, sigma)))))
 
 
 def _shard_root(base: str, worker_id: int, total_disks: int, out_dir: Optional[str]) -> str:
