@@ -1,7 +1,17 @@
+name: Basic Example and TLS Tests
+
 on:
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - 'python/load_balancer/**'
+      - 'nodejs/load-balancer/**'
+      - 'golang/load-balancer/**'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -14,18 +24,12 @@ jobs:
       - name: Set up Aerospike Server and Graph
         run: |
           sudo apt-get update
-          sudo apt-get install -y docker-compose
-          docker-compose up -d
-          # wait for Aerospike
-          for i in {1..20}; do
-            if nc -z aerospike-db 3000; then break; fi
-            sleep 2
-          done
+          docker compose up -d
 
-      - name: Setup Node.js 18.x
+      - name: Setup Node.js 22.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '22'
 
       - name: Setup Python 3.9
         uses: actions/setup-python@v4
@@ -36,6 +40,9 @@ jobs:
         working-directory: python
         run: |
           python -m pip install --upgrade pip
+
+      - name: Wait for AGS
+        run: docker compose up -d --wait
 
       - name: Run pytest against python transactions ui example
         working-directory: python/transactions
@@ -76,7 +83,7 @@ jobs:
 
       - name: Close Docker Containers
         run: |
-          docker-compose down
+          docker compose down
 
       - name: Install TLS test dependencies
         working-directory: python/tls
@@ -98,7 +105,7 @@ jobs:
         working-directory: python/tls/tests
         run: |
           pytest test_AGS_DB_connection.py -v --maxfail=1
-        timeout-minutes: 5
+        timeout-minutes: 2
 
       - name: Run GremlinClient-to-AGS Certificate Tests
         working-directory: python/tls/tests
@@ -109,4 +116,4 @@ jobs:
         working-directory: python/tls/tests
         run: |
           pytest test_Gremlin_AGS_connection.py -v --maxfail=1
-        timeout-minutes: 5
+        timeout-minutes: 2
