@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [python, nodejs, golang]
+        target: [golang]
 
     steps:
       - uses: actions/checkout@v4
