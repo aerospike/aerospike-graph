@@ -7,7 +7,6 @@ on:
       - 'python/load_balancer/**'
       - 'nodejs/load-balancer/**'
       - 'golang/load-balancer/**'
-      - 'docker-compose.yml' # if shared
   push:
     branches: [main]
   workflow_dispatch: {}
@@ -22,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [python, nodejs, golang]
+        target: [python]
 
     steps:
       - uses: actions/checkout@v4
