@@ -4,7 +4,7 @@ can make type a faker input
 
 ## Tasks:
 - Partition upgrades based on feedback for distribution from Ishaan
-- finish node sharing flag
+- flag for flipping the nodes from outs to in (from ego->alter to ego<-alter)
 
 ## Step 3: then introduce more complex distributions and faker properties etc
 
@@ -33,6 +33,9 @@ Percent chance of the EgoNode being connected to an Alters leaf node, i.e. '(Ego
 
 #### `--dry-run`
 Runs the program without executing any writes or reads, useful for checking your config
+
+#### `--invert-direction`
+Changes the algorithm from generating out edges from the egonode to in edges (Ego<-Alter<-Leaf)
 
 #### `--schema` **REQUIRED**
 Path to schema yaml file

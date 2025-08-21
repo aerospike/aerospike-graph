@@ -1,3 +1,5 @@
+import shutil
+
 import numpy as np
 import worker as gen
 import validator
@@ -141,6 +143,8 @@ def main():
                             '(Ego->Alter->AlterLeaf ++ Ego->AlterLeaf')
         p.add_argument('--dry-run', action='store_true',
                        help='Only show degree distribution statistics without generating files')
+        p.add_argument('--invert-direction', action='store_true',
+                       help='Changes the generation algorithms direction from out to in vertices from the ego node')
         p.add_argument('--schema', type=str, required=True,
                        help='Path to schema yaml file')
         output_group = p.add_mutually_exclusive_group(required=False)
@@ -154,7 +158,7 @@ def main():
 
         config_path = args.schema
         config = validator.parse_config_yaml(config_path)
-        config_flatmap, vert_prop_map, edge_prop_map = validator.parse_config(config)
+        config_flatmap, vert_prop_map, edge_prop_map = validator.parse_config(config, args.invert_direction)
 
         if args.dry_run:
             print("\n✔ Dry run completed. No files were generated.")
@@ -177,6 +181,8 @@ def main():
                 out_dir = base_dir / "output"
                 out_dir.mkdir(parents=True, exist_ok=True)
                 print(f"\nOutput directory: {out_dir}")
+            if os.path.exists(out_dir):
+                shutil.rmtree(out_dir)
 
         # Optimize worker count
         cpu_count = multiprocessing.cpu_count()
@@ -215,13 +221,14 @@ def main():
                         gen.process_full_worker,
                         worker_id=wid,
                         aux_path=aux_path,
-                        seed=args.seed + wid,     # worker-local seed
+                        seed=args.seed + wid,
                         ego_start=start_idx,
                         ego_count=count,
                         total_disks=total_disks,
                         out_dir=out_dir,
                         node_share_chance=args.node_sharing_chance,
-                        num_workers=len(parts)
+                        num_workers=len(parts),
+                        invert_direction = args.invert_direction
                     )
                 )
             
