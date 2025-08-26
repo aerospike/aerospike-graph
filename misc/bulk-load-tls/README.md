@@ -34,7 +34,7 @@ mkdir -p $DEST_DIR
 # For AWS EMR
 # aws s3 cp $CA_CERT_REMOTE $CA_CERT
 # Note for AWS You will also need something like this (see AWS EMR section below)
-# cat > spark-tls-config.yaml <<EOF
+# cat > spark-tls-config.json <<EOF
 # [
 #   {
 #     "Classification": "spark-defaults",
