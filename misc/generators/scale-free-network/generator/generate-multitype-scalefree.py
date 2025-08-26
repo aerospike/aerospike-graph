@@ -14,14 +14,12 @@ Usage:
         -- dry-run
 """
 
-# add check that the config and schemas are both size >0
 import argparse
 import os
 import pickle
 import tempfile
 
 import numpy as np
-import yaml
 from concurrent.futures import ProcessPoolExecutor
 import multiprocessing
 from multiprocessing import shared_memory
@@ -270,7 +268,7 @@ def main():
         # Sum across all edge-types to get each vertex’s total out-degree
         degree_sequence = degree_tensor.sum(axis=1)
         print_degree_distribution(degree_sequence)
-        if(args.validate_distribution):
+        if args.validate_distribution:
             validator.validate_and_plot_powerlaw(degree_sequence)
 
         if args.dry_run:
@@ -343,7 +341,7 @@ def main():
 
         # Normal cleanup
         executor = None
-        if(shared_mem):
+        if shared_mem:
             shared_mem.close()
             shared_mem.unlink()
         shared_mem = None

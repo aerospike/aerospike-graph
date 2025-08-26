@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import subprocess
 from tqdm import tqdm
 import argparse
@@ -20,7 +18,10 @@ def get_files_from_disk(disk_num: int, file_type: str) -> list:
     """Get all CSV files of specified type from a disk."""
     data_dir = Path(f"/mnt/data{disk_num}/{file_type}")
     if data_dir.exists():
-        return list(data_dir.glob(f"{file_type}_part_*.csv"))
+        if file_type == "vertices":
+            return list(data_dir.glob("vertices_*_*.csv"))
+        else:
+            return list(data_dir.glob("edges_*_part_*_*.csv"))
     return []
 
 def main():

@@ -1,12 +1,8 @@
-import re
-import string
-import datetime
 import numpy as np
 import sys
 import yaml
 import powerlaw
 import matplotlib.pyplot as plt
-from numpy.f2py.auxfuncs import throw_error
 
 
 class EdgeConf:

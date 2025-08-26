@@ -1,7 +1,6 @@
 import calendar
 import datetime
 import os
-import string
 from bisect import bisect_left
 from multiprocessing import shared_memory
 import numpy as np
@@ -10,13 +9,11 @@ import random
 
 import pickle
 
-from numpy.random import default_rng
-
 BATCH_SIZE = 1_000_000  # Increased to 1M
 MAX_EDGE_FILE_LINES = 20_000_000  # Increased to 20M
 CSV_BUFFER_SIZE = 1024 * 1024  # MB Buffer
 
-def generate_vertex_id(vtype: string, n: int) -> str:
+def generate_vertex_id(vtype: str, n: int) -> str:
     """Generate a numeric vertex ID - much faster than alphanumeric."""
     return f"{vtype}{n:019d}"
 
@@ -198,7 +195,7 @@ def process_full_worker(
             if kind == "vertex":
                 writer = vertex_writers[idx][0]
             else:
-                writer = edge_writers[idx]
+                writer = edge_writers[idx][0]
             writer.writerows(buffer)
             buffer.clear()
     vertices_written = 0
@@ -242,10 +239,10 @@ def process_full_worker(
                 if edge_file_line_count >= MAX_EDGE_FILE_LINES:
                     efile.close()
                     edge_file_index += 1
-                    edge_file_path = os.path.join(edge_output_dir, f'edges_{E.name}_part_{worker_id:02d}_{edge_file_index:03d}.csv')
+                    edge_file_path = os.path.join(edge_output_dir, f'edges_{E.rel_key}_part_{worker_id:02d}_{edge_file_index:03d}.csv')
                     efile = open(edge_file_path, 'w', newline='', buffering=CSV_BUFFER_SIZE)
                     edge_writer = csv.writer(efile)
-                    edge_writer.writerow(['~from', '~to', '~label'] + E.properties)
+                    edge_writer.writerow(['~from', '~to', '~label'] + generate_line_properties(E.properties, rng))
                     edge_writers[E.index] = tuple([edge_writer, efile, ebuff])
                     edge_file_line_count = 0
     for vert_tuple in vertex_writers:
@@ -265,4 +262,4 @@ def process_full_worker(
         if file:
             file.close()
     shm.close()
-    print(f"Worker {worker_id:02d}: 100% complete - vertices_written vertices, edges_written edges")
+    print(f"Worker {worker_id:02d}: 100% complete - {vertices_written} vertices, {edges_written} edges")
