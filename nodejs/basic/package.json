@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "crpyto": "^0.0.1-security",
+    "chai": "^5.2.0",
+    "cross-env": "^7.0.3",
+    "d3": "^7.9.0",
+    "express": "^5.1.0",
+    "gremlin": "^3.7.3",
+    "mocha": "^11.5.0",
+    "path": "^0.12.7"
+  },
+  "name": "node-js-fraud-example",
+  "version": "1.0.0",
+  "description": "An example of a Node.js application that uses Aerospike as a graph database for fraud detection.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "cross-env NODE_ENV=test mocha \"tests/unit/**/*.spec.js\" --timeout 10000",
+    "test:e2e": "node test-runner.js"
+  },
+  "keywords": [],
+  "author": "Connor Hengstler",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "chai": "^5.1.1",
+    "supertest": "^7.1.1",
+    "@playwright/test": "^1.47.0"
+  }
+}
