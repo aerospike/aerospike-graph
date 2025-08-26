@@ -100,7 +100,7 @@ def process_full_worker(
         invert_direction: bool,
         seed: int,
         total_disks: int,
-        out_dir: str | None = None) -> tuple[int | Any, int | Any]:
+        out_dir: str | None = None) -> tuple[int, int]:
     payload = _get_aux(aux_path)
     config_flatmap = payload["config"]
     vertex_properties = payload["vertex_properties"]
@@ -133,7 +133,7 @@ def process_full_worker(
         if invert_direction:
             buff.append([nbr, origin, label] + props)
         else:
-            buff.append(props)
+            buff.append([origin, nbr, label] + props)
 
     counters = defaultdict(int)
 

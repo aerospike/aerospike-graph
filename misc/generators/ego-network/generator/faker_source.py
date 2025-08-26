@@ -292,8 +292,7 @@ class FakerSource:
                 self._pool_idx = 0
             return v
 
-        if not self._buf and self.prefer_unique == True:
-            print("Used Refill")
+        if not self._buf and self.prefer_unique:
             self._refill()
         return self._buf.pop()
 
