@@ -205,9 +205,10 @@ vertices:
 
 ## 🧩 Edge Schemas
 
-Under the top‑level `edges` mapping, create one record per edge, with the label between it:
+Under the top‑level `edges` mapping, create one record per edge label, with each edge type under it as a list item:
 
 ```yaml
 edges:
-  Delivery_Tracks_Warehouse:
+  TRACKS:
+      Delivery_Tracks_Warehouse:
 ```
