@@ -38,8 +38,6 @@ python ego_network_generator.py \
   --seed 42
 ```
 
-> **Note:** If you have a separate *scale‑free* script (e.g., `generate-multitype-scalefree.py` with flags like `--nodes`, `--gamma`), keep its example in that repo/file. This README documents the ego‑network generator CLI shown below.
-
 ---
 
 ## ⚙️ CLI Reference
@@ -276,6 +274,7 @@ names:
 > Long bounds: `[-9_223_372_036_854_775_808, 9_223_372_036_854_775_807]`
 
 **Date** values must be ISO‑8601 (e.g., `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`).
+Currently only `YYYY-MM-DD` is officially supported by the generator
 
 ---
 
