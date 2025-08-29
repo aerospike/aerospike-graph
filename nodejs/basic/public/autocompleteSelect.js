@@ -7,6 +7,10 @@ export async function addListeners() {
     const list2 = document.getElementById("data-list-2");
     const {names} = await getNames("")
 
+    const syncEnable = () => {
+        const q = (input1?.value || '').toLowerCase();
+        input2.disabled = !q;
+    };
     if (input1 && list1) {
         input1.addEventListener("focus", () => {
             list1.innerHTML = "";
@@ -32,6 +36,7 @@ export async function addListeners() {
                     list1.append(opt);
                 });
         });
+        syncEnable()
     }
     if(input2 && list2){
         input2.disabled = true
