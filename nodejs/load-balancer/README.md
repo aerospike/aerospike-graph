@@ -1,14 +1,14 @@
-# Gremlin Python Round-Robin Load Balancer
+# Gremlin Javascript Round-Robin Load Balancer
 * **Round-robin** distribution of traversal submissions across multiple Gremlin Server endpoints
 * **Health checking** and automatic detection of recovered hosts
-* **Dynamic host management** (add/remove endpoints at runtime)
-* Seamless integration with the Gremlin-Python `GraphTraversalSource`
+* **Dynamic host management** (add/remove endpoints at runtime, remove tombstones to ensure thread safety)
+* Seamless integration with the Gremlin-Javascript `GraphTraversalSource`
 
 ---
 
 ## Overview
 
-`RoundRobinClientRemoteConnection` implements the Gremlin-Python `RemoteConnection` interface, 
+`RoundRobinClientRemoteConnection` implements the Gremlin-Javascript `RemoteConnection` interface, 
 allowing you to write traversals as if you were connected to a single server:
 
 ---
@@ -20,8 +20,8 @@ since you query it as you would a single node traversal.
 ---
 ## Prerequisites
 
-* **Python** 3.8+
-* **Gremlin-Python** driver (install with `pip install gremlinpython`)
+* **Node** 14+
+* **Gremlin** driver for javascript
 * One or more running Gremlin Server / Aerospike Graph endpoints
 
 ---
@@ -30,8 +30,8 @@ since you query it as you would a single node traversal.
 
 1. **Install dependencies**:
 
-   ```bash
-   pip install gremlinpython
+   ```shell
+   npm install
 2. **Start Docker Containers**
    ```shell
    docker compose up -d
@@ -39,14 +39,14 @@ since you query it as you would a single node traversal.
 3. **Run the Balancer Demo**
 
    ```shell
-   python ./use_balancer.py
+   npm start
 
 ---
 
 ## How It Works
 
 1. **Initialization**: opens a persistent `DriverRemoteConnection` to each endpoint.
-2. **Round-Robin**: each traversal submission locks access, picks the next healthy connection, and dispatches.
-3. **Failure Detection**: on `ClientConnectorError` or `ServerDisconnectedError`, the host is marked down.
-4. **Health Loop**: a background thread periodically retries downed hosts by issuing a `g.V().limit(1)` probe.
-5. **Recovery**: if the probe succeeds, the host is marked healthy and allowed to be queried again.
+2. **Round-Robin**: Each query picks the next available healthy connection in sequence.
+3. **Failure Detection**: On any connection or traversal error, the endpoint is marked down (tombstoned).
+4. **Health Loop**: A background task periodically probes downed hosts with a lightweight `g.V().limit(1).toList()` query to detect recovery.
+5. **Recovery**: If a probe succeeds, the host is marked healthy and re-enters the rotation.
