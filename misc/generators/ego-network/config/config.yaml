@@ -1,0 +1,111 @@
+EgoNode:
+  label: "GoldenEntity"
+  connections:
+    Partner:
+      degree:
+        dist: uniform
+        median: 3
+        sigma: 2
+    Device:
+      degree:
+        dist: uniform
+        median: 1
+        sigma: 2
+    Cookie:
+      degree:
+        dist: lognormal
+        median: 6.44
+        sigma: 0.8
+        max: 15
+        min: 0
+      properties:
+        method:
+          generator: pyint(min_value=1, max_value=5)
+          type: int
+        tracking_number:
+          generator: pyint(min_value=1, max_value=5)
+          type: int
+    PhoneNumber:
+      degree:
+        dist: normal
+        mean: 2
+        sigma: 1
+        round: round
+        min: 0
+        max: null
+  properties:
+    method:
+      generator: pyint(min_value=1, max_value=5)
+      type: int
+    tracking_number:
+      generator: pyint(min_value=1, max_value=5)
+      type: int
+
+AlterNodes:
+  Partner:
+    label: Partner
+    properties:
+      established:
+        generator: date()
+        type: date
+      contracted:
+        generator: pybool(0.8)
+        type: bool
+      teams:
+        type: list
+        element_type: string
+        generator: pylist(nb_elements=15, allowed_types=[str])
+    connections:
+      Cookie:
+        degree:
+          dist: poisson
+          lam: 6.44
+          max: 50
+      Device:
+        degree:
+          dist: uniform
+          median: 1
+          sigma: 1.5
+      PhoneNumber:
+        degree:
+          dist: uniform
+          median: 1
+          sigma: 1
+
+  Cookie:
+    label: Cookie
+    properties:
+      website:
+        type: string
+        generator: company()
+      idx:
+        type: long
+        generator: pyint(min_value=1000000000000, max_value=99999999999999)
+
+  PhoneNumber:
+    label: PhoneNumber
+    properties:
+      method:
+        type: int
+        prefer_unique: False
+        generator: pyint(min_value=-2147483648, max_value=2147483647)
+      tracking_number:
+        type: long
+        prefer_unique: True
+        generator: pyint(min_value=10000000000, max_value=99999999999)
+
+  Device:
+    label: Device
+    properties:
+      type:
+        type: String
+        prefer_unique: false
+        generator: pystr(min_chars=3, max_chars=12)
+      last_accessed:
+        type: date
+        prefer_unique: false
+        generator: date()
+      use_per_day_hrs:
+        type: double
+        prefer_unique: false
+        generator: pyfloat(min_value=-1e9, max_value=1e9)

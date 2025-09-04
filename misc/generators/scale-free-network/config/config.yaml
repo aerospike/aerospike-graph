@@ -1,0 +1,144 @@
+edges:
+  TRACKS:
+    Delivery_Tracks_Warehouse:
+      properties:
+        method:
+          type: String
+          max_size: 8
+          min_size: 2
+          allowed_chars: "aeiou123450^&*(_+{}:"
+        tracking_number:
+          type: Long
+          max: 9223372036854775807
+          min: 20
+      from: Delivery
+      to: Warehouse
+      median: 4
+      sigma: 2
+
+    Vehicle_Tracks_Warehouse:
+      properties:
+        estabilished:
+          type: Date
+          max_year: 2025
+          min_year: 1932
+        license_num:
+          type: String
+          max_size: 12
+          min_size: 12
+          allowed_chars: "1234567890qwertyuiopasdfghjklzxcvbnm"
+      from: Vehicle
+      to: Warehouse
+      median: 2
+      sigma: 1
+
+  CONTAINS:
+    Warehouse_Contains_Product:
+      properties:
+        profit_margin:
+          type: Double
+          max: 2.8
+          min: 0
+        available_stock:
+          type: Int
+          max: 500000
+          min: 0
+      from: Warehouse
+      to: Product
+      median: 6
+      sigma: 3
+
+vertices:
+  Delivery:
+    properties:
+      method:
+        type: String
+        max_size: 8
+        min_size: 2
+        allowed_chars: "aeiou123450^&*(_+{}:"
+      tracking_number:
+        type: Long
+        max: 9223372036854775807
+        min: 20
+      express:
+        type: Boolean
+        true_chance: 15
+      package_types:
+        type: List
+        min_length: 0
+        max_length: 100
+        element:
+          type: String
+          max_size: 8
+          min_size: 2
+          allowed_chars: "!@#$%^&*()_+}{:></;?"
+    percent: 25
+
+  Vehicle:
+    properties:
+      model:
+        type: String
+        max_size: 6
+        min_size: 4
+        allowed_chars: "aeiou123450^&*(_+{}:"
+      year:
+        type: Int
+        max: 500000
+        min: 0
+      capacity:
+        type: Double
+        max: 2.8
+        min: 0
+      fuelType:
+        type: String
+        max_size: 6
+        min_size: 4
+        allowed_chars: "aeiou123450^&*(_+{}:"
+      active:
+        type: Bool
+        true_chance: 35
+    percent: 15
+
+  Warehouse:
+    properties:
+      location:
+        type: String
+        max_size: 6
+        min_size: 4
+        allowed_chars: "aeiou123450^&*(_+{}:"
+      area:
+        type: Int
+        max: 999
+        min: 100
+      temperatureControlled:
+        type: Bool
+        true_chance: 55
+      manager:
+        type: String
+        max_size: 25
+        min_size: 8
+        allowed_chars: "-qwertyuiopasdfghjklzxcvbnm"
+    percent: 40
+
+  Product:
+    properties:
+      productCode:
+        type: String
+        max_size: 24
+        min_size: 24
+        allowed_chars: "-qwertyuiopasdfghjklzxcvbnm"
+      name:
+        type: String
+        max_size: 32
+        min_size: 4
+        allowed_chars: "-qwertyuiopasdfghjklzxcvbnm"
+      category:
+        type: String
+        max_size: 16
+        min_size: 4
+        allowed_chars: "-qwertyuiopasdfghjklzxcvbnm"
+      expirationDate:
+        type: Date
+        max_year: 2025
+        min_year: 1932
+    percent: 20

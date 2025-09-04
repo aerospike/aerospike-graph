@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [nodejs]
+        target: [python, nodejs]
 
     steps:
       - uses: actions/checkout@v4

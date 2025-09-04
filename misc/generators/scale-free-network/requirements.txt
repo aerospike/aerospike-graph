@@ -1,0 +1,5 @@
+numpy
+tqdm
+powerlaw
+matplotlib
+PyYAML
