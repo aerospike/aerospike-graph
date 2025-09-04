@@ -5,8 +5,8 @@ on:
     branches: [main]
     paths:
       - 'python/load_balancer/**'
-      - 'nodejs/load-balancer/**'
       - 'golang/load-balancer/**'
+      - 'docker-compose.yml'
   push:
     branches: [main]
   workflow_dispatch: {}
@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [python]
+        target: [python, golang]
 
     steps:
       - uses: actions/checkout@v4

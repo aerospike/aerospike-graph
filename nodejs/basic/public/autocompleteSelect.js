@@ -36,7 +36,7 @@ export async function addListeners() {
                     list1.append(opt);
                 });
         });
-        syncEnable()
+        syncEnable();
     }
     if(input2 && list2){
         input2.disabled = true
