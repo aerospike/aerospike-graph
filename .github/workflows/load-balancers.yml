@@ -6,7 +6,6 @@ on:
     paths:
       - 'python/load_balancer/**'
       - 'golang/load-balancer/**'
-      - 'docker-compose.yml'
   push:
     branches: [main]
   workflow_dispatch: {}

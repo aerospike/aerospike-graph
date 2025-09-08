@@ -28,15 +28,17 @@ since you query it as you would a single node traversal.
 
     ```shell
     docker compose up -d
+   ```
 2. **Tidy the mod file**
 
    ```shell
    go mod tidy
+   ```
 3. **Run the Balancer Demo**
 
    ```shell
    go run ./cmd/use_balancer
-
+   ```
 ---
 ## How it Works
 Unlike gremlin-python, in gremlin-go `withRemote()` accepts a set type of `*DriverRemoteConnection`, meaning we cannot 
