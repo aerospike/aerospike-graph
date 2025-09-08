@@ -32,14 +32,17 @@ since you query it as you would a single node traversal.
 
    ```shell
    npm install
+   ```
 2. **Start Docker Containers**
    ```shell
    docker compose up -d
+   ```
 
 3. **Run the Balancer Demo**
 
    ```shell
    npm start
+   ```
 
 ---
 
