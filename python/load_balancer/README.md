@@ -32,15 +32,17 @@ since you query it as you would a single node traversal.
 
    ```bash
    pip install gremlinpython
+   ```
 2. **Start Docker Containers**
    ```shell
-   docker compose up -d
+   docker compose -f ..\..\common\docker-compose-load-balancer.yaml up -d
+   ```
 
 3. **Run the Balancer Demo**
 
    ```shell
    python ./use_balancer.py
-
+   ```
 ---
 
 ## How It Works

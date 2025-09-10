@@ -27,7 +27,7 @@ since you query it as you would a single node traversal.
 1. **Start the Docker Containers**:
 
     ```shell
-    docker compose up -d
+    docker compose -f ..\..\common\docker-compose-load-balancer.yaml up -d
    ```
 2. **Tidy the mod file**
 
