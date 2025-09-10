@@ -50,7 +50,7 @@ jobs:
 
       - name: docker compose up
         working-directory: ${{ matrix.target == 'python' && 'python/load_balancer' || matrix.target == 'nodejs' && 'nodejs/load-balancer' || 'golang/load-balancer' }}
-        run: docker compose -f ..\..\common\docker-compose-load-balancer.yaml up -d --wait
+        run: docker compose -f ../../common/docker-compose-load-balancer.yaml up -d --wait
 
       - name: Python LB tests
         if: matrix.target == 'python'
@@ -78,4 +78,4 @@ jobs:
       - name: docker compose down
         if: always()
         working-directory: ${{ matrix.target == 'python' && 'python/load_balancer' || matrix.target == 'nodejs' && 'nodejs/load-balancer' || 'golang/load-balancer' }}
-        run: docker compose -f ..\..\common\docker-compose-load-balancer.yaml down -v
+        run: docker compose -f ../../common/docker-compose-load-balancer.yaml down -v
