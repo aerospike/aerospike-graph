@@ -35,12 +35,13 @@ since you query it as you would a single node traversal.
 2. **Start Docker Containers**
    ```shell
    docker compose up -d
+   ```
 
 3. **Run the Balancer Demo**
 
    ```shell
    python ./use_balancer.py
-
+   ```
 ---
 
 ## How It Works
