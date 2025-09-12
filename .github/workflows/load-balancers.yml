@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [python, nodejs]
+        target: [python, golang, nodejs]
 
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +51,7 @@ jobs:
 
       - name: docker compose up
         working-directory: ${{ matrix.target == 'python' && 'python/load_balancer' || matrix.target == 'nodejs' && 'nodejs/load-balancer' || 'golang/load-balancer' }}
-        run: docker compose up -d --wait
+        run: docker compose -f ../../common/docker-compose-load-balancer.yaml up -d --wait
 
       - name: Python LB tests
         if: matrix.target == 'python'
@@ -79,4 +79,4 @@ jobs:
       - name: docker compose down
         if: always()
         working-directory: ${{ matrix.target == 'python' && 'python/load_balancer' || matrix.target == 'nodejs' && 'nodejs/load-balancer' || 'golang/load-balancer' }}
-        run: docker compose down -v
+        run: docker compose -f ../../common/docker-compose-load-balancer.yaml down -v

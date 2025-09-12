@@ -39,6 +39,9 @@
     ```shell
     gsutil cp -r ./bucket-files/* gs://<name-of-bucket>
     ```
+    ```shell
+    gsutil cp -r ../../../common/bulkload-data/* gs://<name-of-bucket>
+    ```
     
 7. Edit the Variables Script
     Now edit the `set_variables.sh` script and change values of the variables

@@ -54,6 +54,9 @@
      ```shell
      aws s3 cp ./bucket-files s3://<your-bucket-name>/ --recursive --region us-east-1
      ```
+     ```shell
+     aws s3 cp ../../../common/bulkload-data/* s3://<your-bucket-name>/ --recursive --region us-east-1
+     ```
 7. Create EMR Cluster and Submit the Bulkload
     Now to create an EMR cluster and submit the bulkload job run:
      ```shell
