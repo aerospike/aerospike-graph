@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'python/load_balancer/**'
+      - 'nodejs/load-balancer/**'
       - 'golang/load-balancer/**'
   push:
     branches: [main]
@@ -20,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [python, golang]
+        target: [python, golang, nodejs]
 
     steps:
       - uses: actions/checkout@v4
