@@ -71,8 +71,8 @@ describe('RoundRobinClientRemoteConnection (JS)', () => {
             expect(added).toBe(true);
             expect(postRemoveHosts.length).toBe(postAddHosts.length - 1);
             expect(postRemoveAvail.length).toBe(postAddAvail.length - 1);
-        }finally{
-            await rr.close()
+        } finally {
+            await rr.close();
         }
     });
 
@@ -94,7 +94,7 @@ describe('RoundRobinClientRemoteConnection (JS)', () => {
             expect(got0).toBe(2);
             expect(got1).toBe(2);
             expect(got2).toBe(1);
-        }finally {
+        } finally {
             await rr.close();
         }
     });
