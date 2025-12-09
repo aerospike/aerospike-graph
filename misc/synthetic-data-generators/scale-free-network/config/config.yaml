@@ -18,7 +18,7 @@ edges:
 
     Vehicle_Tracks_Warehouse:
       properties:
-        estabilished:
+        established:
           type: Date
           max_year: 2025
           min_year: 1932
