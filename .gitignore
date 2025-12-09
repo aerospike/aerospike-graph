@@ -1,8 +1,42 @@
-.venv
-
+# ====================
+# IDE / Editor
+# ====================
 .vscode/
-.DS_Store
-node-js-example/node_modules
+.vs/
 .idea/
+
+# ====================
+# OS
+# ====================
+.DS_Store
+
+# ====================
+# Python
+# ====================
+.venv/
+
+# ====================
+# Node.js
+# ====================
+node-js-example/node_modules/
+
+# ====================
+# Java / Maven
+# ====================
 **/target/
+
+# ====================
+# Terraform
+# ====================
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars.json
+
+# ====================
+# Project-specific
+# ====================
 *.csv
+
+# Aerospike license/feature key (secret)
+features.conf
