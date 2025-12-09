@@ -1,5 +1,5 @@
 .venv
-
+node_modules
 .vscode/
 .DS_Store
 node-js-example/node_modules
