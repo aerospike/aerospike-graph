@@ -2,9 +2,112 @@
 
 Generate synthetic CSV data for identity graphs using a configurable ego–alter expansion algorithm driven by your YAML schema.
 
+> **Note**: This generator is part of the [Synthetic Data Generators for Aerospike Graph Service](../README.md) repository. For an overview of all generators, see the main README.
+
 ---
 
-## ✨ Features
+## Table of Contents
+
+- [How to Use](#how-to-use)
+  - [Quick Start](#quick-start)
+  - [Example Command](#example-command)
+- [Features](#features)
+- [Requirements](#requirements)
+- [CLI Reference](#cli-reference)
+  - [`--schema` (required)](#--schema-required)
+  - [`--sf`](#--sf)
+  - [`--chunk-size`](#--chunk-size)
+  - [`--target-chunks`](#--target-chunks)
+  - [`--workers`](#--workers)
+  - [`--seed`](#--seed)
+  - [`--node-sharing-chance`](#--node-sharing-chance)
+  - [`--invert-direction`](#--invert-direction)
+  - [`--dry-run`](#--dry-run)
+  - [`--mount`](#--mount)
+  - [`--out-dir`](#--out-dir)
+- [Schema Reference](#schema-reference)
+  - [Nodes](#nodes)
+  - [Connections](#connections)
+- [Degree Distributions](#degree-distributions)
+  - [`fixed`](#fixed)
+  - [`uniform`](#uniform)
+  - [`normal`](#normal)
+  - [`poisson`](#poisson)
+  - [`lognormal`](#lognormal)
+- [Property Schema](#property-schema)
+  - [Supported Types](#supported-types)
+- [Outputs](#outputs)
+- [Validation & Dry Run](#validation--dry-run)
+- [Safety Notes](#safety-notes)
+- [Related Documentation](#related-documentation)
+
+---
+
+## How to Use
+
+### Quick Start
+
+1. **Set up a virtual environment** (recommended):
+   ```bash
+   # Create a virtual environment
+   python -m venv venv
+   
+   # Activate the virtual environment
+   # On Windows:
+   venv\Scripts\activate
+   # On Linux/Mac:
+   source venv/bin/activate
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Create or edit your schema YAML** (see example in `config/config.yaml`):
+   - Define one `EgoNode` (the central entity)
+   - Define `AlterNodes` (connected entities)
+   - Configure connections, properties, and degree distributions
+
+4. **Run the generator**:
+   ```bash
+   cd generator
+   python ego_network_generator.py \
+     --schema ../config/config.yaml \
+     --sf 100000 \
+     --target-chunks 16 \
+     --workers 8 \
+     --out-dir ../output \
+     --seed 42
+   ```
+
+5. **Output**: CSV files will be generated in the specified output directory, organized as:
+   ```
+   output/
+   ├── vertices/
+   │   └── <vertex_type>/
+   │       └── vertices_*.csv
+   └── edges/
+       └── <edge_type>/
+           └── edges_*.csv
+   ```
+
+### Example Command
+
+Generate 100,000 ego networks with 8 workers:
+```bash
+python generator/ego_network_generator.py \
+  --schema config/config.yaml \
+  --sf 100000 \
+  --target-chunks 16 \
+  --workers 8 \
+  --out-dir ./output \
+  --seed 42
+```
+
+---
+
+## Features
 
 * Schema‑driven vertex/edge generation (labels, properties, connection degrees)
 * Multiple degree distributions (fixed, uniform, normal, poisson, lognormal)
@@ -15,7 +118,7 @@ Generate synthetic CSV data for identity graphs using a configurable ego–alter
 
 ---
 
-## 📦 Requirements
+## Requirements
 
 * Python 3.9+
 * `pip install -r requirements.txt` (includes `faker`, `pyyaml`, `numpy`)
@@ -23,24 +126,7 @@ Generate synthetic CSV data for identity graphs using a configurable ego–alter
 
 ---
 
-## 🚀 Quickstart
-
-1. Create a schema YAML (see **Schema Reference** below) and save as `schema.yaml`.
-2. Run the generator:
-
-```bash
-python ego_network_generator.py \
-  --schema ./schema.yaml \
-  --sf 100000 \
-  --target-chunks 16 \
-  --workers 8 \
-  --out-dir ./output \
-  --seed 42
-```
-
----
-
-## ⚙️ CLI Reference
+## CLI Reference
 
 All flags are passed to the script entrypoint.
 
@@ -97,12 +183,12 @@ Use mounted disks at `/mnt/data*` for I/O.
 
 ### `--out-dir`
 
-*Type:* `str` — *Default:* `aerospikegraph/scale-free-network/ego/output`
+*Type:* `str` — *Default:* `ego-network/output` (if neither `--mount` nor `--out-dir` is specified)
 Output directory for generated CSV files.
 
 ---
 
-## 🧱 Schema Reference
+## Schema Reference
 
 Your schema must define exactly one **EgoNode** and one **AlterNodes** mapping.
 
@@ -170,7 +256,7 @@ connections:
 
 ---
 
-## 📊 Degree Distributions
+## Degree Distributions
 
 A `degree` block is **required** on every connection. After sampling, values are rounded and clamped to `[min, max]`.
 
@@ -240,7 +326,7 @@ degree:
 
 ---
 
-## 🧬 Property Schema
+## Property Schema
 
 Properties are generated via Faker functions.
 Each property requires a `type` and a `generator`.
@@ -278,9 +364,10 @@ Currently only `YYYY-MM-DD` is officially supported by the generator
 
 ---
 
-## 🗂️ Outputs
+## Outputs
+
 Output folder structure will look something like:
-`
+```
 edges |
      - edge_type_name |
                       - edges_part_{chunkid}_edgetypename_{fileindex}.csv
@@ -289,23 +376,31 @@ vertices |
          - vertex_type_name |
                             - vertices_part_{chunkid}_vertextypename_{fileindex}.csv
                             - ...
-`
+```
 
 * `vertices_*.csv` — rows: `id,label,<vertex props...>`
 * `edges_*.csv` — rows: `src_id,dst_id,label,<edge props...>`
 
+The output format follows the [Aerospike Graph Service CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) requirements.
+
 ---
 
-## 🧪 Validation & Dry Run
+## Validation & Dry Run
 
 Use `--dry-run` to validate the schema without writing files. The tool reports any schema errors.
 
 ---
 
-## ⚠️ Safety Notes
+## Safety Notes
 
 * Large `--sf` and high degrees can create huge edge sets. Ensure you have disk space.
 * If you use `--invert-direction`, verify the loader expects inbound relationships.
 * If you publish configs/examples, avoid real PII or production identifiers.
 
 ---
+
+## Related Documentation
+
+* [Main Repository README](../README.md) - Overview of all generators
+* [Aerospike Graph Service CSV Format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) - CSV format requirements
+
