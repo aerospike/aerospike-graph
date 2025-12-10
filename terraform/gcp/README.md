@@ -142,15 +142,15 @@ cp -r environments/_template environments/prod
 
 ### Placeholders to Replace
 
-| Placeholder | Description | Example |
-|-------------|-------------|---------|
-| `YOUR_TERRAFORM_STATE_BUCKET` | GCS bucket for Terraform state | `my-company-tf-state` |
-| `YOUR_PROJECT_ID` | GCP project ID | `my-gcp-project-123` |
-| `TODO_ENVIRONMENT` | Environment name | `prod` |
-| `ags-TODO_ENVIRONMENT` | Resource name prefix | `ags-prod` |
-| `TODO_AEROSPIKE_HOST` | Aerospike cluster IP | `10.128.0.5` |
-| `TODO_USERNAME` | Aerospike username | `admin` |
-| `TODO_PASSWORD` | Aerospike password | `secret` |
+| Placeholder | Description | Example | Files |
+|-------------|-------------|---------|-------|
+| `YOUR_TERRAFORM_STATE_BUCKET` | GCS bucket for Terraform state | `my-company-tf-state` | `*/backend.tf`, `gke-cluster/main.tf` |
+| `YOUR_PROJECT_ID` | GCP project ID | `my-gcp-project-123` | `*/terraform.tfvars` |
+| `TODO_ENVIRONMENT` | Environment name | `prod` | `*/terraform.tfvars`, `*/backend.tf`, `gke-cluster/main.tf` |
+| `ags-TODO_ENVIRONMENT` | Resource name prefix | `ags-prod` | `*/terraform.tfvars` |
+| `TODO_AEROSPIKE_HOST` | Aerospike cluster IP | `10.128.0.5` | `gke-cluster/terraform.tfvars` |
+| `TODO_USERNAME` | Aerospike username | `admin` | `gke-cluster/terraform.tfvars` |
+| `TODO_PASSWORD` | Aerospike password | `secret` | `gke-cluster/terraform.tfvars` |
 
 See [Template README](environments/_template/README.md) for detailed instructions.
 
