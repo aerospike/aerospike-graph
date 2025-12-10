@@ -2,6 +2,8 @@
 
 Terraform modules to deploy Aerospike Graph Service on GKE (Google Kubernetes Engine).
 
+> **Note:** This deployment assumes an Aerospike database is deployed in GCP with an accessible IP address.
+
 ## Architecture Overview
 
 - **GKE Autopilot** - Managed Kubernetes with ARM64 support
@@ -38,28 +40,30 @@ gcp/
 
 ## Prerequisites
 
-1. **GCP Project** with billing enabled
+1. **Terraform** >= 1.0
 
-2. **APIs enabled**:
+2. **GCP Project** with billing enabled
+
+3. **APIs enabled**:
    - Compute Engine API
    - Kubernetes Engine API
    - Container Registry API
 
-3. **GCS bucket** for Terraform state:
+4. **GCS bucket** for Terraform state:
    ```bash
    gsutil mb -p YOUR_PROJECT_ID -l us-central1 gs://YOUR_TERRAFORM_STATE_BUCKET
    gsutil versioning set on gs://YOUR_TERRAFORM_STATE_BUCKET
    ```
 
-4. **Authenticate**:
+5. **Authenticate**:
    ```bash
    gcloud auth application-default login
    gcloud auth configure-docker
    ```
 
-5. **Aerospike database** deployed in default VPC (using aerolab)
+6. **Aerospike database** deployed in the same VPC as the GKE cluster
 
-6. **Docker image** in GCR:
+7. **Docker image** in GCR:
    ```bash
    crane copy aerospike/aerospike-graph-service:3.1.1-slim.1 \
      gcr.io/YOUR_PROJECT_ID/aerospike-graph-service:3.1.1-slim.1
@@ -67,33 +71,63 @@ gcp/
 
 ## Deployment Order
 
-| Step | Module | Description |
-|------|--------|-------------|
-| 1 | `vpc/` | Creates GKE subnet in default VPC |
-| 2 | `gke-cluster/` | Deploys GKE Autopilot + AGS |
-| 3 | `monitoring/` | *(Optional)* Prometheus + Grafana |
+> **Important:** Modules must be deployed in order. `gke-cluster` depends on `vpc` outputs, and `monitoring` depends on `gke-cluster`.
+
+| Step | Module | Depends On | Description |
+|------|--------|------------|-------------|
+| 1 | `vpc/` | — | Creates GKE subnet in default VPC |
+| 2 | `gke-cluster/` | `vpc` | Deploys GKE Autopilot + AGS |
+| 3 | `monitoring/` | `gke-cluster` | *(Optional)* Prometheus + Grafana |
+
+## Placeholders to Replace
+
+Before deploying, replace the following placeholders in the environment files:
+
+| Placeholder | Description | Example | Files |
+|-------------|-------------|---------|-------|
+| `YOUR_TERRAFORM_STATE_BUCKET` | GCS bucket for Terraform state | `my-company-tf-state` | `*/backend.tf`, `gke-cluster/main.tf` |
+| `YOUR_PROJECT_ID` | GCP project ID | `my-gcp-project-123` | `*/terraform.tfvars` |
+| `TODO_ENVIRONMENT` | Environment name | `prod` | `*/terraform.tfvars`, `*/backend.tf`, `gke-cluster/main.tf` |
+| `ags-TODO_ENVIRONMENT` | Resource name prefix | `ags-prod` | `*/terraform.tfvars` |
+| `TODO_AEROSPIKE_HOST` | Aerospike cluster IP | `10.128.0.5` | `gke-cluster/terraform.tfvars` |
+| `TODO_USERNAME` | Aerospike username | `admin` | `gke-cluster/terraform.tfvars` |
+| `TODO_PASSWORD` | Aerospike password | `secret` | `gke-cluster/terraform.tfvars` |
+
+> **Security:** Avoid committing sensitive values like `TODO_PASSWORD` to version control. Consider using environment variables (`TF_VAR_aerospike_password`) or a secrets manager instead.
 
 ## Quick Start
 
 ```bash
-# 1. Deploy VPC (subnet in default VPC)
-cd gcp/environments/test/vpc
-terraform init && terraform apply
+# 1. Configure placeholders in all modules (see Placeholders table above)
+cd gcp/environments/test
+# Edit vpc/terraform.tfvars, vpc/backend.tf
+# Edit gke-cluster/terraform.tfvars, gke-cluster/backend.tf
+# Edit monitoring/terraform.tfvars, monitoring/backend.tf
 
-# 2. Deploy GKE cluster + AGS
+# 2. Deploy VPC (subnet in default VPC)
+cd vpc
+terraform init
+terraform plan    # Review changes
+terraform apply
+
+# 3. Deploy GKE cluster + AGS
 cd ../gke-cluster
-terraform init && terraform apply
+terraform init
+terraform plan    # Review changes
+terraform apply
 
-# 3. Get kubectl credentials
+# 4. Get kubectl credentials
 gcloud container clusters get-credentials ags-test-gke \
   --region us-central1 --project YOUR_PROJECT_ID
 
-# 4. Get service IP
+# 5. Get service IP
 kubectl get svc aerospike-graph-service -n ags
 
-# 5. (Optional) Deploy monitoring
+# 6. (Optional) Deploy monitoring
 cd ../monitoring
-terraform init && terraform apply
+terraform init
+terraform plan    # Review changes
+terraform apply
 ```
 
 ## Key Features
@@ -131,29 +165,6 @@ Each module has its own state file in GCS:
 | test | gke-cluster | `test/gke-cluster/terraform.tfstate` |
 | test | monitoring | `test/monitoring/terraform.tfstate` |
 
-## Creating New Environments
-
-```bash
-# Copy template
-cp -r environments/_template environments/prod
-
-# Update all placeholder values (see below)
-```
-
-### Placeholders to Replace
-
-| Placeholder | Description | Example | Files |
-|-------------|-------------|---------|-------|
-| `YOUR_TERRAFORM_STATE_BUCKET` | GCS bucket for Terraform state | `my-company-tf-state` | `*/backend.tf`, `gke-cluster/main.tf` |
-| `YOUR_PROJECT_ID` | GCP project ID | `my-gcp-project-123` | `*/terraform.tfvars` |
-| `TODO_ENVIRONMENT` | Environment name | `prod` | `*/terraform.tfvars`, `*/backend.tf`, `gke-cluster/main.tf` |
-| `ags-TODO_ENVIRONMENT` | Resource name prefix | `ags-prod` | `*/terraform.tfvars` |
-| `TODO_AEROSPIKE_HOST` | Aerospike cluster IP | `10.128.0.5` | `gke-cluster/terraform.tfvars` |
-| `TODO_USERNAME` | Aerospike username | `admin` | `gke-cluster/terraform.tfvars` |
-| `TODO_PASSWORD` | Aerospike password | `secret` | `gke-cluster/terraform.tfvars` |
-
-See [Template README](environments/_template/README.md) for detailed instructions.
-
 ## Endpoints
 
 After deployment:
@@ -164,6 +175,31 @@ After deployment:
 | Health | `http://<AGS_IP>:9090/healthcheck` |
 | Grafana | `http://<GRAFANA_IP>:80` (if monitoring deployed) |
 
-## Documentation
+## Cleanup / Destroy
 
-- [Template README](environments/_template/README.md) - Template usage guide
+Destroy resources in **reverse order** to avoid dependency errors:
+
+```bash
+# 1. Destroy monitoring (if deployed)
+cd gcp/environments/test/monitoring
+terraform destroy
+
+# 2. Destroy GKE cluster
+cd ../gke-cluster
+terraform destroy
+
+# 3. Destroy VPC subnet
+cd ../vpc
+terraform destroy
+```
+
+## Creating New Environments
+
+```bash
+# Copy template
+cp -r environments/_template environments/prod
+
+# Update all placeholder values (see Placeholders to Replace section)
+```
+
+See [Template README](environments/_template/README.md) for detailed instructions.
