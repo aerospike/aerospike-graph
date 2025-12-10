@@ -11,6 +11,26 @@ Terraform modules to deploy Aerospike Graph Service on GKE (Google Kubernetes En
 - **Autoscaling** - Horizontal Pod Autoscaler (HPA) for automatic scaling
 - **Monitoring** - Optional Prometheus + Grafana with Aerospike dashboards
 
+## Key Features
+
+### Default VPC Integration
+Deploys GKE in the same VPC as Aerospike database - no VPC peering required.
+
+### ARM64 Support
+Uses GKE Autopilot Scale-Out compute class for ARM64 workloads (cost-effective).
+
+### Autoscaling
+```hcl
+enable_autoscaling    = true
+min_replicas          = 2
+max_replicas          = 4
+cpu_target_percent    = 70
+```
+
+### Monitoring Dashboards
+Pre-built Grafana dashboards for monitoring metrics 
+
+
 ## Structure
 
 ```
@@ -130,31 +150,6 @@ terraform plan    # Review changes
 terraform apply
 ```
 
-## Key Features
-
-### Default VPC Integration
-Deploys GKE in the same VPC as Aerospike database - no VPC peering required.
-
-### ARM64 Support
-Uses GKE Autopilot Scale-Out compute class for ARM64 workloads (cost-effective).
-
-### Autoscaling
-```hcl
-enable_autoscaling    = true
-min_replicas          = 2
-max_replicas          = 4
-cpu_target_percent    = 70
-```
-
-### Monitoring Dashboards
-Pre-built Grafana dashboards for:
-- Aerospike Cluster metrics
-- Graph Service performance
-- JVM metrics
-- Latency distribution
-- Namespace metrics
-- Node metrics
-
 ## State Management
 
 Each module has its own state file in GCS:
@@ -164,6 +159,7 @@ Each module has its own state file in GCS:
 | test | vpc | `test/vpc/terraform.tfstate` |
 | test | gke-cluster | `test/gke-cluster/terraform.tfstate` |
 | test | monitoring | `test/monitoring/terraform.tfstate` |
+
 
 ## Endpoints
 
