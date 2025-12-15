@@ -18,6 +18,9 @@ resource "google_container_cluster" "main" {
   project  = var.project_id
   location = var.region
 
+  # Limit to specific zones (optional - leave empty to use all zones in region)
+  node_locations = length(var.zones) > 0 ? var.zones : null
+
   # Enable Autopilot mode
   enable_autopilot = true
 

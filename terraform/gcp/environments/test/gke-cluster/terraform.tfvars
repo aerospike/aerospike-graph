@@ -4,6 +4,7 @@ name_prefix = "ags-test"
 environment = "test"
 project_id  = "YOUR_PROJECT_ID"
 region      = "us-central1"
+zones       = ["us-central1-a"] # Limit to single zone for test environment
 
 # Cluster configuration
 release_channel        = "REGULAR"
