@@ -20,6 +20,12 @@ variable "region" {
   description = "GCP region"
 }
 
+variable "zones" {
+  type        = list(string)
+  description = "Specific zones for node placement. Leave empty to use all zones in region."
+  default     = []
+}
+
 # Cluster configuration
 variable "release_channel" {
   type        = string

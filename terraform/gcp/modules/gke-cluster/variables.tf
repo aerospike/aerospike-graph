@@ -20,6 +20,12 @@ variable "region" {
   description = "GCP region"
 }
 
+variable "zones" {
+  type        = list(string)
+  description = "Specific zones for node placement. Leave empty to use all zones in region."
+  default     = []
+}
+
 # Network configuration
 variable "network_name" {
   type        = string

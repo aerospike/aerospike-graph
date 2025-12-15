@@ -16,6 +16,7 @@ module "gke_cluster" {
   environment = var.environment
   project_id  = var.project_id
   region      = var.region
+  zones       = var.zones
 
   # Network from VPC module
   network_name        = data.terraform_remote_state.vpc.outputs.network_name

@@ -5,6 +5,7 @@ name_prefix = "ags-TODO_ENVIRONMENT" # TODO: Replace (e.g., 'ags-test', 'ags-pro
 environment = "TODO_ENVIRONMENT"     # TODO: Replace with environment name
 project_id  = "TODO_PROJECT_ID"      # TODO: Replace with GCP project ID
 region      = "us-central1"          # TODO: Adjust region if needed
+zones       = []                     # Optional: limit to specific zones, e.g., ["us-central1-a", "us-central1-b"]
 
 # Cluster configuration
 release_channel        = "REGULAR"
