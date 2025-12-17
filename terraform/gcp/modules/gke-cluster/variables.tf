@@ -206,3 +206,86 @@ variable "scale_down_stabilization_seconds" {
   default     = 300
 }
 
+# Node pool configuration (for standard mode only)
+variable "node_pool_machine_type" {
+  type        = string
+  description = "Machine type for node pool (standard mode only). Examples: e2-standard-4, n2-standard-4, t2a-standard-4 (ARM64)"
+  default     = "e2-standard-4"
+}
+
+variable "node_pool_disk_size_gb" {
+  type        = number
+  description = "Disk size in GB for node pool (standard mode only)"
+  default     = 100
+}
+
+variable "node_pool_disk_type" {
+  type        = string
+  description = "Disk type for node pool (standard mode only). Options: pd-standard, pd-ssd"
+  default     = "pd-standard"
+}
+
+variable "node_pool_min_count" {
+  type        = number
+  description = "Minimum number of nodes in the node pool (standard mode only)"
+  default     = 1
+}
+
+variable "node_pool_max_count" {
+  type        = number
+  description = "Maximum number of nodes in the node pool (standard mode only)"
+  default     = 10
+}
+
+variable "cluster_initial_node_count" {
+  type        = number
+  description = "Initial node count for cluster default pool (will be removed, must be > 0)"
+  default     = 1
+}
+
+variable "node_pool_initial_count" {
+  type        = number
+  description = "Initial number of nodes in the node pool (standard mode only)"
+  default     = 2
+}
+
+variable "node_pool_preemptible" {
+  type        = bool
+  description = "Use preemptible VMs for node pool (standard mode only)"
+  default     = false
+}
+
+variable "node_pool_spot" {
+  type        = bool
+  description = "Use spot VMs for node pool (standard mode only). Cannot be used with preemptible."
+  default     = false
+}
+
+variable "node_pool_auto_repair" {
+  type        = bool
+  description = "Enable auto-repair for node pool (standard mode only)"
+  default     = true
+}
+
+variable "node_pool_auto_upgrade" {
+  type        = bool
+  description = "Enable auto-upgrade for node pool (standard mode only)"
+  default     = true
+}
+
+variable "node_pool_labels" {
+  type        = map(string)
+  description = "Labels to apply to node pool nodes (standard mode only)"
+  default     = {}
+}
+
+variable "node_pool_taints" {
+  type = list(object({
+    key    = string
+    value  = string
+    effect = string
+  }))
+  description = "Taints to apply to node pool (standard mode only)"
+  default     = []
+}
+
