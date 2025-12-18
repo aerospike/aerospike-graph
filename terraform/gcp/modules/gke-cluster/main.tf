@@ -1,5 +1,5 @@
 # GKE Cluster Module
-# Creates GKE Autopilot cluster for Aerospike Graph Service
+# Creates GKE Standard cluster for Aerospike Graph Service
 
 # Get access token for kubernetes provider
 data "google_client_config" "default" {}
@@ -10,9 +10,16 @@ locals {
     environment = var.environment
     managed_by  = "terraform"
   }
+  
+  # Node selector based on architecture
+  node_selector = var.cpu_architecture == "arm64" ? {
+    "kubernetes.io/arch" = "arm64"
+  } : {
+    "kubernetes.io/arch" = "amd64"
+  }
 }
 
-# GKE Autopilot Cluster
+# GKE Cluster - Standard Mode
 resource "google_container_cluster" "main" {
   name     = "${local.name_prefix}-gke"
   project  = var.project_id
@@ -21,8 +28,10 @@ resource "google_container_cluster" "main" {
   # Limit to specific zones (optional - leave empty to use all zones in region)
   node_locations = length(var.zones) > 0 ? var.zones : null
 
-  # Enable Autopilot mode
-  enable_autopilot = true
+  # Standard mode - remove default node pool (we'll create our own)
+  # Note: initial_node_count must be > 0 even when removing default pool
+  remove_default_node_pool = true
+  initial_node_count       = var.cluster_initial_node_count
 
   network    = var.network_name
   subnetwork = var.subnet_name
@@ -69,6 +78,71 @@ resource "google_container_cluster" "main" {
   deletion_protection = var.deletion_protection
 }
 
+# Node Pool
+resource "google_container_node_pool" "main" {
+  name       = "${local.name_prefix}-node-pool"
+  project    = var.project_id
+  location   = var.region
+  cluster    = google_container_cluster.main.name
+  node_count = var.node_pool_initial_count
+
+  # Node configuration
+  node_config {
+    machine_type  = var.node_pool_machine_type
+    disk_size_gb  = var.node_pool_disk_size_gb
+    disk_type     = var.node_pool_disk_type
+    preemptible   = var.node_pool_preemptible
+    spot          = var.node_pool_spot
+    # Service account will use default compute service account if not specified
+
+    # Labels
+    labels = merge(
+      local.common_labels,
+      var.node_pool_labels
+    )
+
+    # Taints
+    dynamic "taint" {
+      for_each = var.node_pool_taints
+      content {
+        key    = taint.value.key
+        value  = taint.value.value
+        effect = taint.value.effect
+      }
+    }
+
+    # OAuth scopes
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+
+    # Metadata
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
+  }
+
+  # Autoscaling
+  autoscaling {
+    min_node_count = var.node_pool_min_count
+    max_node_count = var.node_pool_max_count
+  }
+
+  # Management
+  management {
+    auto_repair  = var.node_pool_auto_repair
+    auto_upgrade = var.node_pool_auto_upgrade
+  }
+
+  # Update settings
+  upgrade_settings {
+    max_surge       = 1
+    max_unavailable = 0
+  }
+
+  depends_on = [google_container_cluster.main]
+}
+
 # Kubernetes namespace for the application
 resource "kubernetes_namespace" "app" {
   depends_on = [google_container_cluster.main]
@@ -111,13 +185,7 @@ resource "kubernetes_deployment" "ags" {
 
       spec {
         # Select nodes with the specified CPU architecture
-        # For ARM64 in GKE Autopilot, Scale-Out compute class is required
-        node_selector = var.cpu_architecture == "arm64" ? {
-          "kubernetes.io/arch"              = "arm64"
-          "cloud.google.com/compute-class"  = "Scale-Out"
-        } : {
-          "kubernetes.io/arch" = "amd64"
-        }
+        node_selector = local.node_selector
 
         container {
           name  = "ags"
@@ -278,4 +346,3 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "ags" {
     }
   }
 }
-

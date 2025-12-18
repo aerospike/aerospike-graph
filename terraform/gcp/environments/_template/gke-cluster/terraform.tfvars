@@ -11,6 +11,20 @@ zones       = []                     # Optional: limit to specific zones, e.g., 
 release_channel        = "REGULAR"
 deletion_protection    = false # TODO: Set to true for production
 enable_public_endpoint = false # Set to true to allow public access to GKE control plane
+master_cidr            = "172.16.1.0/28" # GKE master range
+
+# Node Pool configuration (standard mode)
+cluster_initial_node_count = 1                # Temporary default pool (will be removed)
+node_pool_machine_type  = "e2-standard-4"      # Examples: e2-standard-4, n2-standard-4, t2a-standard-4 (ARM64)
+node_pool_disk_size_gb  = 100                  # Disk size in GB
+node_pool_disk_type     = "pd-standard"        # Options: pd-standard, pd-ssd
+node_pool_min_count     = 1                    # Minimum nodes
+node_pool_max_count     = 10                   # Maximum nodes
+node_pool_initial_count = 2                    # Initial node count
+node_pool_preemptible   = false                 # Use preemptible VMs (cheaper but can be terminated)
+node_pool_spot          = false                 # Use spot VMs (cheaper than preemptible)
+node_pool_auto_repair   = true                  # Auto-repair unhealthy nodes
+node_pool_auto_upgrade  = true                  # Auto-upgrade node OS
 
 # Application configuration
 docker_image     = "gcr.io/TODO_PROJECT_ID/aerospike-graph-service:latest" # TODO: Update image

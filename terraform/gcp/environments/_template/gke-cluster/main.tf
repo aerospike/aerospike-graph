@@ -28,6 +28,7 @@ module "gke_cluster" {
   release_channel        = var.release_channel
   deletion_protection    = var.deletion_protection
   enable_public_endpoint = var.enable_public_endpoint
+  master_cidr            = var.master_cidr
 
   # Application configuration
   docker_image       = var.docker_image
@@ -48,6 +49,19 @@ module "gke_cluster" {
   max_replicas          = var.max_replicas
   cpu_target_percent    = var.cpu_target_percent
   memory_target_percent = var.memory_target_percent
+
+  # Node Pool configuration (standard mode only)
+  cluster_initial_node_count = var.cluster_initial_node_count
+  node_pool_machine_type     = var.node_pool_machine_type
+  node_pool_disk_size_gb   = var.node_pool_disk_size_gb
+  node_pool_disk_type      = var.node_pool_disk_type
+  node_pool_min_count      = var.node_pool_min_count
+  node_pool_max_count      = var.node_pool_max_count
+  node_pool_initial_count   = var.node_pool_initial_count
+  node_pool_preemptible    = var.node_pool_preemptible
+  node_pool_spot            = var.node_pool_spot
+  node_pool_auto_repair     = var.node_pool_auto_repair
+  node_pool_auto_upgrade    = var.node_pool_auto_upgrade
 }
 
 # Outputs
