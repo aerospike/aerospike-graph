@@ -1,6 +1,5 @@
-# ====================
-# IDE / Editor
-# ====================
+.venv
+node_modules
 .vscode/
 .vs/
 .idea/

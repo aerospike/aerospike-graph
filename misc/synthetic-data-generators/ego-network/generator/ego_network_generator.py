@@ -238,7 +238,7 @@ def main():
         print(f"\nOptimized configuration:")
         print(f"Workers: {workers} (out of {cpu_count} CPUs)")
         print(f"Batch size: {BATCH_SIZE:,}")
-        print(f"Edge file size: {MAX_EDGE_FILE_LINES:,}") #need to be updated
+        print(f"Max edge file size: {MAX_EDGE_FILE_LINES:,} lines per file")
 
         aux_payload = {
             "config": config_flatmap,
