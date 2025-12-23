@@ -1,12 +1,15 @@
-# Phase 1: Core dependencies
-gremlinpython>=3.6.0,<3.8.0  # Compatible with Aerospike Graph (avoid 3.8+ breaking changes)
-requests>=2.31.0              # HTTP client for Ollama
+# Core dependencies
+gremlinpython>=3.6.0,<3.8.0  # Aerospike Graph (Gremlin client)
+requests>=2.31.0              # HTTP client for Ollama API
 
-# Phase 2: Document parsing
-PyMuPDF>=1.24.0               # PDF support
+# Document parsing
+PyMuPDF>=1.24.0               # PDF support (fitz)
 
-# Phase 3: Vector search
+# Vector search
 pymilvus>=2.4.0               # Milvus Lite for vector storage
 
-# Phase 8: UI (install later)
-# streamlit>=1.30.0
+# LLM providers
+anthropic>=0.18.0             # Claude API (default LLM)
+
+# Utilities
+numpy>=1.24.0                 # Numerical operations (embeddings)
