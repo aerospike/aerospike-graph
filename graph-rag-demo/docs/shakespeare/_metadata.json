@@ -1,0 +1,433 @@
+{
+  "author": "William Shakespeare",
+  "plays": {
+    "hamlet": {
+      "title": "Hamlet",
+      "genre": "Tragedy",
+      "characters": [
+        "Hamlet",
+        "Claudius",
+        "Gertrude",
+        "Ophelia",
+        "Polonius",
+        "Laertes",
+        "Horatio"
+      ]
+    },
+    "macbeth": {
+      "title": "Macbeth",
+      "genre": "Tragedy",
+      "characters": [
+        "Macbeth",
+        "Lady Macbeth",
+        "Banquo",
+        "Macduff",
+        "Duncan",
+        "Malcolm"
+      ]
+    },
+    "othello": {
+      "title": "Othello",
+      "genre": "Tragedy",
+      "characters": [
+        "Othello",
+        "Desdemona",
+        "Iago",
+        "Cassio",
+        "Emilia",
+        "Roderigo"
+      ]
+    },
+    "king_lear": {
+      "title": "King Lear",
+      "genre": "Tragedy",
+      "characters": [
+        "King Lear",
+        "Cordelia",
+        "Goneril",
+        "Regan",
+        "Edgar",
+        "Edmund",
+        "Gloucester"
+      ]
+    },
+    "romeo_and_juliet": {
+      "title": "Romeo and Juliet",
+      "genre": "Tragedy",
+      "characters": [
+        "Romeo",
+        "Juliet",
+        "Mercutio",
+        "Tybalt",
+        "Friar Laurence",
+        "Nurse",
+        "Capulet",
+        "Montague"
+      ]
+    },
+    "midsummer_nights_dream": {
+      "title": "A Midsummer Night's Dream",
+      "genre": "Comedy",
+      "characters": [
+        "Theseus",
+        "Hippolyta",
+        "Lysander",
+        "Hermia",
+        "Demetrius",
+        "Helena",
+        "Oberon",
+        "Titania",
+        "Puck",
+        "Bottom"
+      ]
+    },
+    "much_ado_about_nothing": {
+      "title": "Much Ado About Nothing",
+      "genre": "Comedy",
+      "characters": [
+        "Benedick",
+        "Beatrice",
+        "Claudio",
+        "Hero",
+        "Don Pedro",
+        "Don John",
+        "Leonato"
+      ]
+    },
+    "twelfth_night": {
+      "title": "Twelfth Night",
+      "genre": "Comedy",
+      "characters": [
+        "Viola",
+        "Orsino",
+        "Olivia",
+        "Malvolio",
+        "Sir Toby Belch",
+        "Sir Andrew",
+        "Feste"
+      ]
+    },
+    "merchant_of_venice": {
+      "title": "The Merchant of Venice",
+      "genre": "Comedy",
+      "characters": [
+        "Shylock",
+        "Portia",
+        "Antonio",
+        "Bassanio",
+        "Jessica",
+        "Lorenzo"
+      ]
+    },
+    "taming_of_the_shrew": {
+      "title": "The Taming of the Shrew",
+      "genre": "Comedy",
+      "characters": [
+        "Petruchio",
+        "Katherine",
+        "Bianca",
+        "Lucentio",
+        "Baptista",
+        "Hortensio"
+      ]
+    },
+    "henry_v": {
+      "title": "Henry V",
+      "genre": "History",
+      "characters": [
+        "King Henry V",
+        "Fluellen",
+        "Pistol",
+        "Chorus",
+        "Princess Katherine"
+      ]
+    },
+    "richard_iii": {
+      "title": "Richard III",
+      "genre": "History",
+      "characters": [
+        "Richard III",
+        "Buckingham",
+        "Richmond",
+        "Queen Elizabeth",
+        "Lady Anne"
+      ]
+    },
+    "tempest": {
+      "title": "The Tempest",
+      "genre": "Romance",
+      "characters": [
+        "Prospero",
+        "Miranda",
+        "Ariel",
+        "Caliban",
+        "Ferdinand",
+        "Alonso"
+      ]
+    }
+  },
+  "relationships": [
+    {
+      "source": "hamlet",
+      "source_title": "Hamlet",
+      "target": "macbeth",
+      "target_title": "Macbeth",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "hamlet",
+      "source_title": "Hamlet",
+      "target": "othello",
+      "target_title": "Othello",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "hamlet",
+      "source_title": "Hamlet",
+      "target": "king_lear",
+      "target_title": "King Lear",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "hamlet",
+      "source_title": "Hamlet",
+      "target": "romeo_and_juliet",
+      "target_title": "Romeo and Juliet",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "macbeth",
+      "source_title": "Macbeth",
+      "target": "othello",
+      "target_title": "Othello",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "macbeth",
+      "source_title": "Macbeth",
+      "target": "king_lear",
+      "target_title": "King Lear",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "macbeth",
+      "source_title": "Macbeth",
+      "target": "romeo_and_juliet",
+      "target_title": "Romeo and Juliet",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "othello",
+      "source_title": "Othello",
+      "target": "king_lear",
+      "target_title": "King Lear",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "othello",
+      "source_title": "Othello",
+      "target": "romeo_and_juliet",
+      "target_title": "Romeo and Juliet",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "king_lear",
+      "source_title": "King Lear",
+      "target": "romeo_and_juliet",
+      "target_title": "Romeo and Juliet",
+      "relationship": "SAME_GENRE",
+      "genre": "Tragedy"
+    },
+    {
+      "source": "midsummer_nights_dream",
+      "source_title": "A Midsummer Night's Dream",
+      "target": "much_ado_about_nothing",
+      "target_title": "Much Ado About Nothing",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "midsummer_nights_dream",
+      "source_title": "A Midsummer Night's Dream",
+      "target": "twelfth_night",
+      "target_title": "Twelfth Night",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "midsummer_nights_dream",
+      "source_title": "A Midsummer Night's Dream",
+      "target": "merchant_of_venice",
+      "target_title": "The Merchant of Venice",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "midsummer_nights_dream",
+      "source_title": "A Midsummer Night's Dream",
+      "target": "taming_of_the_shrew",
+      "target_title": "The Taming of the Shrew",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "much_ado_about_nothing",
+      "source_title": "Much Ado About Nothing",
+      "target": "twelfth_night",
+      "target_title": "Twelfth Night",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "much_ado_about_nothing",
+      "source_title": "Much Ado About Nothing",
+      "target": "merchant_of_venice",
+      "target_title": "The Merchant of Venice",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "much_ado_about_nothing",
+      "source_title": "Much Ado About Nothing",
+      "target": "taming_of_the_shrew",
+      "target_title": "The Taming of the Shrew",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "twelfth_night",
+      "source_title": "Twelfth Night",
+      "target": "merchant_of_venice",
+      "target_title": "The Merchant of Venice",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "twelfth_night",
+      "source_title": "Twelfth Night",
+      "target": "taming_of_the_shrew",
+      "target_title": "The Taming of the Shrew",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "merchant_of_venice",
+      "source_title": "The Merchant of Venice",
+      "target": "taming_of_the_shrew",
+      "target_title": "The Taming of the Shrew",
+      "relationship": "SAME_GENRE",
+      "genre": "Comedy"
+    },
+    {
+      "source": "henry_v",
+      "source_title": "Henry V",
+      "target": "richard_iii",
+      "target_title": "Richard III",
+      "relationship": "SAME_GENRE",
+      "genre": "History"
+    }
+  ],
+  "genres": [
+    "Romance",
+    "Comedy",
+    "History",
+    "Tragedy"
+  ],
+  "all_characters": [
+    "Queen Elizabeth",
+    "Antonio",
+    "Hero",
+    "Mercutio",
+    "Fluellen",
+    "Ferdinand",
+    "Claudius",
+    "Romeo",
+    "Roderigo",
+    "Richmond",
+    "Regan",
+    "Desdemona",
+    "Olivia",
+    "Titania",
+    "Sir Toby Belch",
+    "Emilia",
+    "Leonato",
+    "Lucentio",
+    "Prospero",
+    "Viola",
+    "Claudio",
+    "Don John",
+    "Laertes",
+    "Polonius",
+    "Bottom",
+    "Lady Anne",
+    "Othello",
+    "Beatrice",
+    "Horatio",
+    "Friar Laurence",
+    "Shylock",
+    "Tybalt",
+    "Katherine",
+    "Gertrude",
+    "Lorenzo",
+    "Goneril",
+    "Macduff",
+    "Sir Andrew",
+    "Cassio",
+    "Caliban",
+    "Malcolm",
+    "Puck",
+    "Banquo",
+    "Hamlet",
+    "Edgar",
+    "Montague",
+    "Bianca",
+    "Feste",
+    "Richard III",
+    "Lady Macbeth",
+    "Hermia",
+    "Capulet",
+    "Baptista",
+    "Malvolio",
+    "Edmund",
+    "Benedick",
+    "Pistol",
+    "Helena",
+    "Duncan",
+    "Hortensio",
+    "Oberon",
+    "Ophelia",
+    "Chorus",
+    "Miranda",
+    "Don Pedro",
+    "Theseus",
+    "Lysander",
+    "Bassanio",
+    "Macbeth",
+    "Juliet",
+    "Nurse",
+    "Princess Katherine",
+    "Hippolyta",
+    "Iago",
+    "Cordelia",
+    "Jessica",
+    "Ariel",
+    "Portia",
+    "King Lear",
+    "Alonso",
+    "Demetrius",
+    "King Henry V",
+    "Gloucester",
+    "Buckingham",
+    "Petruchio",
+    "Orsino"
+  ]
+}
