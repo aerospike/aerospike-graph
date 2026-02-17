@@ -109,20 +109,20 @@ python generator/ego_network_generator.py \
 
 ## Features
 
-* Schema‑driven vertex/edge generation (labels, properties, connection degrees)
-* Multiple degree distributions (fixed, uniform, normal, poisson, lognormal)
-* Parallel execution with chunking
-* Deterministic runs with a seed
-* Optional node sharing from ego to second‑hop nodes
-* Dry‑run + validation
+- Schema‑driven vertex/edge generation (labels, properties, connection degrees)
+- Multiple degree distributions (fixed, uniform, normal, poisson, lognormal)
+- Parallel execution with chunking
+- Deterministic runs with a seed
+- Optional node sharing from ego to second‑hop nodes
+- Dry‑run + validation
 
 ---
 
 ## Requirements
 
-* Python 3.9+
-* `pip install -r requirements.txt` (includes `faker`, `pyyaml`, `numpy`)
-* Optional: `gsutil` if you plan to push to GCS later
+- Python 3.9+
+- `pip install -r requirements.txt` (includes `faker`, `pyyaml`, `numpy`)
+- Optional: `gsutil` if you plan to push to GCS later
 
 ---
 
@@ -333,8 +333,8 @@ Each property requires a `type` and a `generator`.
 
 Optional tuning:
 
-* `pool_size: int` — value cache size (default 20)
-* `prefer_unique: bool` — try producing unique values (more memory/CPU)
+- `pool_size: int` — value cache size (default 20)
+- `prefer_unique: bool` — try producing unique values (more memory/CPU)
 
 ```yaml
 some_flag:
@@ -378,8 +378,8 @@ vertices |
                             - ...
 ```
 
-* `vertices_*.csv` — rows: `id,label,<vertex props...>`
-* `edges_*.csv` — rows: `src_id,dst_id,label,<edge props...>`
+- `vertices_*.csv` — rows: `id,label,<vertex props...>`
+- `edges_*.csv` — rows: `src_id,dst_id,label,<edge props...>`
 
 The output format follows the [Aerospike Graph Service CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) requirements.
 
@@ -393,14 +393,13 @@ Use `--dry-run` to validate the schema without writing files. The tool reports a
 
 ## Safety Notes
 
-* Large `--sf` and high degrees can create huge edge sets. Ensure you have disk space.
-* If you use `--invert-direction`, verify the loader expects inbound relationships.
-* If you publish configs/examples, avoid real PII or production identifiers.
+- Large `--sf` and high degrees can create huge edge sets. Ensure you have disk space.
+- If you use `--invert-direction`, verify the loader expects inbound relationships.
+- If you publish configs/examples, avoid real PII or production identifiers.
 
 ---
 
 ## Related Documentation
 
-* [Main Repository README](../README.md) - Overview of all generators
-* [Aerospike Graph Service CSV Format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) - CSV format requirements
-
+- [Main Repository README](../README.md) - Overview of all generators
+- [Aerospike Graph Service CSV Format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) - CSV format requirements

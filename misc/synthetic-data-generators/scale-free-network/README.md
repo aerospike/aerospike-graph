@@ -1,4 +1,4 @@
-# Power‑Law Multitype Graph Generator
+# Scale-Free Network Generator (Power-Law Multitype Graph)
 
 Generate scale-free network graphs (power‑law distributed) from a single `config.yaml`, with full support for multi‑type schemas.
 
@@ -14,7 +14,7 @@ Generate scale-free network graphs (power‑law distributed) from a single `conf
   - [Validate Distribution](#validate-distribution)
 - [Features](#features)
 - [Requirements](#requirements)
-- [Config Options (CLI)](#config-options-cli)
+- [CLI Reference](#cli-reference)
   - [`--nodes`](#--nodes)
   - [`--workers`](#--workers)
   - [`--seed`](#--seed)
@@ -114,23 +114,23 @@ python generator/generate-multitype-scalefree.py \
 
 ## Features
 
-* Scale‑free / power‑law degree generation driven by `gamma`
-* Multi‑type vertices and edges defined in one YAML
-* Parallel execution with worker pools
-* Deterministic runs with a base seed
-* Dry‑run & distribution validation utilities
+- Scale‑free / power‑law degree generation driven by `gamma`
+- Multi‑type vertices and edges defined in one YAML
+- Parallel execution with worker pools
+- Deterministic runs with a base seed
+- Dry‑run & distribution validation utilities
 
 ---
 
 ## Requirements
 
-* Python 3.9+
-* `pip install -r requirements.txt`
-* (Optional) mounted disks at `/mnt/data*` if you use `--mount`
+- Python 3.9+
+- `pip install -r requirements.txt`
+- (Optional) mounted disks at `/mnt/data*` if you use `--mount`
 
 ---
 
-## Config Options (CLI)
+## CLI Reference
 
 All flags are passed to the generator entrypoint.
 
@@ -349,6 +349,5 @@ Use `--validate-distribution` to verify that your generated graph follows the ex
 
 ## Related Documentation
 
-* [Main Repository README](../README.md) - Overview of all generators
-* [Aerospike Graph Service CSV Format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) - CSV format requirements
-
+- [Main Repository README](../README.md) - Overview of all generators
+- [Aerospike Graph Service CSV Format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) - CSV format requirements
