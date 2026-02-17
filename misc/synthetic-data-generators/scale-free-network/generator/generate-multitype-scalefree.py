@@ -3,15 +3,15 @@ Generate a directed graph whose out-degree sequence follows a power law distribu
 and export vertices and edges in Aerospike Graph bulk-loader CSV format, with parallelism.
 
 If you want to specify the schema, in config/config.yaml edit the edges and vertices values.
-Explanations for each property and name are in the DynamicGenerator.md file
+Explanations for each property and name are in the README.md file.
 
 Usage:
-    python generate-multiple-scalefree.py \
+    python generate-multitype-scalefree.py \
         --nodes 100000 \
         --workers 8 \
         --out-dir output \
         --seed 42 \
-        -- dry-run
+        --dry-run
 """
 
 import argparse
@@ -283,6 +283,8 @@ def main():
                 raise RuntimeError("No mounted disks found in /mnt/data*. Please run mount_disks.sh first.")
             print(f"\nFound {len(available_disks)} mounted disks: {', '.join(f'/mnt/data{i}' for i in available_disks)}")
         else:
+            if args.out_dir is None:
+                raise RuntimeError("Either --mount or --out-dir must be specified.")
             os.makedirs(args.out_dir, exist_ok=True)
             print(f"\nOutput directory: {args.out_dir}")
 
@@ -313,7 +315,7 @@ def main():
         print(f"\nOptimized configuration:")
         print(f"Workers: {workers} (out of {cpu_count} CPUs)")
         print(f"Batch size: {BATCH_SIZE:,}")
-        print(f"Edge file size: {MAX_EDGE_FILE_LINES:,}") #need to be updated
+        print(f"Max edge file size: {MAX_EDGE_FILE_LINES:,} lines per file")
         # Process in parallel
         with ProcessPoolExecutor(max_workers=workers) as executor_ctx:
             executor = executor_ctx  # Store for cleanup
