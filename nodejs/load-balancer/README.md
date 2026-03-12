@@ -21,7 +21,7 @@ since you query it as you would a single node traversal.
 ## Prerequisites
 
 * **Node** 14+
-* **Gremlin** driver for javascript
+* **Gremlin** driver for JavaScript. AGS requires TinkerPop 3.7.x client drivers; 3.8.x and 4.0.x are not compatible.
 * One or more running Gremlin Server / Aerospike Graph endpoints
 
 ---

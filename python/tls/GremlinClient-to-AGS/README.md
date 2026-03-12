@@ -33,7 +33,7 @@ running the make-certs.sh
 ### Install Dependencies
 Dependencies to install:
 ```shell
-python3 -m pip install gremlinpython async_timeout
+python3 -m pip install "gremlinpython>=3.7.0,<3.8.0" async_timeout
 ```
 ### Create Certificates and Keys
 make-certs.sh creates the certificates and keys needed for TLS

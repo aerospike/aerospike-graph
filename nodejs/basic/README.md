@@ -5,6 +5,8 @@
 
 2. **Docker** (for Aerospike Graph)
 
+> **Note:** AGS requires TinkerPop 3.7.x Gremlin client drivers. TinkerPop 3.8.x and 4.0.x are not compatible.
+
 
 ## Install Dependencies
 
