@@ -6,6 +6,8 @@
 - [Aerospike Graph Service](https://aerospike.com/docs/graph/install/docker/)
 - [Aerospike Database](https://aerospike.com/docs/database/install/docker/)
 
+> **Note:** AGS requires TinkerPop 3.7.x client drivers. TinkerPop 3.8.x and 4.0.x are not compatible.
+
 Build the project with Maven:
 ```shell
 mvn clean install

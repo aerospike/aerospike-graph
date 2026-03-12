@@ -21,7 +21,7 @@ since you query it as you would a single node traversal.
 ## Prerequisites
 
 * **Python** 3.8+
-* **Gremlin-Python** driver (install with `pip install gremlinpython`)
+* **Gremlin-Python** driver (`gremlinpython`). AGS requires TinkerPop 3.7.x client drivers. TinkerPop 3.8.x and 4.0.x are not compatible.
 * One or more running Gremlin Server / Aerospike Graph endpoints
 
 ---
@@ -31,7 +31,7 @@ since you query it as you would a single node traversal.
 1. **Install dependencies**:
 
    ```bash
-   pip install gremlinpython
+   pip install "gremlinpython>=3.7.0,<3.8.0"
    ```
 2. **Start Docker Containers**
    ```shell

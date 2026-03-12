@@ -12,9 +12,9 @@ refresh data and query for different users.
    docker compose up -d
    ```
 
-2. Install Python Dependencies:
+2. Install Python Dependencies. AGS requires TinkerPop 3.7.x client drivers; 3.8.x and 4.0.x are not compatible:
    ```shell
-   pip install gremlinpython dash dash-cytoscape dash-bootstrap-components
+   pip install "gremlinpython>=3.7.0,<3.8.0" dash dash-cytoscape dash-bootstrap-components
    ```
 
 3. Start the Web Example:

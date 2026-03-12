@@ -21,6 +21,8 @@ since you query it as you would a single node traversal.
 * **go** 1.22+
 * One or more running Gremlin Server / Aerospike Graph endpoints
 
+> **Note:** AGS requires TinkerPop 3.7.x Gremlin client drivers. TinkerPop 3.8.x and 4.0.x are not compatible.
+
 ---
 ## Usage
 

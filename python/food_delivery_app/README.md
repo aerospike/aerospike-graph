@@ -23,9 +23,9 @@ Food Delivery App consists of two main components:
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
-2. Install dependencies:
+2. Install dependencies. AGS requires TinkerPop 3.7.x client drivers; 3.8.x and 4.0.x are not compatible:
    ```shell
-   pip install gremlinpython streamlit_agraph streamlit
+   pip install "gremlinpython>=3.7.0,<3.8.0" streamlit_agraph streamlit
    ```
 
 ## Data Generation

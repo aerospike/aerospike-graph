@@ -15,6 +15,10 @@ Please note that Graph will wait for the database to complete start up before it
 Aerospike Graph utilizes Zipkin for query tracing [OpenZipkin](https://aerospike.com/docs/graph/operating/monitoring/query-tracing).
 This docker compose file includes a Zipkin service that show query traces. Once the services have started the Zipkin UI is available at http://localhost:9411/zipkin/.
 
+## Gremlin client compatibility
+
+AGS requires Apache TinkerPop 3.7.x Gremlin client drivers. TinkerPop 3.8.x and 4.0.x clients are not compatible.
+
 ## Contributing
 
 Feel free to submit issues, fork the repository, and create pull requests for any improvements.
