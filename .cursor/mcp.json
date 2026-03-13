@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "graph-rag": {
+      "command": "python3",
+      "args": ["-m", "src.server"],
+      "cwd": "/home/lyndon/github/aerospike-graph/graph-rag-mcp",
+      "env": {
+        "GREMLIN_HOST": "localhost",
+        "GREMLIN_PORT": "8182"
+      }
+    }
+  }
+}
