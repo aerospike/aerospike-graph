@@ -4,7 +4,7 @@
     Follow this guide to configure Aerolab for GCP: 
     https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md
     Make sure your default zone in Aerolab is the same as the zone you intend to make the cluster in, in this case us-central1-a.
-    Otherwise, unexpected behaviour may occur.
+    Otherwise, unexpected behavior may occur.
     
 2. Create Your Cluster
     Now create your Aerospike cluster using this script:

@@ -31,12 +31,14 @@ indicates that the app is running.
 Navigate to `http://localhost:5000` in a web browser
 to use the app's UI.
 
-If you get the error 
-```
-http://localhost:5000/index.html sent back and error.
+If the response shows the following error:
+
+```text
+http://localhost:5000/index.html sent back an error.
 Error code 403: Forbidden
 ```
-You are most likely running a process on the port localhost:5000 already, terminate it and try again
+
+Port 5000 is already in use. Stop the conflicting process and retry.
 
 
 ## Play around with the Graph

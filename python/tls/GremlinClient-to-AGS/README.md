@@ -14,7 +14,7 @@ make-certs.sh
 tls_example.py
 ```
 are all important to use TLS between AGS and Gremlin and
-include explanitive comments.
+include explanatory comments.
 Certificates and keys will also be generated in a new dir when
 running the make-certs.sh
 
@@ -46,10 +46,12 @@ Navigate to the AGS_Gremlin directory, and run the command:
 This should create the necessary files in the security folder: ca.crt, ca.key, 
 and in the g-tls folder: server.crt, and server.key.
 
-### Start Docker Containers
-Next start the docker containers with:
+### Start Docker containers
+
+Start the Docker containers:
+
 ```shell
-docker-compose up -d
+docker compose up -d
 ```
 
 AGS and Aerospike Server should start up.

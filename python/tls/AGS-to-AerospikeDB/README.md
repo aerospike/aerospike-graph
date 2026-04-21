@@ -13,8 +13,8 @@ docker-compose.yaml
 aerospike.conf
 make-certs.sh
 ```
-are all important to use TLS between AGS and Aerospike Server and 
-include explanitive comments.
+are all important to use TLS between AGS and Aerospike Server and
+include explanatory comments.
 Certificates and keys will also be generated in a new dir when
 running the make-certs.sh
 ```dir
@@ -41,9 +41,10 @@ make-certs.sh creates the certificates and keys needed for TLS
 
 This should create the necessary files in the security folder, ca.crt, ca.key, server.crt, and server.key.
 
-Next create the necessary docker containers by using
+Next, create the necessary Docker containers by using:
+
 ```shell
-docker-compose up -d
+docker compose up -d
 ```
 
 Execute the python example to make sure you can connect to AGS and Query
