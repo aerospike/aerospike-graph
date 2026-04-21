@@ -1,54 +1,62 @@
-# Gremlin Python Round-Robin Load Balancer
-* **Round-robin** distribution of traversal submissions across multiple Gremlin Server endpoints
-* **Health checking** and automatic detection of recovered hosts
-* **Dynamic host management** (add/remove endpoints at runtime)
-* Seamless integration with the Gremlin-Python `GraphTraversalSource`
+# Gremlin-Python round-robin load balancer
+
+- **Round-robin** distribution of traversal submissions across multiple Gremlin Server endpoints.
+- **Health checking** and automatic detection of recovered hosts.
+- **Dynamic host management** (add or remove endpoints at runtime).
+- Integrates with the Gremlin-Python `GraphTraversalSource`.
 
 ---
 
 ## Overview
 
-`RoundRobinClientRemoteConnection` implements the Gremlin-Python `RemoteConnection` interface, 
-allowing you to write traversals as if you were connected to a single server:
+`RoundRobinClientRemoteConnection` implements the Gremlin-Python `RemoteConnection` interface, so you can write traversals as if you were connected to a single server.
 
 ---
+
 ## Why use a load balancer
-Load balancers are crucial for high throughput applications, distributing the work evenly instead of hammering a single
-node and risking CPU or I/O overloads. It also guarantees horizontal scalability without adjusting application code,
-since you query it as you would a single node traversal.
+
+Load balancers are important for high-throughput applications: they distribute work evenly instead of overloading a single node and risking CPU or I/O saturation. A load balancer also provides horizontal scalability without requiring application-code changes, because you query it as you would a single-node traversal.
 
 ---
+
 ## Prerequisites
 
-* **Python** 3.8+
-* **Gremlin-Python** driver (`gremlinpython`). AGS requires TinkerPop 3.7.x client drivers. TinkerPop 3.8.x and 4.0.x are not compatible.
-* One or more running Gremlin Server / Aerospike Graph endpoints
+- Python 3.9 or later.
+- Gremlin-Python driver (`gremlinpython`). Aerospike Graph Service (AGS) requires Apache TinkerPop 3.7.x client drivers; 3.8.x and 4.0.x are incompatible.
+- One or more running Gremlin Server or AGS endpoints.
 
 ---
 
 ## Usage
 
-1. **Install dependencies**:
+1. **Install dependencies:**
 
    ```bash
    pip install "gremlinpython>=3.7.0,<3.8.0"
    ```
-2. **Start Docker Containers**
+
+2. **Start the Docker containers:**
+
    ```shell
-   docker compose -f ..\..\common\docker-compose-load-balancer.yaml up -d
+   docker compose -f ../../common/docker-compose-load-balancer.yaml up -d
    ```
 
-3. **Run the Balancer Demo**
+3. **Run the balancer demo:**
 
    ```shell
    python ./use_balancer.py
    ```
+
 ---
 
-## How It Works
+## How it works
 
-1. **Initialization**: opens a persistent `DriverRemoteConnection` to each endpoint.
-2. **Round-Robin**: each traversal submission locks access, picks the next healthy connection, and dispatches.
-3. **Failure Detection**: on `ClientConnectorError` or `ServerDisconnectedError`, the host is marked down.
-4. **Health Loop**: a background thread periodically retries downed hosts by issuing a `g.V().limit(1)` probe.
-5. **Recovery**: if the probe succeeds, the host is marked healthy and allowed to be queried again.
+1. **Initialization:** Opens a persistent `DriverRemoteConnection` to each endpoint.
+2. **Round-robin:** Each traversal submission acquires a lock, picks the next healthy connection, and dispatches.
+3. **Failure detection:** On `ClientConnectorError` or `ServerDisconnectedError`, the host is marked down.
+4. **Health loop:** A background thread periodically retries downed hosts by issuing a `g.V().limit(1)` probe.
+5. **Recovery:** If the probe succeeds, the host is marked healthy and re-enters the rotation.
+
+## Failure modes
+
+If all configured endpoints become unhealthy at the same time, traversal calls raise the underlying connection error. The health loop continues to probe downed hosts; recovered hosts re-enter the rotation automatically.

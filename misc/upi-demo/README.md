@@ -1,40 +1,37 @@
-# Aerospike Graph Fraud Detection Scenarios
+# Aerospike Graph fraud-detection scenarios
 
-This guide helps you set up Aerospike Graph, bulk load data, and run various scenarios for real-time fraud detection using Gremlin queries.
+This guide helps you set up Aerospike Graph Service (AGS), bulk-load data, and run various scenarios for real-time fraud detection using Gremlin queries.
 
----
+## 1. Set up AGS
 
-## 1. Setting Up Aerospike Graph
+1. **Run Docker Compose.** Navigate to the root of the repository and start AGS using Docker Compose:
 
-Follow these steps to set up Aerospike Graph:
+   ```shell
+   docker compose up -d
+   ```
 
-1. **Run Docker Compose**:
-   - Navigate to the root level of the repository and start the Aerospike Graph services using Docker Compose:
-     ```shell
-     docker compose up -d
-     ```
-   - This will start the Aerospike Database and Aerospike Graph Service in detached mode.
+   This starts Aerospike Database and AGS in detached mode.
 
-2. **Verify Services**:
-   - Check if the services are running:
-     ```shell
-     docker ps
-     ```
-   - Confirm that both the Aerospike Database and Aerospike Graph Service containers are running without errors.
+2. **Verify the services.** Check that the services are running:
 
-3. **Connect to Aerospike Graph using GdotV**:
-   (Optional) Import the customized Graph stylesheet in Gdotv `UPIGraphGdotvStylesheet.json`
-   
----
+   ```shell
+   docker ps
+   ```
 
-## 2. Bulk Load Data
+   Confirm that both the Aerospike Database and AGS containers are running without errors.
 
-To load data into Aerospike Graph, set the graph traversal source using [Gremlin Console](https://aerospike.com/docs/graph/quick-start/step/2/part/1/load-data#set-up-gremlin-console):
+3. **(Optional) Connect to AGS using GdotV.** Import the customized graph stylesheet `UPIGraphGdotvStylesheet.json` into GdotV.
+
+## 2. Bulk-load the data
+
+To load data into AGS, set the graph traversal source using the [Gremlin Console](https://aerospike.com/docs/graph/quick-start/step/2/part/1/load-data#set-up-gremlin-console):
+
 ```groovy
 g = traversal().withRemote(DriverRemoteConnection.using("localhost", 8182, "g"))
 ```
 
-Now use the following Gremlin query:
+Run the following Gremlin query:
+
 ```groovy
 g.with("evaluationTimeout", 100000)
  .call("aerospike.graphloader.admin.bulk-load.load")
@@ -42,11 +39,12 @@ g.with("evaluationTimeout", 100000)
  .with("aerospike.graphloader.edges", "/data/upi-demo/dataset/edges")
 ```
 
-After running this command, to check the status of the bulkloader use:
+To check the status of the bulk loader:
+
 ```groovy
 g.call("aerospike.graphloader.admin.bulk-load.status")
 ```
 
-## 3. Run sample Queries
+## 3. Run sample queries
 
-Run the sample queries in `queries.md`  
+Run the sample queries in [`queries.md`](queries.md).
