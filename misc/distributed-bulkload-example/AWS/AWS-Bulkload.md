@@ -5,7 +5,7 @@
     https://github.com/aerospike/aerolab/blob/master/docs/aws-setup.md
     
     Make sure your default zone in Aerolab is the same as the zone you intend to make the cluster in, in this case `us-east-1`.
-    Otherwise, unexpected behaviour may occur.
+    Otherwise, unexpected behavior may occur.
 
 2. Make Your S3 Bucket
     Make a bucket in AWS S3 for the data:
