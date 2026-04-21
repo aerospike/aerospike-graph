@@ -1,20 +1,20 @@
-# Scale-Free Network Generator (Power-Law Multitype Graph)
+# Scale-free network generator (power-law multi-type graph)
 
-Generate scale-free network graphs (power‑law distributed) from a single `config.yaml`, with full support for multi‑type schemas.
+Generate scale-free network graphs (power-law distributed) from a single `config.yaml`, with full support for multi-type schemas.
 
-> **Note**: This generator is part of the [Synthetic Data Generators for Aerospike Graph Service](../README.md) repository. For an overview of all generators, see the main README.
+> **Note:** This generator is part of the [Synthetic data generators for Aerospike Graph Service](../README.md) repository. For an overview of all generators, see the main README.
 
 ---
 
-## Table of Contents
+## Table of contents
 
-- [How to Use](#how-to-use)
-  - [Quick Start](#quick-start)
-  - [Example Command](#example-command)
-  - [Validate Distribution](#validate-distribution)
+- [How to use](#how-to-use)
+  - [Quick start](#quick-start)
+  - [Example command](#example-command)
+  - [Validate distribution](#validate-distribution)
 - [Features](#features)
 - [Requirements](#requirements)
-- [CLI Reference](#cli-reference)
+- [CLI reference](#cli-reference)
   - [`--nodes`](#--nodes)
   - [`--workers`](#--workers)
   - [`--seed`](#--seed)
@@ -23,8 +23,8 @@ Generate scale-free network graphs (power‑law distributed) from a single `conf
   - [`--validate-distribution`](#--validate-distribution)
   - [`--mount`](#--mount)
   - [`--out-dir`](#--out-dir)
-- [Editing Schemas](#editing-schemas)
-  - [Property Schema](#property-schema)
+- [Editing schemas](#editing-schemas)
+  - [Property schema](#property-schema)
     - [Long](#long)
     - [Integer](#integer)
     - [Double](#double)
@@ -32,23 +32,24 @@ Generate scale-free network graphs (power‑law distributed) from a single `conf
     - [String](#string)
     - [Date](#date)
     - [List](#list)
-- [Vertex Schemas](#vertex-schemas)
-- [Edge Schemas](#edge-schemas)
-- [Output Format](#output-format)
-- [Power-Law Distribution](#power-law-distribution)
-- [Related Documentation](#related-documentation)
+- [Vertex schemas](#vertex-schemas)
+- [Edge schemas](#edge-schemas)
+- [Output format](#output-format)
+- [Power-law distribution](#power-law-distribution)
+- [Related documentation](#related-documentation)
 
 ---
 
-## How to Use
+## How to use
 
-### Quick Start
+### Quick start
 
 1. **Set up a virtual environment** (recommended):
+
    ```bash
    # Create a virtual environment
    python -m venv venv
-   
+
    # Activate the virtual environment
    # On Windows:
    venv\Scripts\activate
@@ -56,17 +57,19 @@ Generate scale-free network graphs (power‑law distributed) from a single `conf
    source venv/bin/activate
    ```
 
-2. **Install dependencies**:
+2. **Install dependencies:**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 3. **Edit your schema configuration** in `config/config.yaml`:
-   - Define vertex types with `percent` distribution
-   - Define edge types with `from` and `to` relationships
-   - Configure properties for vertices and edges
+   - Define vertex types with a `percent` distribution.
+   - Define edge types with `from` and `to` relationships.
+   - Configure properties for vertices and edges.
 
-4. **Run the generator**:
+4. **Run the generator:**
+
    ```bash
    cd generator
    python generate-multitype-scalefree.py \
@@ -76,8 +79,9 @@ Generate scale-free network graphs (power‑law distributed) from a single `conf
      --gamma 2.0
    ```
 
-5. **Output**: CSV files will be generated in the specified output directory, organized as:
-   ```
+5. **Output:** CSV files are written to the specified output directory, organized as:
+
+   ```text
    output/
    ├── vertices/
    │   └── <vertex_type>/
@@ -87,9 +91,10 @@ Generate scale-free network graphs (power‑law distributed) from a single `conf
            └── edges_*.csv
    ```
 
-### Example Command
+### Example command
 
-Generate a graph with 100,000 vertices using power-law distribution (gamma=2.0):
+Generate a graph with 100,000 vertices using a power-law distribution (gamma=2.0):
+
 ```bash
 python generator/generate-multitype-scalefree.py \
   --nodes 100000 \
@@ -99,9 +104,10 @@ python generator/generate-multitype-scalefree.py \
   --workers 8
 ```
 
-### Validate Distribution
+### Validate distribution
 
 To validate that the generated graph follows a power-law distribution:
+
 ```bash
 python generator/generate-multitype-scalefree.py \
   --nodes 100000 \
@@ -114,97 +120,96 @@ python generator/generate-multitype-scalefree.py \
 
 ## Features
 
-- Scale‑free / power‑law degree generation driven by `gamma`
-- Multi‑type vertices and edges defined in one YAML
-- Parallel execution with worker pools
-- Deterministic runs with a base seed
-- Dry‑run & distribution validation utilities
+- Scale-free / power-law degree generation driven by `gamma`.
+- Multi-type vertices and edges defined in one YAML.
+- Parallel execution with worker pools.
+- Deterministic runs with a base seed.
+- Dry-run and distribution-validation utilities.
 
 ---
 
 ## Requirements
 
-- Python 3.9+
-- `pip install -r requirements.txt`
-- (Optional) mounted disks at `/mnt/data*` if you use `--mount`
+- Python 3.9 or later.
+- `pip install -r requirements.txt`.
+- (Optional) mounted disks at `/mnt/data*` if you use `--mount`.
 
 ---
 
-## CLI Reference
+## CLI reference
 
 All flags are passed to the generator entrypoint.
 
 ### `--nodes`
 
-*Type:* `int` — *Default:* `100000`
+*Type:* `int` — *Default:* `100000`.
 Total number of vertices in the graph.
 
 ### `--workers`
 
-*Type:* `int` — *Default:* CPU core count
+*Type:* `int` — *Default:* CPU core count.
 Parallel workers for generation.
 
 ### `--seed`
 
-*Type:* `int` — *Default:* `0`
+*Type:* `int` — *Default:* `0`.
 Base RNG seed for reproducibility.
 
 ### `--gamma`
 
-*Type:* `number` — *Default:* `2.5`
-Exponent controlling the power‑law tail. Larger values → fewer extreme high‑degree nodes. Recommended range ~ **1–3**.
+*Type:* `number` — *Default:* `2.5`.
+Exponent controlling the power-law tail. Larger values produce fewer extreme high-degree nodes. Recommended range: 1–3.
 
 ### `--dry-run`
 
-*Type:* flag
-Only compute/print degree distribution statistics; do **not** emit files.
+*Type:* flag.
+Compute and print degree-distribution statistics only; do **not** emit files.
 
 ### `--validate-distribution`
 
-*Type:* `bool` — *Default:* `false`
-Run a helper to compare lognormal vs power‑law fit.
+*Type:* `bool` — *Default:* `false`.
+Run a helper to compare lognormal and power-law fits.
 
 ### `--mount`
 
-*Type:* flag
+*Type:* flag.
 Use mounted disks at `/mnt/data*` for I/O.
 
 ### `--out-dir`
 
-*Type:* `string` — *Required if not using `--mount`*
-Output directory for all generated files. Must be specified unless using the `--mount` option.
+*Type:* `string` — *Required if not using `--mount`*.
+Output directory for all generated files. Required unless you use the `--mount` option.
 
 ---
 
-## Editing Schemas
+## Editing schemas
 
-All schema editing is done in **`config/config.yaml`**.
+Edit all schemas in `config/config.yaml`.
 
-### Property Schema
+### Property schema
 
-When defining properties (for **vertices** and **edges**), declare them under a `properties` mapping. Each property has a `type` and type‑specific options that constrain how values are generated.
+When defining properties for vertices or edges, declare them under a `properties` mapping. Each property has a `type` and type-specific options that constrain how values are generated.
 
 ```yaml
 vertices:
   vertex_name:
-    properties:               # <— dict of properties
-      prop_1:                 # <— dict of property specifications
-        type:                 # <— type name
-        unique_type_prop_1:   # <— type‑specific setting
-        unique_type_prop_2:   # <— type‑specific setting
-    percent:                  # <— share of overall node count (see Vertex Schemas)
+    properties:               # dict of properties
+      prop_1:                 # dict of property specifications
+        type:                 # type name
+        unique_type_prop_1:   # type-specific setting
+        unique_type_prop_2:   # type-specific setting
+    percent:                  # share of overall node count (see Vertex schemas)
 ```
 
-Each property `type` must be one of Aerospike Graph's supported types:
-`Long, Int, Integer, Double, Bool, Boolean, String, Date, List`
+Each property `type` must be one of the AGS supported types: `Long`, `Int`, `Integer`, `Double`, `Bool`, `Boolean`, `String`, `Date`, `List`.
 
-> More details: [Aerospike Graph Service CSV Format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/)
+> For more information, see the [AGS CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/).
 
-**Type‑specific options**
+**Type-specific options:**
 
 #### Long
 
-Longs are constrained to `-2^63 .. 2^63-1`.
+Longs are constrained to `-2^63` through `2^63-1`.
 
 ```yaml
 Long_Property:
@@ -215,7 +220,7 @@ Long_Property:
 
 #### Integer
 
-Type may be `Integer` or `Int`. Constrained to `-2^31 .. 2^31-1`.
+The type may be `Integer` or `Int`. Constrained to `-2^31` through `2^31-1`.
 
 ```yaml
 Integer_Property:
@@ -226,7 +231,7 @@ Integer_Property:
 
 #### Double
 
-64‑bit IEEE‑754 floating point.
+64-bit IEEE-754 floating point.
 
 ```yaml
 Double_Property:
@@ -237,7 +242,7 @@ Double_Property:
 
 #### Boolean
 
-Type may be `Bool` or `Boolean`. `true_chance` is **0–100** (percentage).
+The type may be `Bool` or `Boolean`. `true_chance` is a percentage from 0 to 100.
 
 ```yaml
 Boolean_Property:
@@ -247,7 +252,7 @@ Boolean_Property:
 
 #### String
 
-Any valid string. `max_size`/`min_size` bound the length. `allowed_chars` limits the character set (empty → all chars allowed).
+Any valid string. `max_size` and `min_size` bound the length. `allowed_chars` limits the character set (empty allows all characters).
 
 ```yaml
 String_Properties:
@@ -259,7 +264,7 @@ String_Properties:
 
 #### Date
 
-Dates are emitted in ISO‑8601 `YYYY-MM-DD`.
+Dates are emitted in ISO-8601 `YYYY-MM-DD` format.
 
 ```yaml
 Date_Property:
@@ -270,7 +275,7 @@ Date_Property:
 
 #### List
 
-Lists may contain **one element type** (no nesting). The `element` block is the schema for each list element.
+Lists may contain one element type (no nesting). The `element` block is the schema for each list element.
 
 ```yaml
 List_Property:
@@ -286,25 +291,25 @@ List_Property:
 
 ---
 
-## Vertex Schemas
+## Vertex schemas
 
-Under the top‑level `vertices` mapping, create one record per vertex type. Each vertex type must specify a `percent` value indicating what percentage of the total vertex count should be of this type.
+Under the top-level `vertices` mapping, create one record per vertex type. Each vertex type must specify a `percent` value indicating what percentage of the total vertex count should be of this type.
 
 ```yaml
 vertices:
   Vertex_Name:
     properties:
       # ... property definitions
-    percent: 25  # 25% of all vertices will be of this type
+    percent: 25  # 25% of all vertices are of this type
 ```
 
-**Note**: The sum of all `percent` values should equal 100.
+> **Note:** The sum of all `percent` values must equal 100.
 
 ---
 
-## Edge Schemas
+## Edge schemas
 
-Under the top‑level `edges` mapping, create one record per edge label, with each edge type under it as a list item:
+Under the top-level `edges` mapping, create one record per edge label, with each edge type as a list item:
 
 ```yaml
 edges:
@@ -319,35 +324,36 @@ edges:
 ```
 
 Each edge type must specify:
-- `from`: The source vertex type name
-- `to`: The target vertex type name
-- `median` and `sigma`: Parameters for the degree distribution (used for lognormal sampling)
+
+- `from`: source vertex type name.
+- `to`: target vertex type name.
+- `median` and `sigma`: parameters for the degree distribution (used for lognormal sampling).
 
 ---
 
-## Output Format
+## Output format
 
-The generator produces CSV files compatible with Aerospike Graph Service bulk loading:
+The generator produces CSV files compatible with AGS bulk loading:
 
-- **Vertices**: `vertices/<vertex_type>/vertices_*.csv` with columns: `id,label,<properties...>`
-- **Edges**: `edges/<edge_type>/edges_*.csv` with columns: `src_id,dst_id,label,<properties...>`
+- **Vertices:** `vertices/<vertex_type>/vertices_*.csv` with columns: `id,label,<properties...>`.
+- **Edges:** `edges/<edge_type>/edges_*.csv` with columns: `src_id,dst_id,label,<properties...>`.
 
-The output format follows the [Aerospike Graph Service CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) requirements.
-
----
-
-## Power-Law Distribution
-
-This generator creates graphs with power-law degree distributions, which are common in real-world networks (social networks, web graphs, etc.). The `--gamma` parameter controls the exponent of the power-law distribution:
-
-- **Lower gamma (1.5-2.0)**: More extreme high-degree nodes (hubs)
-- **Higher gamma (2.5-3.0)**: Fewer extreme high-degree nodes, more uniform distribution
-
-Use `--validate-distribution` to verify that your generated graph follows the expected power-law distribution.
+The output format follows the [AGS CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) requirements.
 
 ---
 
-## Related Documentation
+## Power-law distribution
 
-- [Main Repository README](../README.md) - Overview of all generators
-- [Aerospike Graph Service CSV Format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) - CSV format requirements
+This generator creates graphs with power-law degree distributions, which are common in real-world networks such as social networks and web graphs. The `--gamma` parameter controls the exponent of the power-law distribution:
+
+- **Lower gamma (1.5–2.0):** more extreme high-degree nodes (hubs).
+- **Higher gamma (2.5–3.0):** fewer extreme high-degree nodes; more uniform distribution.
+
+Use `--validate-distribution` to verify that the generated graph follows the expected power-law distribution.
+
+---
+
+## Related documentation
+
+- [Main repository README](../README.md) — overview of all generators.
+- [AGS CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) — CSV format requirements.

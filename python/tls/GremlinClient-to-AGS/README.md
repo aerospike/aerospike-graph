@@ -1,24 +1,20 @@
-# TLS Between AGS and Gremlin
+# Transport Layer Security (TLS) between Gremlin client and AGS
 
-This example will cover how to configure and use TLS between
-Aerospike Graph Service and Gremlin.
-This includes creating a new docker container for Aerospike Graph
-Service (AGS) and Aerospike Server.
+This example shows how to configure and use TLS between a Gremlin client and Aerospike Graph Service (AGS). It creates new Docker containers for AGS and Aerospike Database.
 
-## Relevant Files
+## Relevant files
 
-The files
-```
+The following files contain inline comments explaining how to configure TLS between AGS and a Gremlin client:
+
+```text
 docker-compose.yaml
 make-certs.sh
 tls_example.py
 ```
-are all important to use TLS between AGS and Gremlin and
-include explanatory comments.
-Certificates and keys will also be generated in a new dir when
-running the make-certs.sh
 
-```dir
+Running `make-certs.sh` also generates certificates and keys in two new directories:
+
+```text
 .
 ├── security/
 │   ├── ca.crt
@@ -30,21 +26,21 @@ running the make-certs.sh
 
 ## Run it
 
-### Install Dependencies
-Dependencies to install:
+### Install dependencies
+
 ```shell
 python3 -m pip install "gremlinpython>=3.7.0,<3.8.0" async_timeout
 ```
-### Create Certificates and Keys
-make-certs.sh creates the certificates and keys needed for TLS
 
-Navigate to the AGS_Gremlin directory, and run the command:
+### Create certificates and keys
+
+`make-certs.sh` creates the certificates and keys needed for TLS. From the `AGS_Gremlin` directory, run:
+
 ```shell
 ./make-certs.sh
 ```
 
-This should create the necessary files in the security folder: ca.crt, ca.key, 
-and in the g-tls folder: server.crt, and server.key.
+This creates `ca.crt` and `ca.key` in `security/`, and `server.crt` and `server.key` in `g-tls/`.
 
 ### Start Docker containers
 
@@ -54,15 +50,19 @@ Start the Docker containers:
 docker compose up -d
 ```
 
-AGS and Aerospike Server should start up.
+AGS and Aerospike Database start.
 
 ### Execute a query
-Now execute the python example to make sure you can connect to AGS and query gremlin with TLS
+
+Run the Python example to verify the connection to AGS over TLS:
+
 ```shell
 python3 ./tls_example.py
 ```
-If it works you should see output like
-```
+
+## Expected output
+
+```text
 Values:
 ['aerospike', 'unlimited']
 Connected and Queried Successfully, TLS Between AGS and Gremlin is set!

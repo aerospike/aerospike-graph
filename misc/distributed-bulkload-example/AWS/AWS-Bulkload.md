@@ -1,85 +1,88 @@
-# Distributed AWS Bulkload Example
+# Distributed AWS bulk load example
 
-1. Configure Aerolab for AWS
-    Follow this guide to configure Aerolab for AWS: 
-    https://github.com/aerospike/aerolab/blob/master/docs/aws-setup.md
-    
-    Make sure your default zone in Aerolab is the same as the zone you intend to make the cluster in, in this case `us-east-1`.
-    Otherwise, unexpected behavior may occur.
+This example walks you through running a distributed Aerospike Graph Service (AGS) bulk load on AWS EMR using an Aerolab-managed Aerospike cluster.
 
-2. Make Your S3 Bucket
-    Make a bucket in AWS S3 for the data:
-    ```shell
-    aws s3 mb s3://<bucket-name>/ --region <my-region>
-    ```
-    Download bulk loader jar from here
-    https://aerospike.com/download/graph/loader/
-    
-    and place the bulk loader JAR in your bucket directory
-    bucket-files/jars`
+1. **Configure Aerolab for AWS.** Follow the [Aerolab AWS setup guide](https://github.com/aerospike/aerolab/blob/master/docs/aws-setup.md).
 
-3. Edit the Variables Script
-    Now edit the `set_variables.sh` script and change values of the variables
-    Necessary variable changes are for:
-    ```properties
-    name
-    username
-    BUCKET_PATH
-    SUBNET_ID           # This will be changed after creating your Aerolab Cluster
-    SECURITY_GROUP      # This will be changed after creating your Aerolab Cluster
-    ```
+   Set your default Aerolab zone to the same zone where you intend to create the cluster (in this example, `us-east-1`). Otherwise, unexpected behavior may occur.
 
-4. Start the Aerolab Cluster
-    Once the variables (not including `SUBNET_ID` or `SECURITY_GROUP`) are set, run
-    ```shell
-    ./create_cluster.sh
-    ```
-    Make sure to grab the subnet ID and security group ID from the output
-    and put them as the values for
-    ```properties
-    SUBNET_ID           # This will be changed after creating your Aerolab Cluster
-    SECURITY_GROUP      # This will be changed after creating your Aerolab Cluster
-    ```
+2. **Create your S3 bucket.** Create a bucket in AWS S3 for the data:
 
-5. Configure Your Properties File
-    Find the Private IP for your cluster using
-    ```shell
-    aerolab cluster list 
-    ```
-    Edit the properties file in `bucket-files/config/bulk-loader.properties`
-    editing the values to your bucket names and cluster IP
+   ```shell
+   aws s3 mb s3://<BUCKET_NAME>/ --region <REGION>
+   ```
 
-6. Upload Files to AWS
-    Now upload the files to the bucket using
-     ```shell
-     aws s3 cp ./bucket-files s3://<your-bucket-name>/ --recursive --region us-east-1
-     ```
-     ```shell
-     aws s3 cp ../../../common/bulkload-data/* s3://<your-bucket-name>/ --recursive --region us-east-1
-     ```
-7. Create EMR Cluster and Submit the Bulkload
-    Now to create an EMR cluster and submit the bulkload job run:
-     ```shell
-     ./bulkload.sh
-     ```
-    
-    You can check on it using:
-    ```bash
-    aws emr describe-step --cluster-id "<your-emr-cluster-id>" --step-id "<your-step-id>" --region "<your-region>"
-    ```
-    When it has succeeded, you should see output similar to this:
-     ```
-     INFO EdgeOperations: Execution time in seconds for Edge write task: 2
-     INFO ProgressBar:
-              Bulk Loader Progress:
-                     Preflight check complete
-                     Temp data writing complete
-                     Supernode extraction complete
-                     Edge cache generation complete
-                     Vertex writing complete
-                             Total of 10 vertices have been successfully written
-                     Vertex validation complete
-                     Edge writing complete
-                             Total of 5 edges have been successfully written
-                     Edge validation complete
-     ```
+   Download the bulk-loader JAR from the [Aerospike Graph downloads page](https://aerospike.com/download/graph/loader/). Place the JAR in your bucket directory at `bucket-files/jars/`.
+
+3. **Edit the variables script.** Edit `set_variables.sh` and change the values of the following variables:
+
+   ```properties
+   name
+   username
+   BUCKET_PATH
+   SUBNET_ID           # set after creating your Aerolab cluster
+   SECURITY_GROUP      # set after creating your Aerolab cluster
+   ```
+
+4. **Start the Aerolab cluster.** With the variables (excluding `SUBNET_ID` and `SECURITY_GROUP`) set, run:
+
+   ```shell
+   ./create_cluster.sh
+   ```
+
+   Capture the subnet ID and security-group ID from the output and set them as the values for:
+
+   ```properties
+   SUBNET_ID
+   SECURITY_GROUP
+   ```
+
+5. **Configure your properties file.** Find the private IP for your cluster:
+
+   ```shell
+   aerolab cluster list
+   ```
+
+   Edit the properties file at `bucket-files/config/bulk-loader.properties`, setting the values to your bucket name and cluster IP.
+
+6. **Upload files to AWS.** Upload the files to the bucket:
+
+   ```shell
+   aws s3 cp ./bucket-files s3://<BUCKET_NAME>/ --recursive --region us-east-1
+   ```
+
+   ```shell
+   aws s3 cp ../../../common/bulkload-data/* s3://<BUCKET_NAME>/ --recursive --region us-east-1
+   ```
+
+7. **Create an EMR cluster and submit the bulk load.** To create an EMR cluster and submit the bulk-load job:
+
+   ```shell
+   ./bulkload.sh
+   ```
+
+   Check on the job status:
+
+   ```shell
+   aws emr describe-step --cluster-id "<EMR_CLUSTER_ID>" --step-id "<STEP_ID>" --region "<REGION>"
+   ```
+
+## Expected output
+
+When the bulk load succeeds, the output looks similar to:
+
+```text
+INFO EdgeOperations: Execution time in seconds for Edge write task: 2
+INFO ProgressBar:
+         Bulk Loader Progress:
+                Preflight check complete
+                Temp data writing complete
+                Supernode extraction complete
+                Edge cache generation complete
+                Vertex writing complete
+                        Total of 10 vertices have been successfully written
+                Vertex validation complete
+                Edge writing complete
+                        Total of 5 edges have been successfully written
+                Edge validation complete
+```

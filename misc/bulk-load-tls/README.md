@@ -1,15 +1,14 @@
-# Bulk Loading with TLS
+# Bulk loading with Transport Layer Security (TLS)
 
-To bulk load a TLS enabled Aerospike cluster the 
-following steps are required:
-1. The x509 ca cert file (generally a .pem file) must be in a location that is available to all workers
-2. A tls setup script must be in a location that is available to all workers
-3. The script must be run on all workers to configure the JVM and spark.
+To bulk load against a TLS-enabled Aerospike cluster, complete the following preparation:
 
-## Example TLS Setup Script
+1. Place the X.509 CA certificate file (typically a `.pem` file) in a location accessible to all workers.
+2. Place a TLS setup script in a location accessible to all workers.
+3. Run the script on every worker to configure the JVM and Spark.
 
-Note you need to uncomment one of the line below (or add your own) 
-to transfer the file from the remote to the local worker.
+## Example TLS setup script
+
+Uncomment one of the following file-transfer commands (or add your own) to copy the certificate from the remote location to the local worker.
 
 ```bash
 CA_CERT_REMOTE="<path>/cacert.pem"
@@ -17,10 +16,10 @@ DEST_DIR="/etc/aerospike-graph-tls"
 CA_CERT=${DEST_DIR}/cacert.pem
 TRUSTSTORE=${DEST_DIR}/truststore.jks
 
-# Create directory.
+# Create the directory.
 mkdir -p $DEST_DIR
 
-# Download CA certificate. Use one of the following commands.
+# Download the CA certificate. Use one of the following commands.
 
 # For local file system
 # cp $CA_CERT_REMOTE $CA_CERT
@@ -33,7 +32,8 @@ mkdir -p $DEST_DIR
 
 # For AWS EMR
 # aws s3 cp $CA_CERT_REMOTE $CA_CERT
-# Note for AWS You will also need something like this (see AWS EMR section below)
+# Note: for AWS EMR, you also need a configuration file like the
+# following (see the AWS EMR section).
 # cat > spark-tls-config.json <<EOF
 # [
 #   {
@@ -46,7 +46,7 @@ mkdir -p $DEST_DIR
 # ]
 # EOF
 
-# Create truststore from CA cert.
+# Create the truststore from the CA certificate.
 keytool -import -trustcacerts \
   -alias aerospike-ca \
   -file $CA_CERT \
@@ -54,7 +54,7 @@ keytool -import -trustcacerts \
   -storepass changeit \
   -noprompt
 
-# Secure the truststore. Note, master node can run with 400, but workers require 444.
+# Secure the truststore. The master node can run with 400, but workers require 444.
 chmod 444 $TRUSTSTORE
 
 # Configure Spark to use the truststore.
@@ -62,27 +62,29 @@ echo "spark.driver.extraJavaOptions=-Djavax.net.ssl.trustStore=$TRUSTSTORE -Djav
 echo "spark.executor.extraJavaOptions=-Djavax.net.ssl.trustStore=$TRUSTSTORE -Djavax.net.ssl.trustStorePassword=changeit" >> /etc/spark/conf/spark-defaults.conf
 ```
 
-## Bulk Loader Config Adjustments For TLS
+## Bulk-loader configuration adjustments for TLS
 
-The properties file provided to the bulk loader requires some minor 
-adjustments to allow loading a tls enabled Aerospike cluster.
+The properties file passed to the bulk loader requires minor adjustments for loading a TLS-enabled Aerospike cluster:
 
-```
-aerospike.client.host=<ip_of_aerospike_node>:<tls_name_of_cluster>:<port_for_tls_name>
+```text
+aerospike.client.host=<IP_OF_AEROSPIKE_NODE>:<TLS_NAME_OF_CLUSTER>:<PORT_FOR_TLS_NAME>
 aerospike.client.tls=true
 ```
 
-The important piece here is that `aerospike.client.tls=true` is set to `true`, 
-and the `aerospike.client.host` is set according to your tls connection.
+Set `aerospike.client.tls=true` and configure `aerospike.client.host` to match your TLS connection.
 
-## Run Initialization Script on Spark Cluster
+## Run the initialization script on the Spark cluster
 
 ### GCP Dataproc
 
-In GCP you must add this command:
---initialization-actions=gs://<path_to_script>
+In GCP, add the following flag:
+
+```text
+--initialization-actions=gs://<PATH_TO_SCRIPT>
+```
 
 Example:
+
 ```shell
 gcloud dataproc clusters create "$dataproc_name" \
     --enable-component-gateway \
@@ -97,16 +99,20 @@ gcloud dataproc clusters create "$dataproc_name" \
     --worker-boot-disk-size 500 \
     --image-version 2.1-debian11 \
     --properties spark:spark.history.fs.gs.outputstream.type=FLUSHABLE_COMPOSITE \
-    --initialization-actions=gs://<path_to_script> \
+    --initialization-actions=gs://<PATH_TO_SCRIPT> \
     --project $project
 ```
 
 ### AWS EMR
 
-In AWS EMR you must add this command:
---bootstrap-actions Path="s3://<path_to_script>
+In AWS EMR, add the following flag:
 
-and this json file must be created and added to the local filesystem for each worker using the script above.
+```text
+--bootstrap-actions Path="s3://<PATH_TO_SCRIPT>"
+```
+
+The following JSON configuration must be present on each worker's local file system. The preceding TLS setup script generates this file:
+
 ```json
 [
   {
@@ -128,44 +134,46 @@ aws emr create-cluster \
     --instance-count 3 \
     --use-default-roles \
     --ec2-attributes KeyName=your-key \
-    --bootstrap-actions Path="s3://<path_to_script>" \
-    --configurations file://spark-tls-config.json <--- json from above that needs to be generated via tls script above.
+    --bootstrap-actions Path="s3://<PATH_TO_SCRIPT>" \
+    --configurations file://spark-tls-config.json
 ```
 
-You may also require 
+The `spark-tls-config.json` file referenced by `--configurations` is the JSON shown earlier in this section, which is generated by the TLS setup script.
 
-### On Premises
+### On premises
 
-In an on prem cluster, the script may be needed to be run by hand before introducing the node to the spark cluster.
-
-Spark does not provide a native way to run an init script on each worker.
+For an on-premises cluster, the TLS setup script must be run by hand on every node before the node joins the Spark cluster. Spark does not provide a native way to run an init script on each worker.
 
 What you need to do:
-1. Ensure each worker has access to the java keystore, with appropriate permissions to access it (`chmod 444`)
-2. Your spark-defaults.conf file is configured in the right location for with the appropriate settings
-```
-"spark.driver.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit",
-"spark.executor.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit"
-```
+
+1. Ensure each worker has access to the Java keystore, with appropriate permissions (`chmod 444`).
+2. Configure your `spark-defaults.conf` file in the correct location with the appropriate settings:
+
+   ```text
+   "spark.driver.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit",
+   "spark.executor.extraJavaOptions": "-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit"
+   ```
 
 ### Debugging
 
-Debugging steps:
-1. SSH into a worker and the master node
-2. Look for the truststore 
-    ```shell
-    ls -l /etc/aerospike-graph-tls/truststore.jks
-    ```
-    You should see a truststore with appropriate permissions here (`-r--r--r--`)
-    If you do not, then the truststore.jks is not correctly being generated.
-    If the permissions are wrong, investigate the chmod command being used to adjust them, it should be `chmod 444`.
-3. Run a simple test with docker:
-    ```shell
-    docker run -e aerospike.client.host=<ip_of_aerospike_node>:<tls_name_of_cluster>:<port_for_tls_name> -e aerospike.client.tls=true \
-         -e JAVA_OPTIONS="-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
-         -v /etc/aerospike-graph-tls/truststore.jks:/etc/aerospike-graph-tls/truststore.jks \
-         aerospike/aerospike-graph-service:latest-slim
-    ```
-If this connects correctly, and you see `Channel started at port 8182.` at the bottom, then everything is set up correctly.
-Note there could still be a file permissions issue here as docker generally runs with sudo level permissions, which is
-greater than the permissions level that spark executors get.
+1. SSH into a worker and into the master node.
+2. Look for the truststore:
+
+   ```shell
+   ls -l /etc/aerospike-graph-tls/truststore.jks
+   ```
+
+   You expect a truststore with the appropriate permissions (`-r--r--r--`). If the truststore is missing, the file is not being generated. If the permissions are wrong, investigate the `chmod` command — it must be `chmod 444`.
+
+3. Run a simple test with Docker:
+
+   ```shell
+   docker run -e aerospike.client.host=<IP_OF_AEROSPIKE_NODE>:<TLS_NAME_OF_CLUSTER>:<PORT_FOR_TLS_NAME> -e aerospike.client.tls=true \
+        -e JAVA_OPTIONS="-Djavax.net.ssl.trustStore=/etc/aerospike-graph-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit" \
+        -v /etc/aerospike-graph-tls/truststore.jks:/etc/aerospike-graph-tls/truststore.jks \
+        aerospike/aerospike-graph-service:VERSION-slim
+   ```
+
+   Replace `VERSION` with a pinned AGS release. See the [AGS release notes](https://aerospike.com/docs/graph/release-notes/) for available versions.
+
+If the connection succeeds and the output shows `Channel started at port 8182.`, the setup is correct. A file-permissions issue can still occur because Docker generally runs with elevated permissions, which exceed the permissions Spark executors get.

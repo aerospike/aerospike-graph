@@ -1,59 +1,58 @@
-# TLS Between AGS and Aerospike Server
+# Transport Layer Security (TLS) between AGS and Aerospike Database
 
-This example will cover how to configure and use TLS between 
-Aerospike Graph Service and Aerospike Server. 
-This includes creating a new docker container for Aerospike Graph 
-Service (AGS) and Aerospike Server.
+This example shows how to configure and use TLS between Aerospike Graph Service (AGS) and Aerospike Database. It creates new Docker containers for AGS and Aerospike Database.
 
-## Relevant Files
+## Relevant files
 
-The files 
-```
+The following files contain inline comments explaining how to configure TLS between AGS and Aerospike Database:
+
+```text
 docker-compose.yaml
 aerospike.conf
 make-certs.sh
 ```
-are all important to use TLS between AGS and Aerospike Server and
-include explanatory comments.
-Certificates and keys will also be generated in a new dir when
-running the make-certs.sh
-```dir
+
+Running `make-certs.sh` also generates certificates and keys in a new `security/` directory:
+
+```text
 .
-├── security/
+└── security/
     ├── ca.crt
-    └── ca.key
-    └── server.crt
+    ├── ca.key
+    ├── server.crt
     └── server.key
 ```
 
 ## Run it
 
-Dependencies to install:
+Install dependencies:
+
 ```shell
 python3 -m pip install "gremlinpython>=3.7.0,<3.8.0" async_timeout
 ```
 
-make-certs.sh creates the certificates and keys needed for TLS
+`make-certs.sh` creates the certificates and keys needed for TLS:
 
 ```shell
 ./make-certs.sh
 ```
 
-This should create the necessary files in the security folder, ca.crt, ca.key, server.crt, and server.key.
+This creates the necessary files in the `security/` folder: `ca.crt`, `ca.key`, `server.crt`, and `server.key`.
 
-Next, create the necessary Docker containers by using:
+Next, create the necessary Docker containers:
 
 ```shell
 docker compose up -d
 ```
 
-Execute the python example to make sure you can connect to AGS and Query
+Run the Python example to verify the connection to AGS:
+
 ```shell
 python3 ./tls_example.py
 ```
 
-If you see the output
-```
+## Expected output
+
+```text
 Connected and Queried Successfully, TLS between AGS and Aerospike DB is set up!
 ```
-it worked correctly!

@@ -1,36 +1,40 @@
-# Food Delivery Graph Demo Application
+# Food-delivery graph demo application
 
-A demo application showcasing graph database capabilities using Aerospike Graph, featuring a food delivery system with
-customers, restaurants, orders, and drivers.
+A demo application that uses Aerospike Graph Service (AGS) to model a food-delivery system with customers, restaurants, orders, and drivers.
 
 ## Overview
 
-Food Delivery App consists of two main components:
+The food-delivery app has two main components:
 
-1. Data Generator (`food_delivery_datasetgen.py`) - creates the dataset.
-2. GUI Interface (`frontend_streamlit.py`) - runs the webpage.
+1. **Data generator** (`food_delivery_datasetgen.py`) — creates the dataset.
+2. **GUI** (`frontend_streamlit.py`) — runs the web page.
 
 ## Prerequisites
 
-- Python 3.8+
-- Aerospike Graph database
-- Python virtual environment (recommended)
-- Set up Aerospike Graph (see the root directory [README.md](../../README.md) for more information)
+- Python 3.9 or later.
+- Aerospike Graph Service. Set up AGS using the [root README](../../README.md).
+- A Python virtual environment (recommended).
+
+> **Note:** AGS requires Apache TinkerPop 3.7.x Gremlin client drivers. TinkerPop 3.8.x and 4.0.x are incompatible.
+
+## Setup
 
 1. Create and activate a virtual environment:
+
    ```shell
    python -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
-2. Install dependencies. AGS requires TinkerPop 3.7.x client drivers; 3.8.x and 4.0.x are not compatible:
+2. Install dependencies:
+
    ```shell
    pip install "gremlinpython>=3.7.0,<3.8.0" streamlit_agraph streamlit
    ```
 
-## Data Generation
+## Data generation
 
-The `food_delivery_datasetgen.py` script generates sample food delivery orders with the following entities:
+The `food_delivery_datasetgen.py` script generates sample food-delivery orders for the following entities:
 
 - Customers
 - Restaurants
@@ -39,23 +43,23 @@ The `food_delivery_datasetgen.py` script generates sample food delivery orders w
 - Drivers
 - Delivery addresses
 
-To generate sample data, use the following script with or without any of 
-the following options to customize the size of the dataset:
-```
---n-customers x                #default is 100000
---n-restaurants x              #default is 1000
---n-drivers x                  #default is 500
---min-orders-per-customer x    #default is 1
---max-orders-per-customer x    #default is 5
+To generate sample data, run the script with or without these options to control dataset size:
+
+```text
+--n-customers x                # default: 100000
+--n-restaurants x              # default: 1000
+--n-drivers x                  # default: 500
+--min-orders-per-customer x    # default: 1
+--max-orders-per-customer x    # default: 5
 ```
 
 ```shell
 python food_delivery_datasetgen.py
 ```
 
-The data is created and mounted to the Aerospike Graph container.
+The generated data is written to a directory mounted into the AGS container.
 
-Run the following command to load the data into Aerospike Graph:
+Load the generated data into AGS:
 
 ```shell
 python food_delivery_load.py
@@ -63,18 +67,17 @@ python food_delivery_load.py
 
 ## GUI
 
-`gremlin_queries.py` and `frontend_streamlit.py` create an interactive web page
-to run graph queries, as well as visualize subgraphs of the food delivery data.
+`gremlin_queries.py` and `frontend_streamlit.py` together provide an interactive web page for running graph queries and visualizing subgraphs of the food-delivery data.
 
-Start the webpage with the following command:
+Start the web page:
 
 ```shell
 streamlit run frontend_streamlit.py
 ```
 
-You can now test out the features navigated by the dropdown 'Select Action'.
+Use the **Select Action** dropdown to navigate between features.
 
-## Graph Schema
+## Graph schema
 
 ### Vertices
 

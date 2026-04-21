@@ -1,70 +1,67 @@
-# GCP Distributed Bulkload Example
-    
-1. Configure Aerolab for GCP
-    Follow this guide to configure Aerolab for GCP: 
-    https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md
-    Make sure your default zone in Aerolab is the same as the zone you intend to make the cluster in, in this case us-central1-a.
-    Otherwise, unexpected behavior may occur.
-    
-2. Create Your Cluster
-    Now create your Aerospike cluster using this script:
-    ```bash
-    ./create_cluster.sh
-    ```
-    
-3. Find the Cluster IP
-    Now that your cluster is running, find its Private IP using
-    ```shell
-    aerolab cluster list
-    ```
-    
-4. Make Your GCP Bucket
-    Make a bucket in gcp for the data: 
-    ```shell
-    gsutil mb gs://<name-of-bucket>
-    ```
-    
-    Download bulk loader jar from here
-    https://aerospike.com/download/graph/loader/
-    
-    and place the bulk loader JAR in your bucket directory
-    bucket-files/jars`
-    
-5. Configure Your Properties File
-    Edit the properties file in `bucket-files/config/bulk-loader.properties` 
-    editing the values to your bucket names and cluster IP
-    
-6. Upload Files to GCP
-    Now upload the files to the bucket using
-    ```shell
-    gsutil cp -r ./bucket-files/* gs://<name-of-bucket>
-    ```
-    ```shell
-    gsutil cp -r ../../../common/bulkload-data/* gs://<name-of-bucket>
-    ```
-    
-7. Edit the Variables Script
-    Now edit the `set_variables.sh` script and change values of the variables
-    There are explanatory comments in it to help.
-    
-8. Create Dataproc Cluster and Submit the Bulkload
-    Now to create a dataproc cluster and submit the bulkload job run
-    ```shell
-    ./bulkload.sh
-    ```
-    When it has succeeded, you should see output similar to this:
-    ```
-    INFO EdgeOperations: Execution time in seconds for Edge write task: 2
-    INFO ProgressBar:
-             Bulk Loader Progress:
-                    Preflight check complete
-                    Temp data writing complete
-                    Supernode extraction complete
-                    Edge cache generation complete
-                    Vertex writing complete
-                            Total of 10 vertices have been successfully written
-                    Vertex validation complete
-                    Edge writing complete
-                            Total of 5 edges have been successfully written
-                    Edge validation complete
-    ```
+# Distributed GCP bulk load example
+
+This example walks you through running a distributed Aerospike Graph Service (AGS) bulk load on GCP Dataproc using an Aerolab-managed Aerospike cluster.
+
+1. **Configure Aerolab for GCP.** Follow the [Aerolab GCP setup guide](https://github.com/aerospike/aerolab/blob/master/docs/gcp-setup.md).
+
+   Set your default Aerolab zone to the same zone where you intend to create the cluster (in this example, `us-central1-a`). Otherwise, unexpected behavior may occur.
+
+2. **Create your cluster.** Create your Aerospike cluster:
+
+   ```bash
+   ./create_cluster.sh
+   ```
+
+3. **Find the cluster IP.** With your cluster running, find its private IP:
+
+   ```shell
+   aerolab cluster list
+   ```
+
+4. **Create your GCP bucket.** Create a bucket in GCP for the data:
+
+   ```shell
+   gsutil mb gs://<BUCKET_NAME>
+   ```
+
+   Download the bulk-loader JAR from the [Aerospike Graph downloads page](https://aerospike.com/download/graph/loader/). Place the JAR in your bucket directory at `bucket-files/jars/`.
+
+5. **Configure your properties file.** Edit `bucket-files/config/bulk-loader.properties`, setting the values to your bucket name and cluster IP.
+
+6. **Upload files to GCP.** Upload the files to the bucket:
+
+   ```shell
+   gsutil cp -r ./bucket-files/* gs://<BUCKET_NAME>
+   ```
+
+   ```shell
+   gsutil cp -r ../../../common/bulkload-data/* gs://<BUCKET_NAME>
+   ```
+
+7. **Edit the variables script.** Edit `set_variables.sh` and update the variables. Inline comments explain each value.
+
+8. **Create the Dataproc cluster and submit the bulk load.** To create a Dataproc cluster and submit the bulk-load job:
+
+   ```shell
+   ./bulkload.sh
+   ```
+
+## Expected output
+
+When the bulk load succeeds, the output looks similar to:
+
+```text
+INFO EdgeOperations: Execution time in seconds for Edge write task: 2
+INFO ProgressBar:
+         Bulk Loader Progress:
+                Preflight check complete
+                Temp data writing complete
+                Supernode extraction complete
+                Edge cache generation complete
+                Vertex writing complete
+                        Total of 10 vertices have been successfully written
+                Vertex validation complete
+                Edge writing complete
+                        Total of 5 edges have been successfully written
+                Edge validation complete
+```
