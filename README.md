@@ -2,7 +2,7 @@
 
 Welcome to the Aerospike Graph getting-started repository. This repository provides scripts, guides, and examples to help you get started with Aerospike Graph Service (AGS).
 
-AGS is a real-time, scalable graph database that supports billions of vertices and trillions of edges with predictable low latency. AGS supports use cases such as identity graphs, fraud detection, and real-time recommendation systems. For more information, see the [Aerospike Graph documentation](https://aerospike.com/docs/graph/).
+Aerospike Graph is a real-time, scalable graph database that supports billions of vertices and trillions of edges with predictable low latency. It supports use cases such as identity graphs, fraud detection, and real-time recommendation systems. For more information, see the [Aerospike Graph documentation](https://aerospike.com/docs/graph/).
 
 ## Compatibility
 
