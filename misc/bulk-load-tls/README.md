@@ -54,7 +54,7 @@ keytool -import -trustcacerts \
   -storepass changeit \
   -noprompt
 
-# Secure the truststore. The master node can run with 400, but workers require 444.
+# Secure the truststore. The primary node can run with 400, but workers require 444.
 chmod 444 $TRUSTSTORE
 
 # Configure Spark to use the truststore.
@@ -156,7 +156,7 @@ What you need to do:
 
 ### Debugging
 
-1. SSH into a worker and into the master node.
+1. SSH into a worker and into the cluster's primary node.
 2. Look for the truststore:
 
    ```shell

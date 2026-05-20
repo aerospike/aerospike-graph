@@ -1,4 +1,4 @@
-# Transport Layer Security (TLS) between AGS and Aerospike Database
+# Transport Layer Security (TLS) between Aerospike Graph Service and Aerospike Database
 
 This example shows how to configure and use TLS between Aerospike Graph Service (AGS) and Aerospike Database. It creates new Docker containers for AGS and Aerospike Database.
 

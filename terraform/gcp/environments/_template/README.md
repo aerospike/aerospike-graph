@@ -42,8 +42,8 @@ The following placeholders must be replaced with your actual values before deplo
 
 | Placeholder | Description | Example |
 |-------------|-------------|---------|
-| `gcr.io/TODO_PROJECT_ID/...` | Container image path. | `gcr.io/my-project/aerospike-graph-service:3.1.1` |
-| `VERSION` | Image version tag. | `3.1.1-slim.1` |
+| `gcr.io/TODO_PROJECT_ID/...` | Container image path. | `gcr.io/my-project/aerospike-graph-service:3.2.2` |
+| `VERSION` | Image version tag. | `3.2.2-slim.1` |
 
 ## Files to update by module
 

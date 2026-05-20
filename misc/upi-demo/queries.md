@@ -1,4 +1,4 @@
-# Real-time fraud detection with Aerospike Graph
+# Real-time fraud detection with Aerospike Graph Service (AGS)
 
 ## Scenario 1: Evaluating known beneficiary
 
@@ -6,7 +6,7 @@
 
 Rajesh Kumar (Virtual Payment Address (VPA): `8056629010@ybl`) is sending INR 40,000 to `7797767385@ybl`. Check whether this is a known beneficiary.
 
-### Steps
+### Steps for scenario 1
 
 1. **Find the VPA and load all outgoing transactions:**
 
@@ -47,7 +47,7 @@ Rajesh Kumar (Virtual Payment Address (VPA): `8056629010@ybl`) is sending INR 40
 
 Sender `A` sends money to `9524356932@ybl (C)`. `A` has previously transacted with `B`, and `B` has transacted with `C`.
 
-### Steps
+### Steps for scenario 2
 
 ```groovy
 // Verify whether 9524356932@ybl was part of previous transactions:
@@ -70,7 +70,7 @@ g.V('CQE72NZMJL') \
 
 ## Scenario 3: Velocity of outgoing transactions
 
-### Steps
+### Steps for scenario 3
 
 ```groovy
 // Calculate average outgoing transaction amount for each sender VPA:
@@ -98,7 +98,7 @@ g.V('CQE72NZMJL') \
 
 ## Scenario 4: Device reuse detection
 
-### Steps
+### Steps for scenario 4
 
 ```groovy
 // List all devices used by the user:
@@ -109,7 +109,7 @@ Next step: extend the query to include other users sharing the same household ba
 
 ## Scenario 5: Transactional IP city analysis
 
-### Steps
+### Steps for scenario 5
 
 ```groovy
 // IP cities in the immediate network:
@@ -134,7 +134,7 @@ g.V('CQE72NZMJL') \
 
 ## Scenario 6: Fraud and flagged activity counts
 
-### Steps
+### Steps for scenario 6
 
 ```groovy
 // Blocked accounts/cards in the immediate network:

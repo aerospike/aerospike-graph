@@ -1,4 +1,4 @@
-# Synthetic data generators for Aerospike Graph Service
+# Synthetic data generators for Aerospike Graph Service (AGS)
 
 This repository contains synthetic data generators for bulk loading into [Aerospike Graph Service (AGS)](https://aerospike.com/docs/graph/). The generators produce CSV files in the format required by the AGS bulk loader.
 
