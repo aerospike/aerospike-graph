@@ -7,7 +7,7 @@ AGS is a real-time, scalable graph database that supports billions of vertices a
 ## Compatibility
 
 - AGS requires Apache TinkerPop 3.7.x Gremlin client drivers. TinkerPop 3.8.x and 4.0.x clients are incompatible.
-- The examples in this repository are tested against the AGS image referenced in `docker-compose.yaml`. Pin a specific version (for example, `aerospike/aerospike-graph-service:3.1.1-slim`) for reproducible builds. See the [AGS release notes](https://aerospike.com/docs/graph/release-notes/) for available versions.
+- The examples in this repository are tested against the AGS image referenced in `docker-compose.yaml`. Pin a specific version (for example, `aerospike/aerospike-graph-service:3.2.2-slim.1`) for reproducible builds. See the [AGS release notes](https://aerospike.com/docs/graph/release/) for available versions.
 
 ## Start Aerospike Graph Service
 
