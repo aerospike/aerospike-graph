@@ -293,7 +293,7 @@ List_Property:
 
 ## Vertex schemas
 
-Under the top-level `vertices` mapping, create one record per vertex type. Each vertex type must specify a `percent` value indicating what percentage of the total vertex count should be of this type.
+Under the top-level `vertices` mapping, create one record per vertex type. Each vertex type must specify a `percent` value indicating what percentage of the total vertex count must be of this type.
 
 ```yaml
 vertices:

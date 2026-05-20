@@ -1,5 +1,7 @@
 # Gremlin-Go round-robin load balancer
 
+Round-robin load balancing for Gremlin-Go clients connecting to Aerospike Graph Service (AGS) or Gremlin Server endpoints.
+
 - **Round-robin** distribution of traversal submissions across multiple Gremlin Server endpoints.
 - **Health checking** and automatic detection of recovered hosts.
 - **Dynamic host management** (add or remove endpoints at runtime).

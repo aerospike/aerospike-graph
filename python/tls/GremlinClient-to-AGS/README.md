@@ -1,4 +1,4 @@
-# Transport Layer Security (TLS) between Gremlin client and AGS
+# Transport Layer Security (TLS) between Gremlin client and Aerospike Graph Service
 
 This example shows how to configure and use TLS between a Gremlin client and Aerospike Graph Service (AGS). It creates new Docker containers for AGS and Aerospike Database.
 
