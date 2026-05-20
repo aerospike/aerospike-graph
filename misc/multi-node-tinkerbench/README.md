@@ -2,7 +2,9 @@
 
 This example shows how to create a multi-node Aerospike Database cluster on GCP using Aerolab, attach an Aerospike Graph Service (AGS) instance to each Aerospike node, and run TinkerBench on a dedicated benchmark VM.
 
-> **Note:** This example requires an Aerospike Enterprise Edition feature-key file. To get a free 60-day Enterprise trial feature-key file, see the [Aerospike Enterprise trial page](https://aerospike.com/get-started-aerospike-database/).
+> **Note:** This example uses Aerolab to create an Aerospike Database Enterprise Edition cluster, which requires an enterprise feature-key file. To get a free 60-day trial feature-key file, see the [Aerospike Enterprise trial page](https://aerospike.com/get-started-aerospike-database/).
+>
+> As of AGS 3.2.2, AGS itself no longer requires the `graph-service` feature to be enabled in the feature-key file. The feature-key file is still required for Aerospike Database Enterprise Edition.
 
 ## Configure Aerolab for GCP
 

@@ -174,6 +174,6 @@ What you need to do:
         aerospike/aerospike-graph-service:VERSION-slim
    ```
 
-   Replace `VERSION` with a pinned AGS release. See the [AGS release notes](https://aerospike.com/docs/graph/release-notes/) for available versions.
+   Replace `VERSION` with a pinned AGS release. See the [AGS release notes](https://aerospike.com/docs/graph/release/) for available versions.
 
 If the connection succeeds and the output shows `Channel started at port 8182.`, the setup is correct. A file-permissions issue can still occur because Docker generally runs with elevated permissions, which exceed the permissions Spark executors get.
