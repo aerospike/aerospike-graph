@@ -24,7 +24,7 @@ This guide helps you set up Aerospike Graph Service (AGS), bulk-load data, and r
 
 ## 2. Bulk-load the data
 
-To load data into AGS, set the graph traversal source using the [Gremlin Console](https://aerospike.com/docs/graph/quick-start#install-the-gremlin-console) (see the official quickstart for setup steps):
+To load data into AGS, set the graph traversal source using the [Gremlin Console](https://aerospike.com/docs/graph/quick-start#install-the-gremlin-console) (see the [official Quickstart](https://aerospike.com/docs/graph/quick-start) for setup steps):
 
 ```groovy
 g = traversal().withRemote(DriverRemoteConnection.using("localhost", 8182, "g"))

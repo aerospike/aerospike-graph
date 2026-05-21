@@ -1,4 +1,4 @@
-# Aerospike Graph quickstart
+# Aerospike Graph Quickstart
 
 Welcome to the Aerospike Graph getting-started repository. This repository provides scripts, guides, and examples to help you get started with Aerospike Graph Service (AGS).
 
@@ -13,7 +13,7 @@ Aerospike Graph is a real-time, scalable graph database that supports billions o
 ## Compatibility
 
 - AGS requires Apache TinkerPop 3.7.x Gremlin client drivers. TinkerPop 3.8.x and 4.0.x clients are incompatible.
-- The root `docker-compose.yaml` uses the **standard** AGS image (`aerospike/aerospike-graph-service:latest`), which includes the [standalone bulk loader](https://aerospike.com/docs/graph/load/standalone) required for the UPI demo and Gremlin `g.call` bulk-load examples. The **slim** image does not include the bulk loader; use slim only for Gremlin-only workloads. Pin a specific version for reproducible builds (for example, `aerospike/aerospike-graph-service:3.2.2`). See the [AGS release notes](https://aerospike.com/docs/graph/release/) for available versions.
+- The root `docker-compose.yaml` uses the **standard** AGS image (`aerospike/aerospike-graph-service:latest`), which includes the [standalone bulk loader](https://aerospike.com/docs/graph/load/standalone) required for the UPI demo and Gremlin `g.call` bulk-load examples. The **slim** image does not include the bulk loader; use slim only for Gremlin-only workloads. Pin a specific version for reproducible builds (use a tag from the [AGS release notes](https://aerospike.com/docs/graph/release/)).
 
 ## Start Aerospike Graph Service
 

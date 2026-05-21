@@ -97,7 +97,7 @@ The following placeholders must be replaced with your actual values before deplo
    gcloud auth application-default login
    ```
 
-4. Copy the AGS Docker image to your GCR. Replace `VERSION` with a pinned AGS release. The current release is `3.2.2`. See the [AGS release notes](https://aerospike.com/docs/graph/release/) for the full list.
+4. Copy the AGS Docker image to your GCR. Replace `VERSION` with a pinned AGS release from the [AGS release notes](https://aerospike.com/docs/graph/release/).
 
    ```bash
    crane copy aerospike/aerospike-graph-service:VERSION-slim \
