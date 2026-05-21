@@ -11,7 +11,7 @@ A web application that visualizes transactions between two users in a web browse
 
 ## Usage
 
-1. Start the Docker image. From the root of the example directory, run:
+1. From the example directory root, start Docker Compose:
 
    ```shell
    docker compose up -d
@@ -23,10 +23,10 @@ A web application that visualizes transactions between two users in a web browse
    pip install "gremlinpython>=3.7.0,<3.8.0" dash dash-cytoscape dash-bootstrap-components
    ```
 
-3. Start the web example:
+3. Start the web app:
 
    ```shell
    python transactions_between_users.py
    ```
 
-4. Open the web application. Open a web browser and navigate to `http://localhost:8050/`.
+4. Open a web browser and navigate to `http://localhost:8050/`.

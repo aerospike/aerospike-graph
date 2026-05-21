@@ -84,7 +84,7 @@ Generate synthetic CSV data for identity graphs using a configurable ego–alter
      --seed 42
    ```
 
-5. Output: CSV files are written to the specified output directory, organized as:
+5. CSV files are written to the output directory, organized as:
 
    ```text
    output/

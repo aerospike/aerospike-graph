@@ -34,17 +34,15 @@ python3 -m pip install "gremlinpython>=3.7.0,<3.8.0" async_timeout
 
 ### Create certificates and keys
 
-`make-certs.sh` creates the certificates and keys needed for TLS. From the `AGS_Gremlin` directory, run:
+From the `GremlinClient-to-AGS` directory, run:
 
 ```shell
 ./make-certs.sh
 ```
 
-This creates `ca.crt` and `ca.key` in `security/`, and `server.crt` and `server.key` in `g-tls/`.
+The script writes `ca.crt` and `ca.key` to `security/`, and `server.crt` and `server.key` to `g-tls/`.
 
 ### Start Docker containers
-
-Start the Docker containers:
 
 ```shell
 docker compose up -d
@@ -53,8 +51,6 @@ docker compose up -d
 AGS and Aerospike Database start.
 
 ### Execute a query
-
-Run the Python example to verify the connection to AGS over TLS:
 
 ```shell
 python3 ./tls_example.py

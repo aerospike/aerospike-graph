@@ -8,19 +8,19 @@ Rajesh Kumar (Virtual Payment Address (VPA): `8056629010@ybl`) is sending INR 40
 
 ### Steps for scenario 1
 
-1. Find the VPA and load all outgoing transactions:
+1. Find the sender VPA:
 
    ```groovy
    g.V("8056629010@ybl")
    ```
 
-2. Check whether the sender's VPA has transacted with the receiver's VPA:
+2. Check for a prior transaction with the receiver:
 
    ```groovy
    g.V("8056629010@ybl").out("transaction").hasId("7797767385@ybl")
    ```
 
-3. Explore other VPAs of the sender and evaluate transactions with the receiver:
+3. Explore related VPAs and transaction paths:
 
    ```groovy
    g.V("8056629010@ybl").in("owns").in("has_account").outE('has_account', 'has_card').inV().outE("owns").inV().outE("transaction").inV().path()
@@ -32,7 +32,7 @@ Rajesh Kumar (Virtual Payment Address (VPA): `8056629010@ybl`) is sending INR 40
    g.V('CQE72NZMJL').outE('has_account', 'has_card').inV().outE("owns").inV().outE("transaction").inV().path()
    ```
 
-4. Real-time check query:
+4. Real-time beneficiary check:
 
    ```groovy
    g.V('CQE72NZMJL') \

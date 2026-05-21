@@ -11,7 +11,7 @@ A command-line application that generates a graph of transactions between users 
 
 ## Usage
 
-1. Start the Docker image. From the root of the example directory, run:
+1. From the example directory root, start Docker Compose:
 
    ```shell
    docker compose up -d
@@ -23,7 +23,7 @@ A command-line application that generates a graph of transactions between users 
    pip install "gremlinpython>=3.7.0,<3.8.0"
    ```
 
-3. Run the basic Python example:
+3. Run the example:
 
    ```shell
    python example.py
