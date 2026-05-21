@@ -58,19 +58,19 @@ For detailed usage instructions, see [`scale-free-network/README.md`](scale-free
 
 The two generators serve different purposes and are optimized for different graph topologies:
 
-1. **Different topologies:**
+1. Different topologies:
    - Ego networks create hub-and-spoke patterns around central entities.
    - Scale-free networks create graphs with power-law degree distributions.
 
-2. **Different use cases:**
+2. Different use cases:
    - Ego networks are suitable for identity graphs, fraud detection, and entity-resolution scenarios.
    - Scale-free networks are suitable for social networks, recommendation systems, and web-graph analysis.
 
-3. **Different algorithms:**
+3. Different algorithms:
    - Ego networks use expansion algorithms from a central node outward.
    - Scale-free networks use power-law sampling to generate realistic network structures.
 
-4. **Different configuration models:**
+4. Different configuration models:
    - Ego networks use a hierarchical schema (`EgoNode → AlterNodes`).
    - Scale-free networks use a flat multi-type schema (vertices and edges with percentages).
 

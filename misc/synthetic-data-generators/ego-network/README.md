@@ -47,7 +47,7 @@ Generate synthetic CSV data for identity graphs using a configurable ego–alter
 
 ### Quickstart
 
-1. **Set up a virtual environment** (recommended):
+1. Set up a virtual environment (recommended):
 
    ```bash
    # Create a virtual environment
@@ -60,18 +60,18 @@ Generate synthetic CSV data for identity graphs using a configurable ego–alter
    source venv/bin/activate
    ```
 
-2. **Install dependencies:**
+2. Install dependencies:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Create or edit your schema YAML** (see the example in `config/config.yaml`):
+3. Create or edit your schema YAML (see the example in `config/config.yaml`):
    - Define one `EgoNode` (the central entity).
    - Define `AlterNodes` (connected entities).
    - Configure connections, properties, and degree distributions.
 
-4. **Run the generator:**
+4. Run the generator:
 
    ```bash
    cd generator
@@ -84,7 +84,7 @@ Generate synthetic CSV data for identity graphs using a configurable ego–alter
      --seed 42
    ```
 
-5. **Output:** CSV files are written to the specified output directory, organized as:
+5. Output: CSV files are written to the specified output directory, organized as:
 
    ```text
    output/

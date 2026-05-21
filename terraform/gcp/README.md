@@ -63,28 +63,28 @@ gcp/
 
 ## Prerequisites
 
-1. **Terraform** 1.0 or later.
-2. **GCP project** with billing enabled.
-3. **APIs enabled:**
+1. Terraform 1.0 or later.
+2. GCP project with billing enabled.
+3. APIs enabled:
    - Compute Engine API.
    - Kubernetes Engine API.
    - Container Registry API.
-4. **GCS bucket** for Terraform state:
+4. GCS bucket for Terraform state:
 
    ```bash
    gsutil mb -p YOUR_PROJECT_ID -l us-central1 gs://YOUR_TERRAFORM_STATE_BUCKET
    gsutil versioning set on gs://YOUR_TERRAFORM_STATE_BUCKET
    ```
 
-5. **Authentication:**
+5. Authentication:
 
    ```bash
    gcloud auth application-default login
    gcloud auth configure-docker
    ```
 
-6. **Aerospike Database** deployed in the same VPC as the GKE cluster.
-7. **Docker image** in GCR. Replace `VERSION` with a pinned AGS release from the [AGS release notes](https://aerospike.com/docs/graph/release/).
+6. Aerospike Database deployed in the same VPC as the GKE cluster.
+7. Docker image in GCR. Replace `VERSION` with a pinned AGS release from the [AGS release notes](https://aerospike.com/docs/graph/release/).
 
    ```bash
    crane copy aerospike/aerospike-graph-service:VERSION-slim \
