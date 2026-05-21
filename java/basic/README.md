@@ -5,7 +5,7 @@ A minimal Java application that connects to Aerospike Graph Service (AGS), inser
 ## Prerequisites
 
 - Java 11 or later.
-- [Aerospike Graph Service](https://aerospike.com/docs/graph/install/docker/).
+- [Aerospike Graph Service](https://aerospike.com/docs/graph/deploy/docker).
 - [Aerospike Database](https://aerospike.com/docs/database/install/docker/).
 
 > **Note:** AGS requires Apache TinkerPop 3.7.x Gremlin client drivers. TinkerPop 3.8.x and 4.0.x are incompatible.

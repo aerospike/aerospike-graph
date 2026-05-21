@@ -380,10 +380,10 @@ vertices |
                             - ...
 ```
 
-- `vertices_*.csv` — rows: `id,label,<vertex props...>`.
-- `edges_*.csv` — rows: `src_id,dst_id,label,<edge props...>`.
+- `vertices_*.csv` — rows: `~id`, `~label`, `<vertex props...>`.
+- `edges_*.csv` — rows: `~from`, `~to`, `~label`, `<edge props...>`.
 
-The output format follows the [AGS CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) requirements.
+The output format follows the [AGS CSV format](https://aerospike.com/docs/graph/load/csv-format) requirements.
 
 ---
 
@@ -404,4 +404,4 @@ Use `--dry-run` to validate the schema without writing files. The tool reports a
 ## Related documentation
 
 - [Main repository README](../README.md) — overview of all generators.
-- [AGS CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) — CSV format requirements.
+- [AGS CSV format](https://aerospike.com/docs/graph/load/csv-format) — CSV format requirements.

@@ -203,7 +203,7 @@ vertices:
 
 Each property `type` must be one of the AGS supported types: `Long`, `Int`, `Integer`, `Double`, `Bool`, `Boolean`, `String`, `Date`, `List`.
 
-> For more information, see the [AGS CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/).
+> For more information, see the [AGS CSV format](https://aerospike.com/docs/graph/load/csv-format).
 
 **Type-specific options:**
 
@@ -335,10 +335,10 @@ Each edge type must specify:
 
 The generator produces CSV files compatible with AGS bulk loading:
 
-- **Vertices:** `vertices/<vertex_type>/vertices_*.csv` with columns: `id,label,<properties...>`.
-- **Edges:** `edges/<edge_type>/edges_*.csv` with columns: `src_id,dst_id,label,<properties...>`.
+- **Vertices:** `vertices/<vertex_type>/vertices_*.csv` with columns: `~id`, `~label`, `<properties...>`.
+- **Edges:** `edges/<edge_type>/edges_*.csv` with columns: `~from`, `~to`, `~label`, `<properties...>`.
 
-The output format follows the [AGS CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) requirements.
+The output format follows the [AGS CSV format](https://aerospike.com/docs/graph/load/csv-format) requirements.
 
 ---
 
@@ -356,4 +356,4 @@ Use `--validate-distribution` to verify that the generated graph follows the exp
 ## Related documentation
 
 - [Main repository README](../README.md) — overview of all generators.
-- [AGS CSV format](https://aerospike.com/docs/graph/develop/data-loading/csv-format/) — CSV format requirements.
+- [AGS CSV format](https://aerospike.com/docs/graph/load/csv-format) — CSV format requirements.

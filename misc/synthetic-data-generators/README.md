@@ -2,7 +2,7 @@
 
 This repository contains synthetic data generators for bulk loading into [Aerospike Graph Service (AGS)](https://aerospike.com/docs/graph/). The generators produce CSV files in the format required by the AGS bulk loader.
 
-For detailed information about the CSV format requirements, see the [AGS CSV format documentation](https://aerospike.com/docs/graph/develop/data-loading/csv-format/).
+For detailed information about the CSV format requirements, see the [AGS CSV format documentation](https://aerospike.com/docs/graph/load/csv-format).
 
 ## Table of contents
 
@@ -143,10 +143,10 @@ pip install -r requirements.txt
 
 Both generators produce CSV files compatible with AGS bulk loading:
 
-- **Vertices:** `vertices/<vertex_type>/vertices_*.csv` with columns: `id,label,<properties...>`.
-- **Edges:** `edges/<edge_type>/edges_*.csv` with columns: `src_id,dst_id,label,<properties...>`.
+- **Vertices:** `vertices/<vertex_type>/vertices_*.csv` with columns: `~id`, `~label`, `<properties...>`.
+- **Edges:** `edges/<edge_type>/edges_*.csv` with columns: `~from`, `~to`, `~label`, `<properties...>`.
 
-For detailed information about the CSV format, property types, and data loading, see the [AGS CSV format documentation](https://aerospike.com/docs/graph/develop/data-loading/csv-format/).
+For detailed information about the CSV format, property types, and data loading, see the [AGS CSV format documentation](https://aerospike.com/docs/graph/load/csv-format).
 
 ## Uploading to Google Cloud Storage
 
