@@ -29,19 +29,19 @@ Load balancers are important for high-throughput applications: they distribute w
 
 ## Usage
 
-1. **Install dependencies:**
+1. Install dependencies:
 
    ```shell
    npm install
    ```
 
-2. **Start the Docker containers:**
+2. Start the Docker containers:
 
    ```shell
    docker compose -f ../../common/docker-compose-load-balancer.yaml up -d
    ```
 
-3. **Run the balancer demo:**
+3. Run the balancer demo:
 
    ```shell
    npm start
@@ -51,11 +51,11 @@ Load balancers are important for high-throughput applications: they distribute w
 
 ## How it works
 
-1. **Initialization:** Opens a persistent `DriverRemoteConnection` to each endpoint.
-2. **Round-robin:** Each query picks the next available healthy connection in sequence.
-3. **Failure detection:** On any connection or traversal error, the endpoint is marked as down (tombstoned).
-4. **Health loop:** A background task periodically probes downed hosts with a lightweight `g.V().limit(1).toList()` query to detect recovery.
-5. **Recovery:** If a probe succeeds, the host is marked as healthy and re-enters the rotation.
+1. Initialization: Opens a persistent `DriverRemoteConnection` to each endpoint.
+2. Round-robin: Each query picks the next available healthy connection in sequence.
+3. Failure detection: On any connection or traversal error, the endpoint is marked as down (tombstoned).
+4. Health loop: A background task periodically probes downed hosts with a lightweight `g.V().limit(1).toList()` query to detect recovery.
+5. Recovery: If a probe succeeds, the host is marked as healthy and re-enters the rotation.
 
 ## Failure modes
 

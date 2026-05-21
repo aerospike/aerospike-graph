@@ -11,19 +11,19 @@ A command-line application that generates a graph of transactions between users 
 
 ## Usage
 
-1. **Start the Docker image.** From the root of the example directory, run:
+1. Start the Docker image. From the root of the example directory, run:
 
    ```shell
    docker compose up -d
    ```
 
-2. **Install the Gremlin Python dependency:**
+2. Install the Gremlin Python dependency:
 
    ```shell
    pip install "gremlinpython>=3.7.0,<3.8.0"
    ```
 
-3. **Run the basic Python example:**
+3. Run the basic Python example:
 
    ```shell
    python example.py

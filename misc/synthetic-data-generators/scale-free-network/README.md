@@ -44,7 +44,7 @@ Generate scale-free network graphs (power-law distributed) from a single `config
 
 ### Quickstart
 
-1. **Set up a virtual environment** (recommended):
+1. Set up a virtual environment (recommended):
 
    ```bash
    # Create a virtual environment
@@ -57,18 +57,18 @@ Generate scale-free network graphs (power-law distributed) from a single `config
    source venv/bin/activate
    ```
 
-2. **Install dependencies:**
+2. Install dependencies:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Edit your schema configuration** in `config/config.yaml`:
+3. Edit your schema configuration in `config/config.yaml`:
    - Define vertex types with a `percent` distribution.
    - Define edge types with `from` and `to` relationships.
    - Configure properties for vertices and edges.
 
-4. **Run the generator:**
+4. Run the generator:
 
    ```bash
    cd generator
@@ -79,7 +79,7 @@ Generate scale-free network graphs (power-law distributed) from a single `config
      --gamma 2.0
    ```
 
-5. **Output:** CSV files are written to the specified output directory, organized as:
+5. Output: CSV files are written to the specified output directory, organized as:
 
    ```text
    output/

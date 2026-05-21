@@ -6,8 +6,8 @@ A demo application that uses Aerospike Graph Service (AGS) to model a food-deliv
 
 The food-delivery app has two main components:
 
-1. **Data generator** (`food_delivery_datasetgen.py`) — creates the dataset.
-2. **GUI** (`frontend_streamlit.py`) — runs the web page.
+1. Data generator (`food_delivery_datasetgen.py`) — creates the dataset.
+2. GUI (`frontend_streamlit.py`) — runs the web page.
 
 ## Prerequisites
 

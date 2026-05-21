@@ -29,19 +29,19 @@ Load balancers are important for high-throughput applications: they distribute w
 
 ## Usage
 
-1. **Install dependencies:**
+1. Install dependencies:
 
    ```bash
    pip install "gremlinpython>=3.7.0,<3.8.0"
    ```
 
-2. **Start the Docker containers:**
+2. Start the Docker containers:
 
    ```shell
    docker compose -f ../../common/docker-compose-load-balancer.yaml up -d
    ```
 
-3. **Run the balancer demo:**
+3. Run the balancer demo:
 
    ```shell
    python ./use_balancer.py
@@ -51,11 +51,11 @@ Load balancers are important for high-throughput applications: they distribute w
 
 ## How it works
 
-1. **Initialization:** Opens a persistent `DriverRemoteConnection` to each endpoint.
-2. **Round-robin:** Each traversal submission acquires a lock, picks the next healthy connection, and dispatches.
-3. **Failure detection:** On `ClientConnectorError` or `ServerDisconnectedError`, the host is marked as down.
-4. **Health loop:** A background thread periodically retries downed hosts by issuing a `g.V().limit(1)` probe.
-5. **Recovery:** If the probe succeeds, the host is marked as healthy and re-enters the rotation.
+1. Initialization: Opens a persistent `DriverRemoteConnection` to each endpoint.
+2. Round-robin: Each traversal submission acquires a lock, picks the next healthy connection, and dispatches.
+3. Failure detection: On `ClientConnectorError` or `ServerDisconnectedError`, the host is marked as down.
+4. Health loop: A background thread periodically retries downed hosts by issuing a `g.V().limit(1)` probe.
+5. Recovery: If the probe succeeds, the host is marked as healthy and re-enters the rotation.
 
 ## Failure modes
 
