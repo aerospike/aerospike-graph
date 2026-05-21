@@ -134,10 +134,9 @@ pip install -r requirements.txt
 ## Getting started
 
 1. Choose the generator that matches your use case (see the preceding descriptions).
-2. Navigate to the generator's directory.
-3. Read the generator's README for detailed usage instructions.
-4. Configure your schema in the `config/` directory.
-5. Run the generator with your chosen parameters.
+2. Open the generator directory and follow its README for detailed usage instructions.
+3. Configure your schema in the `config/` directory.
+4. Run the generator with your chosen parameters.
 
 ## Output format
 

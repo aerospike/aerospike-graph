@@ -25,27 +25,27 @@ Running `make-certs.sh` also generates certificates and keys in a new `security/
 
 ## Run it
 
-Install dependencies:
+### Install dependencies
 
 ```shell
 python3 -m pip install "gremlinpython>=3.7.0,<3.8.0" async_timeout
 ```
 
-`make-certs.sh` creates the certificates and keys needed for TLS:
+### Create certificates and keys
 
 ```shell
 ./make-certs.sh
 ```
 
-This creates the necessary files in the `security/` folder: `ca.crt`, `ca.key`, `server.crt`, and `server.key`.
+The script writes `ca.crt`, `ca.key`, `server.crt`, and `server.key` to `security/`.
 
-Next, create the necessary Docker containers:
+### Start Docker containers
 
 ```shell
 docker compose up -d
 ```
 
-Run the Python example to verify the connection to AGS:
+### Execute a query
 
 ```shell
 python3 ./tls_example.py

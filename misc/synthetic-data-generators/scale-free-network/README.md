@@ -79,7 +79,7 @@ Generate scale-free network graphs (power-law distributed) from a single `config
      --gamma 2.0
    ```
 
-5. Output: CSV files are written to the specified output directory, organized as:
+5. CSV files are written to the output directory, organized as:
 
    ```text
    output/

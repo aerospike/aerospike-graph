@@ -4,7 +4,7 @@ This guide helps you set up Aerospike Graph Service (AGS), bulk-load data, and r
 
 ## 1. Set up AGS
 
-1. Run Docker Compose. Navigate to the root of the repository and start AGS using Docker Compose:
+1. From the repository root, run Docker Compose:
 
    ```shell
    docker compose up -d
@@ -12,7 +12,7 @@ This guide helps you set up Aerospike Graph Service (AGS), bulk-load data, and r
 
    This starts Aerospike Database and AGS in detached mode.
 
-2. Verify the services. Check that the services are running:
+2. Verify the services are running:
 
    ```shell
    docker ps
@@ -20,7 +20,7 @@ This guide helps you set up Aerospike Graph Service (AGS), bulk-load data, and r
 
    Confirm that both the Aerospike Database and AGS containers are running without errors.
 
-3. (Optional) Connect to AGS using GdotV. Import the customized graph stylesheet `UPIGraphGdotvStylesheet.json` into GdotV.
+3. (Optional) Import the customized graph stylesheet `UPIGraphGdotvStylesheet.json` into GdotV.
 
 ## 2. Bulk-load the data
 

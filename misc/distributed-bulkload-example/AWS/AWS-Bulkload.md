@@ -6,7 +6,7 @@ This example walks you through running a distributed Aerospike Graph Service (AG
 
    Set your default Aerolab zone to the same zone where you intend to create the cluster (in this example, `us-east-1`). Otherwise, unexpected behavior may occur.
 
-2. Create your S3 bucket. Create a bucket in AWS S3 for the data:
+2. Create an S3 bucket for the data:
 
    ```shell
    aws s3 mb s3://<BUCKET_NAME>/ --region <REGION>
@@ -14,7 +14,7 @@ This example walks you through running a distributed Aerospike Graph Service (AG
 
    Download the bulk-loader JAR from the [Aerospike Graph downloads page](https://aerospike.com/download/graph/loader/). Place the JAR in your bucket directory at `bucket-files/jars/`.
 
-3. Edit the variables script. Edit `set_variables.sh` and change the values of the following variables:
+3. Edit `set_variables.sh` and set the following variables:
 
    ```properties
    name
@@ -24,7 +24,7 @@ This example walks you through running a distributed Aerospike Graph Service (AG
    SECURITY_GROUP      # set after creating your Aerolab cluster
    ```
 
-4. Start the Aerolab cluster. With the variables (excluding `SUBNET_ID` and `SECURITY_GROUP`) set, run:
+4. Start the Aerospike cluster. With the variables (excluding `SUBNET_ID` and `SECURITY_GROUP`) set, run:
 
    ```shell
    ./create_cluster.sh
@@ -37,15 +37,13 @@ This example walks you through running a distributed Aerospike Graph Service (AG
    SECURITY_GROUP
    ```
 
-5. Configure your properties file. Find the private IP for your cluster:
+5. Find the cluster private IP with `aerolab cluster list`, then edit `bucket-files/config/bulk-loader.properties` with your bucket name and cluster IP.
 
    ```shell
    aerolab cluster list
    ```
 
-   Edit the properties file at `bucket-files/config/bulk-loader.properties`, setting the values to your bucket name and cluster IP.
-
-6. Upload files to AWS. Upload the files to the bucket:
+6. Upload files to the bucket:
 
    ```shell
    aws s3 cp ./bucket-files s3://<BUCKET_NAME>/ --recursive --region us-east-1
@@ -55,7 +53,7 @@ This example walks you through running a distributed Aerospike Graph Service (AG
    aws s3 cp ../../../common/bulkload-data/* s3://<BUCKET_NAME>/ --recursive --region us-east-1
    ```
 
-7. Create an EMR cluster and submit the bulk load. To create an EMR cluster and submit the bulk-load job:
+7. Create an EMR cluster and submit the bulk load:
 
    ```shell
    ./bulkload.sh
