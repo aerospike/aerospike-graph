@@ -11,10 +11,11 @@ A Node.js Express application that visualizes graph queries against Aerospike Gr
 
 ## Install dependencies
 
-Navigate to the `node-js-example` directory and run:
+From the repository root, change into the Node.js example directory and install dependencies:
 
 ```shell
-npm i
+cd nodejs/basic
+npm ci
 ```
 
 ## Start the server
