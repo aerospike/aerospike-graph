@@ -19,7 +19,7 @@ TRUSTSTORE=${DEST_DIR}/truststore.jks
 # Create the directory.
 mkdir -p $DEST_DIR
 
-# Download the CA certificate. Use one of the following commands.
+# Download the CA certificate. Use one of the following commands:
 
 # For local file system
 # cp $CA_CERT_REMOTE $CA_CERT
@@ -142,7 +142,7 @@ The `spark-tls-config.json` file referenced by `--configurations` is the JSON sh
 
 ### On premises
 
-For an on-premises cluster, the TLS setup script must be run by hand on every node before the node joins the Spark cluster. Spark does not provide a native way to run an init script on each worker.
+For an on-premises cluster, you must manually run the TLS setup script on every node before the node joins the Spark cluster. Spark does not provide a native way to run an init script on each worker.
 
 What you need to do:
 
@@ -163,7 +163,7 @@ What you need to do:
    ls -l /etc/aerospike-graph-tls/truststore.jks
    ```
 
-   You expect a truststore with the appropriate permissions (`-r--r--r--`). If the truststore is missing, the file is not being generated. If the permissions are wrong, investigate the `chmod` command — it must be `chmod 444`.
+   The truststore should appear with the appropriate permissions (`-r--r--r--`). If the truststore is missing, the file is not being generated. If the permissions are wrong, investigate the `chmod` command — it must be `chmod 444`.
 
 3. Run a simple test with Docker:
 

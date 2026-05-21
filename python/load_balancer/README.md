@@ -53,9 +53,9 @@ Load balancers are important for high-throughput applications: they distribute w
 
 1. **Initialization:** Opens a persistent `DriverRemoteConnection` to each endpoint.
 2. **Round-robin:** Each traversal submission acquires a lock, picks the next healthy connection, and dispatches.
-3. **Failure detection:** On `ClientConnectorError` or `ServerDisconnectedError`, the host is marked down.
+3. **Failure detection:** On `ClientConnectorError` or `ServerDisconnectedError`, the host is marked as down.
 4. **Health loop:** A background thread periodically retries downed hosts by issuing a `g.V().limit(1)` probe.
-5. **Recovery:** If the probe succeeds, the host is marked healthy and re-enters the rotation.
+5. **Recovery:** If the probe succeeds, the host is marked as healthy and re-enters the rotation.
 
 ## Failure modes
 

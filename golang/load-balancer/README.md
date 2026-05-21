@@ -17,7 +17,7 @@ Round-robin load balancing for Gremlin-Go clients connecting to Aerospike Graph 
 
 ## Why use a load balancer
 
-Load balancers are important for high-throughput applications: they distribute work evenly instead of overloading a single node and risking CPU or I/O saturation. A load balancer also provides horizontal scalability without requiring application-code changes, because you query it as you would a single-node traversal.
+Load balancers are important for high-throughput applications. They distribute work evenly instead of overloading a single node and risking CPU or I/O saturation. A load balancer also provides horizontal scalability without requiring application-code changes, because you query all nodes as you would a single-node traversal.
 
 ---
 
@@ -32,19 +32,19 @@ Load balancers are important for high-throughput applications: they distribute w
 
 ## Usage
 
-1. **Start the Docker containers:**
+1. Start the Docker containers:
 
    ```shell
    docker compose -f ../../common/docker-compose-load-balancer.yaml up -d
    ```
 
-2. **Tidy the Go module file:**
+2. Tidy the Go module file:
 
    ```shell
    go mod tidy
    ```
 
-3. **Run the balancer demo:**
+3. Run the balancer demo:
 
    ```shell
    go run ./cmd/use_balancer
@@ -70,4 +70,4 @@ func (lb *RoundRobinClientRemoteConnection) DoIter(
 ) error
 ```
 
-An alternative implementation could require the user to request a new traversal source from the load balancer for each rotation. That approach lets you query as you would with a single `DriverRemoteConnection`, at the cost of not rotating mid-query.
+An alternative implementation could require a request for a new traversal source from the load balancer for each rotation. That approach lets you query as you would with a single `DriverRemoteConnection`, at the cost of not rotating mid-query.

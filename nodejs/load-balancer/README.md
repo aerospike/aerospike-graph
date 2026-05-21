@@ -53,9 +53,9 @@ Load balancers are important for high-throughput applications: they distribute w
 
 1. **Initialization:** Opens a persistent `DriverRemoteConnection` to each endpoint.
 2. **Round-robin:** Each query picks the next available healthy connection in sequence.
-3. **Failure detection:** On any connection or traversal error, the endpoint is marked down (tombstoned).
+3. **Failure detection:** On any connection or traversal error, the endpoint is marked as down (tombstoned).
 4. **Health loop:** A background task periodically probes downed hosts with a lightweight `g.V().limit(1).toList()` query to detect recovery.
-5. **Recovery:** If a probe succeeds, the host is marked healthy and re-enters the rotation.
+5. **Recovery:** If a probe succeeds, the host is marked as healthy and re-enters the rotation.
 
 ## Failure modes
 
