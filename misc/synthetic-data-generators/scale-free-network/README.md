@@ -9,7 +9,7 @@ Generate scale-free network graphs (power-law distributed) from a single `config
 ## Table of contents
 
 - [How to use](#how-to-use)
-  - [Quick start](#quick-start)
+  - [Quickstart](#quickstart)
   - [Example command](#example-command)
   - [Validate distribution](#validate-distribution)
 - [Features](#features)
@@ -42,7 +42,7 @@ Generate scale-free network graphs (power-law distributed) from a single `config
 
 ## How to use
 
-### Quick start
+### Quickstart
 
 1. **Set up a virtual environment** (recommended):
 

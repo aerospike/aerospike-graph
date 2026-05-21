@@ -84,7 +84,7 @@ gcp/
    ```
 
 6. **Aerospike Database** deployed in the same VPC as the GKE cluster.
-7. **Docker image** in GCR. Replace `VERSION` with a pinned AGS release. The current release is `3.2.2`. See the [AGS release notes](https://aerospike.com/docs/graph/release/) for the full list.
+7. **Docker image** in GCR. Replace `VERSION` with a pinned AGS release from the [AGS release notes](https://aerospike.com/docs/graph/release/).
 
    ```bash
    crane copy aerospike/aerospike-graph-service:VERSION-slim \
@@ -117,7 +117,7 @@ Before deploying, replace the following placeholders in the environment files:
 
 > **Security:** Avoid committing sensitive values such as `TODO_PASSWORD` to version control. Use environment variables (`TF_VAR_aerospike_password`) or a secrets manager.
 
-## Quick start
+## Quickstart
 
 1. Configure placeholders in all modules (see [Placeholders to replace](#placeholders-to-replace)).
 

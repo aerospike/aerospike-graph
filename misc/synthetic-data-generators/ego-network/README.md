@@ -9,7 +9,7 @@ Generate synthetic CSV data for identity graphs using a configurable ego–alter
 ## Table of contents
 
 - [How to use](#how-to-use)
-  - [Quick start](#quick-start)
+  - [Quickstart](#quickstart)
   - [Example command](#example-command)
 - [Features](#features)
 - [Requirements](#requirements)
@@ -45,7 +45,7 @@ Generate synthetic CSV data for identity graphs using a configurable ego–alter
 
 ## How to use
 
-### Quick start
+### Quickstart
 
 1. **Set up a virtual environment** (recommended):
 
