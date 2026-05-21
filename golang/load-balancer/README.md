@@ -54,7 +54,7 @@ Load balancers are important for high-throughput applications. They distribute w
 
 ## How it works
 
-Unlike Gremlin-Python, Gremlin-Go's `withRemote()` accepts a fixed type of `*DriverRemoteConnection`, which means you cannot pass a custom balancer object that implements an interface (as the Python load-balancer example does). Instead, this load balancer exposes its own API: choose the function that matches the return type of your traversal, such as `DoList` for traversals returning results:
+Gremlin-Go's `withRemote()` accepts only `*DriverRemoteConnection`, so you cannot inject a custom load-balancing wrapper through the standard remote connection API. Instead, this load balancer exposes its own API. Choose the function that matches the return type of your traversal, such as `DoList` for traversals returning results:
 
 ```go
 func (lb *RoundRobinClientRemoteConnection) DoList(
