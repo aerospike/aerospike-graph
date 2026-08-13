@@ -1,13 +1,11 @@
 {
   "dependencies": {
-    "crpyto": "^0.0.1-security",
     "chai": "^5.2.0",
     "cross-env": "^7.0.3",
     "d3": "^7.9.0",
     "express": "^5.1.0",
     "gremlin": "~3.7.3",
-    "mocha": "^11.5.0",
-    "path": "^0.12.7"
+    "mocha": "^11.5.0"
   },
   "name": "node-js-fraud-example",
   "version": "1.0.0",
